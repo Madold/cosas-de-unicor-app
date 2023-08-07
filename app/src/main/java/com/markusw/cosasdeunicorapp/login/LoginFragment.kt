@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.ext.toast
 import com.markusw.cosasdeunicorapp.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
@@ -19,6 +19,16 @@ class LoginFragment : Fragment() {
     ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupEvents()
+    }
+
+    private fun setupEvents() {
+        binding.forgotPasswordText.setOnClickListener { toast("navigating to forgot password") }
+        binding.registerText.setOnClickListener { toast("navigating to register screen") }
     }
 
     override fun onDestroy() {

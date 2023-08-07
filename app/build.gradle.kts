@@ -62,11 +62,12 @@ android {
 dependencies {
 
     val daggerHiltVersion = "2.44"
+    val flexboxVersion = "3.0.0"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")
     implementation("androidx.navigation:navigation-ui-ktx:2.6.0")
@@ -83,6 +84,9 @@ dependencies {
     //Dagger hilt
     implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
     kapt("com.google.dagger:hilt-android-compiler:$daggerHiltVersion")
+
+    //Flexbox layout
+    implementation("com.google.android.flexbox:flexbox:$flexboxVersion")
 
 
     //Test dependencies
