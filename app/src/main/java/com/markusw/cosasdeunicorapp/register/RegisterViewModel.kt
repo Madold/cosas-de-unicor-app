@@ -4,7 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.domain.services.AuthService
+import com.markusw.cosasdeunicorapp.domain.use_cases.ValidateEmail
 import com.markusw.cosasdeunicorapp.domain.use_cases.ValidateName
+import com.markusw.cosasdeunicorapp.domain.use_cases.ValidatePassword
+import com.markusw.cosasdeunicorapp.domain.use_cases.ValidateRepeatedPassword
+import com.markusw.cosasdeunicorapp.domain.use_cases.ValidateTerms
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +19,11 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val authService: AuthService,
-    private val validateName: ValidateName
+    private val validateName: ValidateName,
+    private val validateEmail: ValidateEmail,
+    private val validatePassword: ValidatePassword,
+    private val validateRepeatedPassword: ValidateRepeatedPassword,
+    private val validateTerms: ValidateTerms
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(RegisterState())
