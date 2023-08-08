@@ -140,6 +140,7 @@
         android:layout_marginTop="10dp"
         app:boxStrokeColor="@color/md_theme_light_primary"
         app:hintTextColor="@color/md_theme_light_primary"
+        app:helperTextTextColor="@color/md_theme_light_primary"
         android:layout_marginHorizontal="16dp"
         app:endIconMode="password_toggle"
         >
@@ -162,6 +163,7 @@
         android:layout_marginTop="10dp"
         app:boxStrokeColor="@color/md_theme_light_primary"
         app:hintTextColor="@color/md_theme_light_primary"
+        app:helperTextTextColor="@color/md_theme_light_primary"
         android:layout_marginHorizontal="16dp"
         app:endIconMode="password_toggle"
         >
@@ -190,11 +192,13 @@
         >
 
         <CheckBox
+            android:id="@+id/termsCheckbox"
             android:layout_width="wrap_content"
             android:layout_height="16dp"
             android:text="Acepto los "
             android:textSize="14sp"
-            tools:ignore="TouchTargetSizeCheck" />
+            tools:ignore="TouchTargetSizeCheck"
+            />
 
         <TextView
             android:id="@+id/termsText"
@@ -222,14 +226,6 @@
             android:textSize="14sp"
             />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" del acuerdo de privacidad."
-            android:textSize="14sp"
-            android:textColor="@color/black"
-            />
-
     </com.google.android.flexbox.FlexboxLayout>
 
     <Button
@@ -238,7 +234,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="10dp"
         android:text="Crear cuenta"
         app:cornerRadius="10dp"
         android:backgroundTint="@color/md_theme_light_primary"
