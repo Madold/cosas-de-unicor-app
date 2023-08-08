@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.domain.services.AuthService
+import com.markusw.cosasdeunicorapp.domain.use_cases.ValidateName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val validateName: ValidateName
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(RegisterState())
