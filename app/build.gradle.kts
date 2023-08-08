@@ -4,7 +4,6 @@ plugins {
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
-
 }
 
 android {
