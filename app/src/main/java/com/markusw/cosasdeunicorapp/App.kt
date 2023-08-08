@@ -5,6 +5,7 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.installations.interop.BuildConfig
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
 
 @HiltAndroidApp
 class App: Application() {
@@ -13,6 +14,8 @@ class App: Application() {
 
         if (BuildConfig.DEBUG) {
             Firebase.analytics.setAnalyticsCollectionEnabled(false)
+            Timber.plant(Timber.DebugTree())
         }
+
     }
 }
