@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -33,6 +34,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupEvents()
+        setupObservers()
     }
 
     private fun setupEvents() {
@@ -44,6 +46,22 @@ class LoginFragment : Fragment() {
         binding.emailField.addTextChangedListener { viewModel.onEmailChanged(it.toString()) }
         binding.passwordField.addTextChangedListener { viewModel.onEmailChanged(it.toString()) }
         binding.loginButton.setOnClickListener { viewModel.onLogin() }
+    }
+
+    private fun setupObservers() {
+        lifecycleScope.launch {
+            viewModel.authenticationEvents.collectLatest { authEvent ->
+                when (authEvent) {
+                    is  AuthenticationEvent.AuthFailed -> {
+
+                    }
+
+                    is AuthenticationEvent.AuthSuccessful -> {
+
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
