@@ -6,7 +6,7 @@ class ValidatePassword @Inject constructor() {
 
     companion object {
         const val PASSWORD_REGEX =
-            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{6,}\$"
+            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@\$!%*._?&])[A-Za-z\\d@\$!%*._?&]{6,}\$"
         const val MINIMUM_PASSWORD_LENGTH = 6
     }
 
