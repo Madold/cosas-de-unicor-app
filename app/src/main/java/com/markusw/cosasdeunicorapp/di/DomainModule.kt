@@ -1,5 +1,6 @@
 package com.markusw.cosasdeunicorapp.di
 
+import com.google.firebase.auth.FirebaseAuth
 import com.markusw.cosasdeunicorapp.domain.services.AuthService
 import com.markusw.cosasdeunicorapp.domain.services.FirebaseAuthService
 import dagger.Module
@@ -14,6 +15,6 @@ object DomainModule {
 
     @Provides
     @Singleton
-    fun provideAuthService(): AuthService = FirebaseAuthService()
+    fun provideAuthService(auth: FirebaseAuth): AuthService = FirebaseAuthService(auth)
 
 }

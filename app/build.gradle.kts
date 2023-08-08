@@ -68,6 +68,7 @@ dependencies {
 
     val daggerHiltVersion = "2.44"
     val flexboxVersion = "3.0.0"
+    val timberVersion = "5.0.1"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.10.1")
@@ -99,6 +100,9 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     //Auth
     implementation("com.google.firebase:firebase-auth-ktx")
+
+    //Timber
+    implementation("com.jakewharton.timber:timber:$timberVersion")
 
 
     //Test dependencies
