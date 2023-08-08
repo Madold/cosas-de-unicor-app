@@ -45,7 +45,7 @@ class LoginFragment : Fragment() {
         }
 
         binding.emailField.addTextChangedListener { viewModel.onEmailChanged(it.toString()) }
-        binding.passwordField.addTextChangedListener { viewModel.onEmailChanged(it.toString()) }
+        binding.passwordField.addTextChangedListener { viewModel.onPasswordChanged(it.toString()) }
         binding.loginButton.setOnClickListener { viewModel.onLogin() }
     }
 
