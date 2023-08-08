@@ -6,76 +6,88 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".register.RegisterFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
         android:id="@+id/headerWrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="280dp"
+        android:background="#000"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:background="#000"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/topAppBarLayout"
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/topAppBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/black"
-                app:title=""
-                app:navigationIcon="@drawable/ic_arrow_left"
-                app:navigationIconTint="@color/white"
-                />
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:cardCornerRadius="100dp">
-            <ImageView
-                android:layout_width="130dp"
-                android:layout_height="130dp"
-                android:src="@drawable/logo"
-                android:background="@drawable/logo_background"
-                android:contentDescription="@string/app_name"
-                />
-        </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:id="@+id/registerText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="Registrate"
-            android:textColor="@color/white"
-            android:textSize="32sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/logo" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:text="Crea una cuenta"
-            android:textSize="16sp"
-            android:textColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@+id/registerText"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginStart="16dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/header_bg"
+            android:scaleType="centerCrop"
             />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+       <androidx.constraintlayout.widget.ConstraintLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent">
+
+           <com.google.android.material.appbar.AppBarLayout
+               android:id="@+id/topAppBarLayout"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:background="@android:color/transparent"
+               app:layout_constraintLeft_toLeftOf="parent"
+               app:layout_constraintRight_toRightOf="parent"
+               app:layout_constraintTop_toTopOf="parent"
+               >
+
+               <com.google.android.material.appbar.MaterialToolbar
+                   android:id="@+id/topAppBar"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   app:navigationIcon="@drawable/ic_arrow_left"
+                   app:navigationIconTint="@color/white"
+                   app:title="" />
+           </com.google.android.material.appbar.AppBarLayout>
+
+           <androidx.cardview.widget.CardView
+               android:id="@+id/logo"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               app:cardCornerRadius="100dp"
+               app:layout_constraintBottom_toBottomOf="parent"
+               app:layout_constraintLeft_toLeftOf="parent"
+               app:layout_constraintRight_toRightOf="parent"
+               app:layout_constraintTop_toTopOf="parent">
+
+               <ImageView
+                   android:layout_width="130dp"
+                   android:layout_height="130dp"
+                   android:background="@drawable/logo_background"
+                   android:contentDescription="@string/app_name"
+                   android:src="@drawable/logo" />
+           </androidx.cardview.widget.CardView>
+
+           <TextView
+               android:id="@+id/registerText"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="16dp"
+               android:text="Registrate"
+               android:textColor="@color/white"
+               android:textSize="32sp"
+               app:layout_constraintLeft_toLeftOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/logo" />
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="16dp"
+               android:paddingBottom="10dp"
+               android:text="Crea una cuenta"
+               android:textColor="@color/white"
+               android:textSize="16sp"
+               app:layout_constraintLeft_toLeftOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/registerText" />
+
+       </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nameFieldLayout"
@@ -180,9 +192,9 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="16dp"
-            android:textSize="14sp"
             android:text="Acepto los "
-            />
+            android:textSize="14sp"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
             android:id="@+id/termsText"
