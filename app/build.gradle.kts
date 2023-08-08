@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 
 }
 
@@ -88,6 +89,10 @@ dependencies {
     //Flexbox layout
     implementation("com.google.android.flexbox:flexbox:$flexboxVersion")
 
+    //Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
+    //Analytics
+    implementation("com.google.firebase:firebase-analytics-ktx")
 
     //Test dependencies
     testImplementation("junit:junit:4.13.2")
