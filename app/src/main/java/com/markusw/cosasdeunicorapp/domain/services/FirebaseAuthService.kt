@@ -1,6 +1,7 @@
 package com.markusw.cosasdeunicorapp.domain.services
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.markusw.cosasdeunicorapp.core.utils.Resource
 import kotlinx.coroutines.tasks.await
 
@@ -11,6 +12,8 @@ class FirebaseAuthService constructor(
         return try {
             auth.signInWithEmailAndPassword(email, password).await()
             Resource.Success(Unit)
+        } catch (e: FirebaseAuthInvalidUserException) {
+            Resource.Error("There is no user with that email")
         } catch (e: Exception) {
             Resource.Error(e.message.toString())
         }
