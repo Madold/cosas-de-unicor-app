@@ -19,4 +19,13 @@ class FirebaseAuthService constructor(
         }
     }
 
+    override suspend fun register(email: String, password: String): Resource<Unit> {
+        return try {
+            auth.createUserWithEmailAndPassword(email, password).await()
+            Resource.Success(Unit)
+        } catch (e: Exception) {
+            Resource.Error(e.message.toString())
+        }
+    }
+
 }
