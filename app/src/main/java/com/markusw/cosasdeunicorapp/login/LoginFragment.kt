@@ -59,6 +59,7 @@ class LoginFragment : Fragment() {
 
                     is AuthenticationEvent.AuthSuccessful -> {
                         Timber.d("Auth succesfull")
+                        //TODO: Navigate to HomeFragment
                     }
                 }
             }
