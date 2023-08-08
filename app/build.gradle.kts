@@ -32,6 +32,11 @@ android {
                 "proguard-rules.pro"
             )
             isShrinkResources = true
+            isDebuggable = false
+        }
+        debug {
+            isMinifyEnabled = false
+            isDebuggable = true
         }
 
     }
