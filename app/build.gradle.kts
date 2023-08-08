@@ -97,6 +97,9 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
     //Analytics
     implementation("com.google.firebase:firebase-analytics-ktx")
+    //Auth
+    implementation("com.google.firebase:firebase-auth-ktx")
+
 
     //Test dependencies
     testImplementation("junit:junit:4.13.2")

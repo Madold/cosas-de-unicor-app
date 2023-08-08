@@ -1,12 +1,44 @@
 package com.markusw.cosasdeunicorapp.login
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.domain.services.AuthService
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
-
+    private val authService: AuthService
 ): ViewModel() {
 
+    private var _uiState = MutableStateFlow(LoginState())
+    val uiState = _uiState.asStateFlow()
 
+    fun onEmailChanged(email: String) {
+        _uiState.update { it.copy(email = email) }
+    }
+
+    fun onEmailPasswordChanged(password: String) {
+        _uiState.update { it.copy(password = password) }
+    }
+
+    fun onLogin() {
+        viewModelScope.launch {
+            val email = _uiState.value.email
+            val password = _uiState.value.password
+
+            when (authService.authenticate(email, password)) {
+                is Resource.Error -> {
+
+                }
+                is Resource.Success -> {
+
+                }
+            }
+        }
+    }
 
 }
