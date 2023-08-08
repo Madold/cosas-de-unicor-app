@@ -14,6 +14,7 @@ import com.markusw.cosasdeunicorapp.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -53,11 +54,11 @@ class LoginFragment : Fragment() {
             viewModel.authenticationEvents.collectLatest { authEvent ->
                 when (authEvent) {
                     is  AuthenticationEvent.AuthFailed -> {
-
+                        Timber.e(authEvent.reason)
                     }
 
                     is AuthenticationEvent.AuthSuccessful -> {
-
+                        Timber.d("Auth succesfull")
                     }
                 }
             }
