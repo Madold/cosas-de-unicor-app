@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.ext.toast
 import com.markusw.cosasdeunicorapp.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -54,11 +55,11 @@ class LoginFragment : Fragment() {
             viewModel.authenticationEvents.collectLatest { authEvent ->
                 when (authEvent) {
                     is  AuthenticationEvent.AuthFailed -> {
-                        Timber.e(authEvent.reason)
+                        toast(authEvent.reason)
                     }
 
                     is AuthenticationEvent.AuthSuccessful -> {
-                        Timber.d("Auth succesfull")
+                        toast("Auth successful")
                         //TODO: Navigate to HomeFragment
                     }
                 }
