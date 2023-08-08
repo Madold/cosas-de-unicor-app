@@ -36,9 +36,9 @@ class LoginViewModel @Inject constructor(
             val email = _uiState.value.email
             val password = _uiState.value.password
 
-            when (val result = authService.authenticate(email, password)) {
+            when (val authResult = authService.authenticate(email, password)) {
                 is Resource.Error -> {
-                    authenticationEventChannel.send(AuthenticationEvent.AuthFailed(reason = result.message!!))
+                    authenticationEventChannel.send(AuthenticationEvent.AuthFailed(reason = authResult.message!!))
                 }
                 is Resource.Success -> {
                     authenticationEventChannel.send(AuthenticationEvent.AuthSuccessful)

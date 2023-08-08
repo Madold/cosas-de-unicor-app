@@ -15,7 +15,6 @@ import com.markusw.cosasdeunicorapp.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -51,6 +50,14 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupObservers() {
+
+        lifecycleScope.launch {
+            viewModel.uiState.collectLatest { state ->
+                binding.emailField.error = state.emailError
+                binding.passwordField.error = state.passwordError
+            }
+        }
+
         lifecycleScope.launch {
             viewModel.authenticationEvents.collectLatest { authEvent ->
                 when (authEvent) {
