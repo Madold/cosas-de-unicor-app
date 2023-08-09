@@ -75,6 +75,13 @@ class RegisterFragment : Fragment() {
                         toast("Registro exitoso")
                         navController.popBackStack()
                     }
+                    is RegistrationEvent.TermsNotAccepted -> {
+                        showDialog(
+                            title = "Importante",
+                            message = registrationEvent.message,
+                            positiveButtonText = "Entendido"
+                        )
+                    }
                 }
             }
         }

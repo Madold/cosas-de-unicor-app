@@ -55,39 +55,46 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun onRegister() {
-
-        val nameValidationResult = validateName(uiState.value.name)
-        val emailValidationResult = validateEmail(uiState.value.email)
-        val passwordValidationResult = validatePassword(uiState.value.password)
-        val repeatedPasswordValidationResult =
-            validateRepeatedPassword(uiState.value.password, uiState.value.repeatedPassword)
-        val termsValidationResult = validateTerms(uiState.value.isTermsAccepted)
-
-        val isAnyError = listOf(
-            nameValidationResult,
-            emailValidationResult,
-            passwordValidationResult,
-            repeatedPasswordValidationResult,
-            termsValidationResult
-        ).any { !it.successful }
-
-        if (isAnyError) {
-            _uiState.update {
-                it.copy(
-                    nameError = nameValidationResult.errorMessage,
-                    emailError = emailValidationResult.errorMessage,
-                    passwordError = passwordValidationResult.errorMessage,
-                    repeatedPasswordError = repeatedPasswordValidationResult.errorMessage,
-                    termsError = termsValidationResult.errorMessage
-                )
-            }
-            return
-        }
-
-        val email = uiState.value.email
-        val password = uiState.value.password
-
         viewModelScope.launch(Dispatchers.IO) {
+            val nameValidationResult = validateName(uiState.value.name)
+            val emailValidationResult = validateEmail(uiState.value.email)
+            val passwordValidationResult = validatePassword(uiState.value.password)
+            val repeatedPasswordValidationResult =
+                validateRepeatedPassword(uiState.value.password, uiState.value.repeatedPassword)
+            val termsValidationResult = validateTerms(uiState.value.isTermsAccepted)
+
+            val isAnyError = listOf(
+                nameValidationResult,
+                emailValidationResult,
+                passwordValidationResult,
+                repeatedPasswordValidationResult,
+                termsValidationResult
+            ).any { !it.successful }
+
+            if (isAnyError) {
+                _uiState.update {
+                    it.copy(
+                        nameError = nameValidationResult.errorMessage,
+                        emailError = emailValidationResult.errorMessage,
+                        passwordError = passwordValidationResult.errorMessage,
+                        repeatedPasswordError = repeatedPasswordValidationResult.errorMessage,
+                        termsError = termsValidationResult.errorMessage
+                    )
+                }
+
+
+                termsValidationResult.errorMessage?.let {
+                    registrationEventChannel.send(RegistrationEvent.TermsNotAccepted(it))
+                }
+
+
+                return@launch
+            }
+
+            val email = uiState.value.email
+            val password = uiState.value.password
+
+
             _uiState.update {
                 it.copy(
                     isLoading = true,
