@@ -2,6 +2,7 @@ package com.markusw.cosasdeunicorapp.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.markusw.cosasdeunicorapp.core.DispatcherProvider
 import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.domain.services.AuthService
 import com.markusw.cosasdeunicorapp.domain.use_cases.ValidateEmail
@@ -19,7 +20,8 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val authService: AuthService,
     private val validateEmail: ValidateEmail,
-    private val validatePassword: ValidatePassword
+    private val validatePassword: ValidatePassword,
+    private val dispatchers: DispatcherProvider
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(LoginState())
@@ -56,7 +58,7 @@ class LoginViewModel @Inject constructor(
 
         resetErrors()
 
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.io) {
             _uiState.update { it.copy(isLoading = true) }
             val email = uiState.value.email
             val password = uiState.value.password
