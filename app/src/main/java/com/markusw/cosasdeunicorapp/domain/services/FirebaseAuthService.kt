@@ -8,7 +8,7 @@ import kotlinx.coroutines.tasks.await
 
 class FirebaseAuthService constructor(
     private val auth: FirebaseAuth
-): AuthService {
+) : AuthService {
     override suspend fun authenticate(email: String, password: String): Resource<Unit> {
         return try {
             auth.signInWithEmailAndPassword(email, password).await()
