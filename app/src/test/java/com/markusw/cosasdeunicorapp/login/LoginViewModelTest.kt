@@ -2,6 +2,7 @@
 
 package com.markusw.cosasdeunicorapp.login
 
+import com.markusw.cosasdeunicorapp.TestDispatchers
 import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.domain.services.AuthService
 import com.markusw.cosasdeunicorapp.domain.use_cases.ValidateEmail
@@ -26,12 +27,14 @@ class LoginViewModelTest {
     @RelaxedMockK
     private lateinit var validateEmail: ValidateEmail
     private lateinit var validatePassword: ValidatePassword
+    private lateinit var testDispatchers: TestDispatchers
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         validatePassword = ValidatePassword()
-        viewModel = LoginViewModel(authService, validateEmail, validatePassword)
+        testDispatchers = TestDispatchers()
+        viewModel = LoginViewModel(authService, validateEmail, validatePassword, testDispatchers)
     }
 
     @Test
