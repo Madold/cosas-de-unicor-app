@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.showDialog
 import com.markusw.cosasdeunicorapp.core.ext.toast
@@ -24,6 +26,14 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by viewModels<LoginViewModel>()
     private val navController by lazy { findNavController() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Firebase.auth.currentUser?.let {
+            navController.navigate(R.id.action_loginFragment_to_homeFragment)
+            return
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
