@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalCoroutinesApi::class)
 
 package com.markusw.cosasdeunicorapp.login
 
@@ -18,6 +17,7 @@ import org.junit.Before
 import org.junit.Test
 
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class LoginViewModelTest {
 
     @RelaxedMockK
