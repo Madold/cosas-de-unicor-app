@@ -121,4 +121,9 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        registrationEventChannel.close()
+    }
+
 }

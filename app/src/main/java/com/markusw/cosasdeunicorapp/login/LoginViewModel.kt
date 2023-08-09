@@ -82,4 +82,9 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        authenticationEventChannel.close()
+    }
+
 }
