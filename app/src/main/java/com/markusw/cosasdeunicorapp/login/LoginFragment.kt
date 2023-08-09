@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.ext.showDialog
 import com.markusw.cosasdeunicorapp.core.ext.toast
 import com.markusw.cosasdeunicorapp.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,7 +55,8 @@ class LoginFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
                 binding.emailField.error = state.emailError
-                binding.passwordField.error = state.passwordError
+                binding.passwordFieldLayout.helperText = state.passwordError
+                binding.loadingLayout.visibility = if (state.isLoading) View.VISIBLE else View.GONE
             }
         }
 
@@ -62,7 +64,13 @@ class LoginFragment : Fragment() {
             viewModel.authenticationEvents.collectLatest { authEvent ->
                 when (authEvent) {
                     is  AuthenticationEvent.AuthFailed -> {
-                        toast(authEvent.reason)
+                        showDialog(
+                            title = "Error",
+                            message = authEvent.reason,
+                            positiveButtonText = "Reintentar",
+                            onPositiveButtonClick = { viewModel.onLogin() },
+                            neutralButtonText = "Cancelar"
+                        )
                     }
 
                     is AuthenticationEvent.AuthSuccessful -> {
