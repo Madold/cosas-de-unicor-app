@@ -61,6 +61,8 @@ class RegisterFragment : Fragment() {
                         positiveButtonText = "Aceptar"
                     )
                 }
+                binding.loadingLayout.visibility = if (state.isLoading) View.VISIBLE else View.GONE
+                binding.registerButton.isEnabled = !state.isLoading
             }
         }
 
@@ -72,7 +74,8 @@ class RegisterFragment : Fragment() {
                             message = registrationEvent.reason,
                             title = "Error",
                             positiveButtonText = "Reintentar",
-                            onPositiveButtonClick = { viewModel.onRegister() }
+                            onPositiveButtonClick = { viewModel.onRegister() },
+                            neutralButtonText = "Cancelar"
                         )
                     }
                     is RegistrationEvent.SuccessfullyRegistration -> {

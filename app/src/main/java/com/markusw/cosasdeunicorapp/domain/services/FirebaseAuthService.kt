@@ -2,6 +2,7 @@ package com.markusw.cosasdeunicorapp.domain.services
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.markusw.cosasdeunicorapp.core.utils.Resource
 import kotlinx.coroutines.tasks.await
 
@@ -23,8 +24,10 @@ class FirebaseAuthService constructor(
         return try {
             auth.createUserWithEmailAndPassword(email, password).await()
             Resource.Success(Unit)
+        } catch (e: FirebaseAuthUserCollisionException) {
+            Resource.Error("Ya hay un usuario registrado con ese correo.")
         } catch (e: Exception) {
-            Resource.Error(e.message.toString())
+            Resource.Error("${e.javaClass}: ${e.message.toString()}")
         }
     }
 
