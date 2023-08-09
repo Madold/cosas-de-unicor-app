@@ -54,13 +54,6 @@ class RegisterFragment : Fragment() {
                 binding.emailField.error = state.emailError
                 binding.passwordFieldLayout.helperText = state.passwordError
                 binding.repeatPasswordFieldLayout.helperText = state.repeatedPasswordError
-                state.termsError?.let {
-                    showDialog(
-                        message = it,
-                        title = "Importante",
-                        positiveButtonText = "Aceptar"
-                    )
-                }
                 binding.loadingLayout.visibility = if (state.isLoading) View.VISIBLE else View.GONE
                 binding.registerButton.isEnabled = !state.isLoading
             }
