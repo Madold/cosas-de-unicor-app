@@ -9,13 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.markusw.cosasdeunicorapp.R
-import com.markusw.cosasdeunicorapp.core.ext.simpleDialog
+import com.markusw.cosasdeunicorapp.core.ext.showDialog
 import com.markusw.cosasdeunicorapp.core.ext.toast
 import com.markusw.cosasdeunicorapp.databinding.FragmentRegisterBinding
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -42,10 +39,7 @@ class RegisterFragment : Fragment() {
 
     private fun setupEvents() {
         binding.topAppBar.setNavigationOnClickListener { navController.popBackStack() }
-        binding.registerButton.setOnClickListener {
-            viewModel.onRegister()
-            simpleDialog("Usuario registrado con éxito", "Registro exitoso")
-        }
+        binding.registerButton.setOnClickListener { viewModel.onRegister() }
         binding.nameField.addTextChangedListener { viewModel.onNameChanged(it.toString()) }
         binding.emailField.addTextChangedListener { viewModel.onEmailChanged(it.toString()) }
         binding.passwordField.addTextChangedListener { viewModel.onPasswordChanged(it.toString()) }
