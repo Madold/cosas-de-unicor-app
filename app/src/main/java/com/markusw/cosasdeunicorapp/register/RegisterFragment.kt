@@ -63,6 +63,26 @@ class RegisterFragment : Fragment() {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.registrationEvents.collect { registrationEvent ->
+                when (registrationEvent) {
+                    is RegistrationEvent.RegistrationFailed -> {
+                        showDialog(
+                            message = registrationEvent.reason,
+                            title = "Error",
+                            positiveButtonText = "Reintentar",
+                            onPositiveButtonClick = { viewModel.onRegister() }
+                        )
+                    }
+                    is RegistrationEvent.SuccessfullyRegistration -> {
+                        toast("Registro exitoso")
+                        navController.popBackStack()
+                    }
+                }
+            }
+        }
+
     }
 
     override fun onDestroy() {

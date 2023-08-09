@@ -10,8 +10,10 @@ import com.markusw.cosasdeunicorapp.domain.use_cases.ValidatePassword
 import com.markusw.cosasdeunicorapp.domain.use_cases.ValidateRepeatedPassword
 import com.markusw.cosasdeunicorapp.domain.use_cases.ValidateTerms
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,6 +30,8 @@ class RegisterViewModel @Inject constructor(
 
     private var _uiState = MutableStateFlow(RegisterState())
     val uiState = _uiState.asStateFlow()
+    private val registrationEventChannel = Channel<RegistrationEvent>()
+    val registrationEvents = registrationEventChannel.receiveAsFlow()
 
     fun onNameChanged(name: String) {
         _uiState.update { it.copy(name = name) }
@@ -54,7 +58,8 @@ class RegisterViewModel @Inject constructor(
             val nameValidationResult = validateName(uiState.value.name)
             val emailValidationResult = validateEmail(uiState.value.email)
             val passwordValidationResult = validatePassword(uiState.value.password)
-            val repeatedPasswordValidationResult = validateRepeatedPassword(uiState.value.password, uiState.value.repeatedPassword)
+            val repeatedPasswordValidationResult =
+                validateRepeatedPassword(uiState.value.password, uiState.value.repeatedPassword)
             val termsValidationResult = validateTerms(uiState.value.isTermsAccepted)
 
             val isAnyError = listOf(
@@ -83,10 +88,15 @@ class RegisterViewModel @Inject constructor(
 
             when (val registrationResult = authService.register(email, password)) {
                 is Resource.Error -> {
-
+                    registrationEventChannel.send(
+                        RegistrationEvent.RegistrationFailed(
+                            reason = registrationResult.message!!
+                        )
+                    )
                 }
-                is Resource.Success -> {
 
+                is Resource.Success -> {
+                    registrationEventChannel.send(RegistrationEvent.SuccessfullyRegistration)
                 }
             }
 
