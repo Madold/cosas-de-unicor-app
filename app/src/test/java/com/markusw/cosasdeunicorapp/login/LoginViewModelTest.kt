@@ -33,7 +33,12 @@ class LoginViewModelTest {
         MockKAnnotations.init(this)
         validatePassword = ValidatePassword()
         testDispatchers = TestDispatchers()
-        viewModel = LoginViewModel(authService, validateEmail, validatePassword, testDispatchers)
+        viewModel = LoginViewModel(
+            authService,
+            validateEmail,
+            validatePassword,
+            testDispatchers
+        )
     }
 
     @Test
@@ -44,6 +49,13 @@ class LoginViewModelTest {
     }
 
     @Test
+    fun `Must change the email and show it to the exposed state`() {
+        val expectedEmail = "someEmail@gmail.com"
+        viewModel.onEmailChanged(expectedEmail)
+        assert(viewModel.uiState.value.email == expectedEmail)
+    }
+
+    @Test
     fun `Must change the password and show it to the exposed state`() {
         val expectedPassword = "examplePassword"
         viewModel.onPasswordChanged(expectedPassword)
@@ -51,7 +63,64 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun `When auth service return Resource Error then the ViewModel emits an authentication error`() = runTest {
+    fun `when user login with an invalid email then show an error in the exposed state`() {
+        val invalidEmail = "myEmail"
+        val expectedError = "Email is invalid"
+        coEvery { validateEmail(invalidEmail) } returns ValidationResult(successful = false, expectedError)
+        viewModel.onEmailChanged(invalidEmail)
+        viewModel.onLogin()
+        assert(viewModel.uiState.value.emailError == expectedError)
+    }
+
+    @Test
+    fun `When user login with a blank password then shows a password blank error in the exposed state`() {
+        val invalidPassword = ""
+        val expectedError = "La contraseña no puede ser vacía"
+        viewModel.onPasswordChanged(invalidPassword)
+        viewModel.onLogin()
+        assert(viewModel.uiState.value.passwordError == expectedError)
+    }
+
+    @Test
+    fun `when user login with an invalid password then shows a password invalid error in the exposed state`() {
+        val invalidPassword = "invalidPassword"
+        val expectedError = "La contraseña debe empezar por mayuscula, tener almenos un número y un caracter especial"
+        viewModel.onPasswordChanged(invalidPassword)
+        viewModel.onLogin()
+        assert(viewModel.uiState.value.passwordError == expectedError)
+    }
+
+    @Test
+    fun `when user login with a password length minus than 6 then shows an error in the exposed state`() {
+        val shortPassword = "abc"
+        val expectedError = "La contraseña debe tener al menos 6 caracteres de longitud"
+        viewModel.onPasswordChanged(shortPassword)
+        viewModel.onLogin()
+        assert(viewModel.uiState.value.passwordError == expectedError)
+    }
+
+    @Test
+    fun `when user login with invalid credentials and then login with valid credentials email and password errors should be null`() {
+        val invalidEmail = "invalidEmail"
+        val invalidPassword = "invalidPassword"
+        coEvery { validateEmail(invalidEmail) } returns ValidationResult(successful = false, errorMessage = "invalid email")
+        val validEmail = "validEmail@gmai.com"
+        val validPassword = "Password1!"
+        viewModel.onEmailChanged(invalidEmail)
+        viewModel.onPasswordChanged(invalidPassword)
+        viewModel.onLogin()
+
+        assert(viewModel.uiState.value.emailError == "invalid email" && viewModel.uiState.value.passwordError == "La contraseña debe empezar por mayuscula, tener almenos un número y un caracter especial")
+        coEvery { validateEmail(validEmail) } returns ValidationResult(successful = true)
+
+        viewModel.onEmailChanged(validEmail)
+        viewModel.onPasswordChanged(validPassword)
+        viewModel.onLogin()
+        assert(viewModel.uiState.value.emailError == null && viewModel.uiState.value.passwordError == null)
+    }
+
+    @Test
+    fun `When auth service return Resource Error then the ViewModel emits an authentication error event`() = runTest {
         val expectedEmail = "exampleEmail@gmail.com"
         val expectedPassword = "Password1!"
         val expectedError = Resource.Error<Unit>("Example error")
@@ -63,6 +132,21 @@ class LoginViewModelTest {
         viewModel.onLogin()
 
         assert(viewModel.authenticationEvents.first() == AuthenticationEvent.AuthFailed(reason = expectedError.message!!))
+    }
+
+    @Test
+    fun `When auth service return Resource Success then the ViewModel emits an authentication success event`() = runTest {
+        val expectedEmail = "exampleEmail@gmail.com"
+        val expectedPassword = "Password1!"
+        val expectedEvent = Resource.Success(Unit)
+        coEvery { authService.authenticate(expectedEmail, expectedPassword) } returns expectedEvent
+        coEvery { validateEmail(expectedEmail) } returns ValidationResult(successful = true)
+
+        viewModel.onEmailChanged(expectedEmail)
+        viewModel.onPasswordChanged(expectedPassword)
+        viewModel.onLogin()
+
+        assert(viewModel.authenticationEvents.first() == AuthenticationEvent.AuthSuccessful)
     }
 
 }
