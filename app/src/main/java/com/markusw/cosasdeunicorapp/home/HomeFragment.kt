@@ -30,7 +30,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupEvents() {
-        binding.closeSessionButton.setOnClickListener { viewModel.closeSession() }
+        binding.closeSessionButton.setOnClickListener { viewModel.onCloseSession() }
     }
 
     override fun onDestroy() {

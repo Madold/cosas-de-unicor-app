@@ -31,4 +31,13 @@ class FirebaseAuthService constructor(
         }
     }
 
+    override suspend fun logout(): Resource<Unit> {
+        return try {
+            auth.signOut()
+            Resource.Success(Unit)
+        } catch (e: Exception) {
+            Resource.Error("${e.javaClass}: ${e.message}")
+        }
+    }
+
 }
