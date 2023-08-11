@@ -79,12 +79,19 @@ class LoginFragment : Fragment() {
         binding.loginButton.setOnClickListener { viewModel.onLogin() }
         binding.googleButton.setOnClickListener {
             lifecycleScope.launch {
+                //TODO: Implement a better error handling
                 val signInIntentSender = googleAuthClient.signIn()
-                Timber.d("${signInIntentSender.toString()}")
-                googleSignInLauncher.launch(
-                    IntentSenderRequest.Builder(
-                        signInIntentSender ?: return@launch
-                    ).build()
+                if (signInIntentSender != null) {
+                    googleSignInLauncher.launch(
+                        IntentSenderRequest.Builder(
+                            signInIntentSender
+                        ).build()
+                    )
+                    return@launch
+                }
+                showDialog(
+                    message = "Haz intentado iniciar sesión muchas veces con este método. Temporalmente ha sido inhabilitado, vuelve a intentarlo más tarde.",
+                    positiveButtonText = "Aceptar"
                 )
             }
         }
@@ -93,7 +100,7 @@ class LoginFragment : Fragment() {
     private fun setupObservers() {
 
         lifecycleScope.launch {
-            viewModel.uiState.collectLatest { state ->
+            viewModel.uiState.collect { state ->
                 binding.emailField.error = state.emailError
                 binding.passwordFieldLayout.helperText = state.passwordError
                 binding.loadingLayout.visibility = if (state.isLoading) View.VISIBLE else View.GONE
@@ -101,9 +108,9 @@ class LoginFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            viewModel.authenticationEvents.collectLatest { authEvent ->
+            viewModel.authenticationEvents.collect { authEvent ->
                 when (authEvent) {
-                    is  AuthenticationEvent.AuthFailed -> {
+                    is AuthenticationEvent.AuthFailed -> {
                         showDialog(
                             title = "Error",
                             message = authEvent.reason,
