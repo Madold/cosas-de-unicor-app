@@ -23,6 +23,7 @@ class FirebaseAuthService constructor(
     override suspend fun register(email: String, password: String): Resource<Unit> {
         return try {
             auth.createUserWithEmailAndPassword(email, password).await()
+            auth.signOut()
             Resource.Success(Unit)
         } catch (e: FirebaseAuthUserCollisionException) {
             Resource.Error("Ya hay un usuario registrado con ese correo.")

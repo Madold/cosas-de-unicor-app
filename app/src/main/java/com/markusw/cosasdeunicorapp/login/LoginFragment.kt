@@ -85,7 +85,7 @@ class LoginFragment : Fragment() {
 
                     is AuthenticationEvent.AuthSuccessful -> {
                         toast("Auth successful")
-                        //TODO: Navigate to HomeFragment
+                        navController.navigate(R.id.action_loginFragment_to_homeFragment)
                     }
                 }
             }
