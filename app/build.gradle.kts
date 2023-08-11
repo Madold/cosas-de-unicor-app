@@ -102,6 +102,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics-ktx")
     //Auth
     implementation("com.google.firebase:firebase-auth-ktx")
+    //Storage
+    implementation("com.google.firebase:firebase-storage-ktx")
 
     //Timber
     implementation("com.jakewharton.timber:timber:$timberVersion")
