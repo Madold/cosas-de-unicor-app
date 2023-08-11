@@ -71,6 +71,7 @@ dependencies {
     val timberVersion = "5.0.1"
     val mockkVersion = "1.13.5"
     val coroutinesTestVersion = "1.6.4"
+    val loggerVersion = "2.2.0"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.10.1")
@@ -108,13 +109,16 @@ dependencies {
     //Timber
     implementation("com.jakewharton.timber:timber:$timberVersion")
 
-    //kotlin coroutines test
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion")
+    //Logger
+    implementation("com.orhanobut:logger:$loggerVersion")
 
 
     //Test dependencies
     testImplementation("junit:junit:4.13.2")
+    //MockK
     testImplementation("io.mockk:mockk:$mockkVersion")
+    //Kotlin coroutines test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion")
 
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
