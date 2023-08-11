@@ -1,5 +1,6 @@
 package com.markusw.cosasdeunicorapp.domain.services
 
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -35,6 +36,15 @@ class FirebaseAuthService constructor(
     override suspend fun logout(): Resource<Unit> {
         return try {
             auth.signOut()
+            Resource.Success(Unit)
+        } catch (e: Exception) {
+            Resource.Error("${e.javaClass}: ${e.message}")
+        }
+    }
+
+    override suspend fun authenticateWithCredential(credential: AuthCredential): Resource<Unit> {
+        return try {
+            auth.signInWithCredential(credential).await()
             Resource.Success(Unit)
         } catch (e: Exception) {
             Resource.Error("${e.javaClass}: ${e.message}")

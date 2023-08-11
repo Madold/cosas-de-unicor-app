@@ -2,6 +2,7 @@ package com.markusw.cosasdeunicorapp.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.AuthCredential
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
 import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.domain.services.AuthService
@@ -72,6 +73,19 @@ class LoginViewModel @Inject constructor(
                 }
             }
             _uiState.update { it.copy(isLoading = false) }
+        }
+    }
+
+    fun onGoogleSignInResult(googleCredential: AuthCredential) {
+        viewModelScope.launch(dispatchers.io) {
+            when (val authResult = authService.authenticateWithCredential(googleCredential)) {
+                is Resource.Error -> {
+                    authenticationEventChannel.send(AuthenticationEvent.AuthFailed(reason = authResult.message!!))
+                }
+                is Resource.Success -> {
+                    authenticationEventChannel.send(AuthenticationEvent.AuthSuccessful)
+                }
+            }
         }
     }
 

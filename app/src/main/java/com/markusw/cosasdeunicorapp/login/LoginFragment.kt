@@ -1,14 +1,20 @@
 package com.markusw.cosasdeunicorapp.login
 
+import android.app.Activity
+import android.content.IntentSender
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.markusw.cosasdeunicorapp.R
@@ -18,6 +24,8 @@ import com.markusw.cosasdeunicorapp.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -26,6 +34,20 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by viewModels<LoginViewModel>()
     private val navController by lazy { findNavController() }
+    private val googleAuthClient by lazy {
+        GoogleAuthUIClient(
+            context = requireContext(),
+            oneTapClient = Identity.getSignInClient(requireContext())
+        )
+    }
+    private val googleSignInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val googleCredentials = googleAuthClient.getGoogleCredentialsFromIntent(result.data)
+            viewModel.onGoogleSignInResult(googleCredentials)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +80,17 @@ class LoginFragment : Fragment() {
         binding.emailField.addTextChangedListener { viewModel.onEmailChanged(it.toString()) }
         binding.passwordField.addTextChangedListener { viewModel.onPasswordChanged(it.toString()) }
         binding.loginButton.setOnClickListener { viewModel.onLogin() }
+        binding.googleButton.setOnClickListener {
+            lifecycleScope.launch {
+                val signInIntentSender = googleAuthClient.signIn()
+                Timber.d("${signInIntentSender.toString()}")
+                googleSignInLauncher.launch(
+                    IntentSenderRequest.Builder(
+                        signInIntentSender ?: return@launch
+                    ).build()
+                )
+            }
+        }
     }
 
     private fun setupObservers() {
