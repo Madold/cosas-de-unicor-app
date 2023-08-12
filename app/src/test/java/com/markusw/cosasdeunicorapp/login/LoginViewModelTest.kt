@@ -167,7 +167,7 @@ class LoginViewModelTest {
         coEvery { authService.authenticateWithCredential(fakeGoogleCredential) } returns expectedResult
         viewModel.onGoogleSignInResult(fakeGoogleCredential)
 
-        assert(viewModel.authenticationEvents.first() == AuthenticationEvent.AuthFailed(reason = "Invalid credentials"))
+        assert(viewModel.authenticationEvents.first() == AuthenticationEvent.AuthSuccessful)
     }
 
 }
