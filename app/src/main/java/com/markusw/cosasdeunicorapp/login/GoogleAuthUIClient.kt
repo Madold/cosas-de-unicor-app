@@ -11,6 +11,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.utils.Resource
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import java.util.concurrent.CancellationException
@@ -19,19 +20,21 @@ class GoogleAuthUIClient(
     private val context: Context,
     private val oneTapClient: SignInClient
 ) {
-    suspend fun signIn(): IntentSender? {
-        val result = try {
-            oneTapClient.beginSignIn(
+    suspend fun signIn(): Resource<IntentSender?> {
+        return try {
+            val result =  oneTapClient.beginSignIn(
                 buildSignInRequest()
             ).await()
 
+            Resource.Success(
+                data = result?.pendingIntent?.intentSender
+            )
         } catch (e: Exception) {
             Timber.e(e)
             if (e is CancellationException) throw e
-            null
+            Resource.Error("${e.javaClass}: ${e.message}")
         }
 
-        return result?.pendingIntent?.intentSender
     }
 
     fun getGoogleCredentialsFromIntent(intent: Intent?): AuthCredential {

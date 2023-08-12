@@ -18,6 +18,7 @@ import com.google.firebase.ktx.Firebase
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.showDialog
 import com.markusw.cosasdeunicorapp.core.ext.toast
+import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -69,30 +70,33 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupEvents() {
-
         binding.registerText.setOnClickListener {
             navController.navigate(R.id.action_loginFragment_to_registerFragment)
         }
-
         binding.emailField.addTextChangedListener { viewModel.onEmailChanged(it.toString()) }
         binding.passwordField.addTextChangedListener { viewModel.onPasswordChanged(it.toString()) }
         binding.loginButton.setOnClickListener { viewModel.onLogin() }
+
         binding.googleButton.setOnClickListener {
             lifecycleScope.launch {
-                //TODO: Implement a better error handling
-                val signInIntentSender = googleAuthClient.signIn()
-                if (signInIntentSender != null) {
-                    googleSignInLauncher.launch(
-                        IntentSenderRequest.Builder(
-                            signInIntentSender
-                        ).build()
-                    )
-                    return@launch
+                when (val signInResult  = googleAuthClient.signIn()) {
+                    is Resource.Error -> {
+                        showDialog(
+                            message = signInResult.message!!,
+                            positiveButtonText = "Aceptar"
+                        )
+                    }
+
+                    is Resource.Success -> {
+                        signInResult.data?.let { intentSender ->
+                            googleSignInLauncher.launch(
+                                IntentSenderRequest.Builder(
+                                    intentSender
+                                ).build()
+                            )
+                        }
+                    }
                 }
-                showDialog(
-                    message = "Haz intentado iniciar sesión muchas veces con este método. Temporalmente ha sido inhabilitado, vuelve a intentarlo más tarde.",
-                    positiveButtonText = "Aceptar"
-                )
             }
         }
     }
