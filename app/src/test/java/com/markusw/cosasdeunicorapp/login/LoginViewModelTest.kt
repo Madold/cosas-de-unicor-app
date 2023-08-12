@@ -12,6 +12,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -48,21 +49,21 @@ class LoginViewModelTest {
     fun `Must show the initial state correctly`() {
         val expectedState = LoginState()
 
-        assert(viewModel.uiState.value == expectedState)
+        assertEquals(viewModel.uiState.value, expectedState)
     }
 
     @Test
     fun `Must change the email and show it to the exposed state`() {
         val expectedEmail = "someEmail@gmail.com"
         viewModel.onEmailChanged(expectedEmail)
-        assert(viewModel.uiState.value.email == expectedEmail)
+        assertEquals(viewModel.uiState.value.email, expectedEmail)
     }
 
     @Test
     fun `Must change the password and show it to the exposed state`() {
         val expectedPassword = "examplePassword"
         viewModel.onPasswordChanged(expectedPassword)
-        assert(viewModel.uiState.value.password == expectedPassword)
+        assertEquals(viewModel.uiState.value.password, expectedPassword)
     }
 
     @Test
@@ -72,7 +73,7 @@ class LoginViewModelTest {
         coEvery { validateEmail(invalidEmail) } returns ValidationResult(successful = false, expectedError)
         viewModel.onEmailChanged(invalidEmail)
         viewModel.onLogin()
-        assert(viewModel.uiState.value.emailError == expectedError)
+        assertEquals(viewModel.uiState.value.emailError,  expectedError)
     }
 
     @Test
@@ -81,7 +82,7 @@ class LoginViewModelTest {
         val expectedError = "La contraseña no puede ser vacía"
         viewModel.onPasswordChanged(invalidPassword)
         viewModel.onLogin()
-        assert(viewModel.uiState.value.passwordError == expectedError)
+        assertEquals(viewModel.uiState.value.passwordError, expectedError)
     }
 
     @Test
@@ -90,7 +91,7 @@ class LoginViewModelTest {
         val expectedError = "La contraseña debe empezar por mayuscula, tener almenos un número y un caracter especial"
         viewModel.onPasswordChanged(invalidPassword)
         viewModel.onLogin()
-        assert(viewModel.uiState.value.passwordError == expectedError)
+        assertEquals(viewModel.uiState.value.passwordError, expectedError)
     }
 
     @Test
@@ -99,7 +100,7 @@ class LoginViewModelTest {
         val expectedError = "La contraseña debe tener al menos 6 caracteres de longitud"
         viewModel.onPasswordChanged(shortPassword)
         viewModel.onLogin()
-        assert(viewModel.uiState.value.passwordError == expectedError)
+        assertEquals(viewModel.uiState.value.passwordError, expectedError)
     }
 
     @Test
@@ -134,7 +135,7 @@ class LoginViewModelTest {
         viewModel.onPasswordChanged(expectedPassword)
         viewModel.onLogin()
 
-        assert(viewModel.authenticationEvents.first() == AuthenticationEvent.AuthFailed(reason = expectedError.message!!))
+        assertEquals(viewModel.authenticationEvents.first(), AuthenticationEvent.AuthFailed(reason = expectedError.message!!))
     }
 
     @Test
@@ -149,7 +150,7 @@ class LoginViewModelTest {
         viewModel.onPasswordChanged(expectedPassword)
         viewModel.onLogin()
 
-        assert(viewModel.authenticationEvents.first() == AuthenticationEvent.AuthSuccessful)
+        assertEquals(viewModel.authenticationEvents.first(), AuthenticationEvent.AuthSuccessful)
     }
 
     @Test
@@ -158,7 +159,7 @@ class LoginViewModelTest {
         coEvery { authService.authenticateWithCredential(fakeGoogleCredential) } returns expectedError
         viewModel.onGoogleSignInResult(fakeGoogleCredential)
 
-        assert(viewModel.authenticationEvents.first() == AuthenticationEvent.AuthFailed(reason = "Invalid credentials"))
+        assertEquals(viewModel.authenticationEvents.first(), AuthenticationEvent.AuthFailed(reason = "Invalid credentials"))
     }
 
     @Test
@@ -167,7 +168,7 @@ class LoginViewModelTest {
         coEvery { authService.authenticateWithCredential(fakeGoogleCredential) } returns expectedResult
         viewModel.onGoogleSignInResult(fakeGoogleCredential)
 
-        assert(viewModel.authenticationEvents.first() == AuthenticationEvent.AuthSuccessful)
+        assertEquals(viewModel.authenticationEvents.first(), AuthenticationEvent.AuthSuccessful)
     }
 
 }
