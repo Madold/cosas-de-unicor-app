@@ -1,6 +1,7 @@
 
 package com.markusw.cosasdeunicorapp.login
 
+import com.google.firebase.auth.AuthCredential
 import com.markusw.cosasdeunicorapp.TestDispatchers
 import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.domain.services.AuthService
@@ -10,6 +11,7 @@ import com.markusw.cosasdeunicorapp.domain.use_cases.ValidationResult
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -27,6 +29,7 @@ class LoginViewModelTest {
     private lateinit var validateEmail: ValidateEmail
     private lateinit var validatePassword: ValidatePassword
     private lateinit var testDispatchers: TestDispatchers
+    private val fakeGoogleCredential = mockk<AuthCredential>()
 
     @Before
     fun setUp() {
@@ -147,6 +150,24 @@ class LoginViewModelTest {
         viewModel.onLogin()
 
         assert(viewModel.authenticationEvents.first() == AuthenticationEvent.AuthSuccessful)
+    }
+
+    @Test
+    fun `When user sign in with google and google auth service returns error then ViewModel emits an authentication error event`() = runTest {
+        val expectedError = Resource.Error<Unit>("Invalid credentials")
+        coEvery { authService.authenticateWithCredential(fakeGoogleCredential) } returns expectedError
+        viewModel.onGoogleSignInResult(fakeGoogleCredential)
+
+        assert(viewModel.authenticationEvents.first() == AuthenticationEvent.AuthFailed(reason = "Invalid credentials"))
+    }
+
+    @Test
+    fun `When user sign in with google and google auth service returns success then ViewModel emits an authentication success event`() = runTest {
+        val expectedResult = Resource.Success(Unit)
+        coEvery { authService.authenticateWithCredential(fakeGoogleCredential) } returns expectedResult
+        viewModel.onGoogleSignInResult(fakeGoogleCredential)
+
+        assert(viewModel.authenticationEvents.first() == AuthenticationEvent.AuthFailed(reason = "Invalid credentials"))
     }
 
 }
