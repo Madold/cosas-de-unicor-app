@@ -6,10 +6,10 @@ import android.content.IntentSender
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
 import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.UnsupportedApiCallException
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.utils.Resource
 import kotlinx.coroutines.tasks.await
@@ -29,6 +29,11 @@ class GoogleAuthUIClient(
             Resource.Success(
                 data = result?.pendingIntent?.intentSender
             )
+        } catch (e: ApiException) {
+            Timber.e(e)
+          Resource.Error("Al parecer has intentado iniciar sesión muchas veces con google y has cancelado, este metodo de inicio de sesión ha sido bloqueado temporalmente, intenta de nuevo en 24 horas.")
+        } catch (e: UnsupportedApiCallException) {
+            Resource.Error("Al parecer no tienes google play services instalado o actualizado. No puedes iniciar sesión con google si falta este servicio.")
         } catch (e: Exception) {
             Timber.e(e)
             if (e is CancellationException) throw e
