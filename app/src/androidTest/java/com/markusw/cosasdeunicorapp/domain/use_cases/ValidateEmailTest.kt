@@ -1,5 +1,6 @@
 package com.markusw.cosasdeunicorapp.domain.use_cases
 
+import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -21,7 +22,26 @@ class ValidateEmailTest {
         )
         val blankEmail = "       "
         val result = validateEmail(blankEmail)
-        assert(result == expectedError)
+        assertEquals(result, expectedError)
+    }
+
+    @Test
+    fun when_Email_is_not_a_valid_email_then_returns_a_invalid_email_error() {
+        val expectedError = ValidationResult(
+            successful = false,
+            errorMessage = "El correo no es un correo válido"
+        )
+        val invalidEmail = "invalidEmail@"
+        val result = validateEmail(invalidEmail)
+        assertEquals(result, expectedError)
+    }
+
+    @Test
+    fun when_Email_is_a_valid_email_then_returns_a_validation_result_that_is_success() {
+        val expectedResult = ValidationResult(successful = true)
+        val validEmail = "validEmail@somecompany.com"
+        val result = validateEmail(validEmail)
+        assertEquals(result, expectedResult)
     }
 
 }
