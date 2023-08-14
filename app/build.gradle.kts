@@ -73,7 +73,7 @@ dependencies {
     val coroutinesTestVersion = "1.6.4"
     val loggerVersion = "2.2.0"
     val gmsAuthServicesVersion = "20.6.0"
-    val splashScreenVersion = "1.0.0"
+    val splashScreenVersion = "1.0.1"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.10.1")
