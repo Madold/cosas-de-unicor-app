@@ -73,6 +73,7 @@ dependencies {
     val coroutinesTestVersion = "1.6.4"
     val loggerVersion = "2.2.0"
     val gmsAuthServicesVersion = "20.6.0"
+    val splashScreenVersion = "1.0.0"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.10.1")
@@ -117,6 +118,9 @@ dependencies {
 
     //Logger
     implementation("com.orhanobut:logger:$loggerVersion")
+
+    //Splash Screen API
+    implementation("androidx.core:core-splashscreen:$splashScreenVersion")
 
 
     //Test dependencies
