@@ -76,7 +76,9 @@ class LoginFragment : Fragment() {
         binding.emailField.addTextChangedListener { viewModel.onEmailChanged(it.toString()) }
         binding.passwordField.addTextChangedListener { viewModel.onPasswordChanged(it.toString()) }
         binding.loginButton.setOnClickListener { viewModel.onLogin() }
-
+        binding.forgotPasswordText.setOnClickListener {
+            navController.navigate(R.id.action_loginFragment_to_resetPasswordFragment)
+        }
         binding.googleButton.setOnClickListener {
             lifecycleScope.launch {
                 when (val signInResult  = googleAuthClient.signIn()) {
