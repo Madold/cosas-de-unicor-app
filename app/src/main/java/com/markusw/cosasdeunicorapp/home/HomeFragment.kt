@@ -45,6 +45,7 @@ class HomeFragment : Fragment() {
             setContent {
                 BottomNavigationBar(
                     onScreenClicked = { screen ->
+                        //TODO: Setup nested navigation graph
                         when (screen) {
                             is HomeBottomBarScreen.Chat -> {
 
@@ -69,7 +70,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupEvents() {
-        binding.closeSessionButton.setOnClickListener { viewModel.onCloseSession() }
+        //binding.closeSessionButton.setOnClickListener { viewModel.onCloseSession() }
     }
 
     private fun setupObservers() {
