@@ -103,6 +103,7 @@
                app:endIconMode="password_toggle"
                app:boxStrokeColor="@color/md_theme_light_primary"
                app:hintTextColor="@color/md_theme_light_primary"
+               app:helperTextTextColor="@color/md_theme_light_primary"
                >
 
                <com.google.android.material.textfield.TextInputEditText
