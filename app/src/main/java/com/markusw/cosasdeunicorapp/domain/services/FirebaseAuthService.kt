@@ -23,7 +23,7 @@ class FirebaseAuthService constructor(
 
             Resource.Success(Unit)
         } catch (e: FirebaseAuthInvalidUserException) {
-            Resource.Error("There is no user with that email")
+            Resource.Error("No existe un usuario con ese correo.")
         } catch (e: Exception) {
             Resource.Error(e.message.toString())
         }
