@@ -13,6 +13,14 @@ class FirebaseAuthService constructor(
     override suspend fun authenticate(email: String, password: String): Resource<Unit> {
         return try {
             auth.signInWithEmailAndPassword(email, password).await()
+
+            auth.currentUser?.let {
+                if (!it.isEmailVerified) {
+                    it.sendEmailVerification().await()
+                   return Resource.Error("La cuenta no está verificada. Se ha enviado un correo de verificación.")
+                }
+            }
+
             Resource.Success(Unit)
         } catch (e: FirebaseAuthInvalidUserException) {
             Resource.Error("There is no user with that email")
