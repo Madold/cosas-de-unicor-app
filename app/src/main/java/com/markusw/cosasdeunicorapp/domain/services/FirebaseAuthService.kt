@@ -59,4 +59,15 @@ class FirebaseAuthService constructor(
         }
     }
 
+    override suspend fun sendPasswordResetByEmail(email: String): Resource<Unit> {
+        return try {
+            auth.sendPasswordResetEmail(email).await()
+            Resource.Success(Unit)
+        } catch (e: FirebaseAuthInvalidUserException) {
+            Resource.Error("No existe un usuario registrado con ese correo.")
+        } catch (e: Exception) {
+            Resource.Error("${e.javaClass}: ${e.message}")
+        }
+    }
+
 }
