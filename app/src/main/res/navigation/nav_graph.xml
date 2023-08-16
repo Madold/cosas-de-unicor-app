@@ -60,4 +60,5 @@
         android:name="com.markusw.cosasdeunicorapp.resetpassword.ResetPasswordFragment"
         android:label="fragment_reset_password"
         tools:layout="@layout/fragment_reset_password" />
+
 </navigation>
