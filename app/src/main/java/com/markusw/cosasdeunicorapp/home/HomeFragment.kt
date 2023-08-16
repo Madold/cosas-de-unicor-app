@@ -55,7 +55,7 @@ class HomeFragment : Fragment() {
                                 navigateTo(R.id.homeChatFragment)
                             }
                             is HomeBottomBarScreen.Documents -> {
-
+                                navigateTo(R.id.homeDocsFragment)
                             }
                             is HomeBottomBarScreen.Home -> {
                                 navigateTo(R.id.homeMainFragment)
@@ -64,7 +64,7 @@ class HomeFragment : Fragment() {
 
                             }
                             is HomeBottomBarScreen.News -> {
-
+                                navigateTo(R.id.homeNewsFragment)
                             }
                         }
                     }
