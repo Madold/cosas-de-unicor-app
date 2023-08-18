@@ -8,32 +8,30 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markusw.cosasdeunicorapp.home.HomeBottomBarScreen
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.markusw.cosasdeunicorapp.home.HomeScreens
 import com.markusw.cosasdeunicorapp.ui.theme.home_bottom_bar_background
 
 @Composable
 fun BottomNavigationBar(
+    navController: NavHostController,
     modifier: Modifier = Modifier,
-    onScreenClicked: (HomeBottomBarScreen) -> Unit,
 ) {
 
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStackEntry?.destination
     val screens = listOf(
-        HomeBottomBarScreen.Chat,
-        HomeBottomBarScreen.News,
-        HomeBottomBarScreen.Home,
-        HomeBottomBarScreen.Documents,
-        HomeBottomBarScreen.More,
+        HomeScreens.Chat,
+        HomeScreens.News,
+        HomeScreens.Home,
+        HomeScreens.Documents,
+        HomeScreens.More,
     )
-
-    var selectedScreen: HomeBottomBarScreen by remember {
-        mutableStateOf(HomeBottomBarScreen.Home)
-    }
 
     Box(
         modifier = modifier
@@ -49,15 +47,19 @@ fun BottomNavigationBar(
         ) {
             screens.forEach { screen ->
                 BottomNavigationBarItem(
-                    screen = screen,
-                    selected = screen == selectedScreen,
+                    label = screen.label,
+                    icon = screen.icon,
+                    selected = currentDestination?.route == screen.route,
                     onClick = {
-                        selectedScreen = it
-                        onScreenClicked(it)
+                        navController.navigate(screen.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                        }
                     }
                 )
             }
         }
     }
-
 }

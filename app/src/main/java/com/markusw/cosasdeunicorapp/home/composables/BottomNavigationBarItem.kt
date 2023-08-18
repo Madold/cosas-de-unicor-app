@@ -13,14 +13,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import com.markusw.cosasdeunicorapp.home.HomeBottomBarScreen
+import androidx.compose.ui.unit.sp
 import com.markusw.cosasdeunicorapp.ui.theme.md_theme_light_primary
 
 @Composable
 fun BottomNavigationBarItem(
-    screen: HomeBottomBarScreen,
-    selected: Boolean,
-    onClick: (HomeBottomBarScreen) -> Unit,
+    label: String,
+    icon: Int,
+    selected: Boolean = false,
+    onClick: () -> Unit = {},
 ) {
 
     val emphasisColor by remember(key1 = selected) {
@@ -29,18 +30,18 @@ fun BottomNavigationBarItem(
         }
     }
 
-    IconButton(onClick = { onClick(screen) }) {
+    IconButton(onClick = onClick) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
-                painter = painterResource(id = screen.icon),
-                contentDescription = screen.title,
+                painter = painterResource(id = icon),
+                contentDescription = label,
                 tint = emphasisColor
             )
             AnimatedVisibility(visible = selected) {
-                Text(text = screen.title, color = emphasisColor)
+                Text(text = label, color = emphasisColor, fontSize = 14.sp)
             }
         }
     }

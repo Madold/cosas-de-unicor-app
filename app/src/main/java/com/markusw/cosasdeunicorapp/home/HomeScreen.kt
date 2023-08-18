@@ -1,0 +1,73 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
+package com.markusw.cosasdeunicorapp.home
+
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.markusw.cosasdeunicorapp.home.chat.ChatScreenContent
+import com.markusw.cosasdeunicorapp.home.composables.BottomNavigationBar
+import com.markusw.cosasdeunicorapp.home.docs.DocsScreenContent
+import com.markusw.cosasdeunicorapp.home.main.HomeScreenContent
+import com.markusw.cosasdeunicorapp.home.news.NewsScreenContent
+
+@Composable
+fun HomeScreen() {
+
+    val navController = rememberNavController()
+
+    Scaffold(
+        content = {
+            HomeHost(
+                navController = navController,
+                contentPadding = it
+            )
+        },
+        bottomBar = {
+            BottomNavigationBar(
+                navController = navController
+            )
+        }
+    )
+}
+
+@Composable
+private fun HomeHost(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues
+) {
+    NavHost(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(contentPadding),
+        navController = navController,
+        startDestination = HomeScreens.Home.route
+    ) {
+        composable(route = HomeScreens.Home.route) {
+            HomeScreenContent()
+        }
+        composable(route = HomeScreens.Chat.route) {
+            ChatScreenContent()
+        }
+        composable(route = HomeScreens.News.route) {
+            NewsScreenContent()
+        }
+        composable(route = HomeScreens.Documents.route) {
+            DocsScreenContent()
+        }
+        composable(route = HomeScreens.More.route) {
+            Text(text = "Coming soon...")
+        }
+    }
+}
+
