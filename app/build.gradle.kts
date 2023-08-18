@@ -74,6 +74,7 @@ dependencies {
     val loggerVersion = "2.2.0"
     val gmsAuthServicesVersion = "20.6.0"
     val splashScreenVersion = "1.0.1"
+    val navigationComposeVersion = "2.5.3"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.10.1")
@@ -121,6 +122,9 @@ dependencies {
 
     //Splash Screen API
     implementation("androidx.core:core-splashscreen:$splashScreenVersion")
+
+    //Navigation Compose
+    implementation("androidx.navigation:navigation-compose:$navigationComposeVersion")
 
 
     //Test dependencies
