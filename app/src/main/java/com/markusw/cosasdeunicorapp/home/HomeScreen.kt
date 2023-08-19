@@ -9,8 +9,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -51,7 +53,7 @@ private fun HomeHost(
     viewModel: HomeViewModel
 ) {
 
-    val uiState = viewModel.uiState
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     NavHost(
         modifier = modifier
@@ -64,7 +66,9 @@ private fun HomeHost(
             HomeScreenContent()
         }
         composable(route = HomeScreens.Chat.route) {
-            ChatScreenContent()
+            ChatScreenContent(
+                globalChatList = emptyList(),
+            )
         }
         composable(route = HomeScreens.News.route) {
             NewsScreenContent()

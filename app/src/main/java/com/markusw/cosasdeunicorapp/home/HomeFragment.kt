@@ -61,7 +61,6 @@ class HomeFragment : Fragment() {
                     is HomeEvents.LogoutSuccessful -> {
                         navController.navigate(R.id.action_homeFragment_to_loginFragment)
                     }
-                    else -> Unit
                 }
             }
         }

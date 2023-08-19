@@ -4,7 +4,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.data.model.Message
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.tasks.await
