@@ -108,6 +108,8 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     //Storage
     implementation("com.google.firebase:firebase-storage-ktx")
+    //FireStore
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
     //GMS Play Services Auth
     implementation("com.google.android.gms:play-services-auth:$gmsAuthServicesVersion")
