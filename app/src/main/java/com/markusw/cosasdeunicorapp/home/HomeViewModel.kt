@@ -70,7 +70,12 @@ class HomeViewModel @Inject constructor(
                     System.currentTimeMillis()
                 )
             )
+            resetMessageField()
         }
+    }
+
+    private fun resetMessageField() {
+        _uiState.update { it.copy(message = "") }
     }
 
     override fun onCleared() {
