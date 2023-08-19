@@ -2,7 +2,6 @@ package com.markusw.cosasdeunicorapp
 
 import android.app.Application
 import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.BuildConfig
 import com.google.firebase.ktx.Firebase
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger

@@ -67,7 +67,7 @@ private fun HomeHost(
         }
         composable(route = HomeScreens.Chat.route) {
             ChatScreenContent(
-                globalChatList = emptyList(),
+                globalChatList = uiState.globalChatList,
             )
         }
         composable(route = HomeScreens.News.route) {
