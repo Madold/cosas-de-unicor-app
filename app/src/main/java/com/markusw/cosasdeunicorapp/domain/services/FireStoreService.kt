@@ -7,7 +7,6 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.tasks.await
-import timber.log.Timber
 
 class FireStoreService constructor(
     private val fireStore: FirebaseFirestore

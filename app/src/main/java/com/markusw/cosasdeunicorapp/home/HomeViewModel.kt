@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
 import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.data.ChatRepository
+import com.markusw.cosasdeunicorapp.data.model.Message
 import com.markusw.cosasdeunicorapp.domain.services.AuthService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -53,6 +54,22 @@ class HomeViewModel @Inject constructor(
                     homeEventsChannel.send(HomeEvents.LogoutSuccessful)
                 }
             }
+        }
+    }
+
+    fun onMessageChange(message: String) {
+        _uiState.update { it.copy(message = message) }
+    }
+
+    fun onMessageSent() {
+        viewModelScope.launch(dispatchers.io) {
+            chatRepository.sendMessageToGlobalChat(
+                Message(
+                    uiState.value.message,
+                    "Markus",
+                    System.currentTimeMillis()
+                )
+            )
         }
     }
 

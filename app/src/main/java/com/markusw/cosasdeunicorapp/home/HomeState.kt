@@ -4,4 +4,5 @@ import com.markusw.cosasdeunicorapp.data.model.Message
 
 data class HomeState(
     val globalChatList: List<Message> = emptyList(),
+    val message: String = "",
 )
