@@ -10,6 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -24,12 +25,14 @@ import com.markusw.cosasdeunicorapp.home.news.NewsScreenContent
 fun HomeScreen() {
 
     val navController = rememberNavController()
+    val viewModel: HomeViewModel = hiltViewModel()
 
     Scaffold(
         content = {
             HomeHost(
                 navController = navController,
-                contentPadding = it
+                contentPadding = it,
+                viewModel = viewModel
             )
         },
         bottomBar = {
@@ -42,10 +45,14 @@ fun HomeScreen() {
 
 @Composable
 private fun HomeHost(
-    navController: NavHostController,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues
+    navController: NavHostController,
+    contentPadding: PaddingValues,
+    viewModel: HomeViewModel
 ) {
+
+    val uiState = viewModel.uiState
+
     NavHost(
         modifier = modifier
             .fillMaxSize()

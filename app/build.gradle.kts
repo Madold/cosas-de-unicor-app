@@ -75,6 +75,8 @@ dependencies {
     val gmsAuthServicesVersion = "20.6.0"
     val splashScreenVersion = "1.0.1"
     val navigationComposeVersion = "2.7.0"
+    val hiltNavigationComposeVersion = "1.0.0"
+    val lifecycleComposeVersion = "2.6.1"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.10.1")
@@ -125,6 +127,12 @@ dependencies {
 
     //Navigation Compose
     implementation("androidx.navigation:navigation-compose:$navigationComposeVersion")
+
+    //Lifecycle compose
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleComposeVersion")
+
+    //Hilt navigation Compose
+    implementation("androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion")
 
 
     //Test dependencies
