@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.markusw.cosasdeunicorapp.core.ext.isScrolledToTheEnd
 import com.markusw.cosasdeunicorapp.home.HomeState
 
 @Composable
@@ -21,7 +22,9 @@ fun ChatList(
     val globalChatList = state.globalChatList
 
     LaunchedEffect(key1 = globalChatList) {
-        scrollState.animateScrollToItem(globalChatList.size)
+        if (scrollState.isScrolledToTheEnd()) {
+            scrollState.animateScrollToItem(globalChatList.size)
+        }
     }
 
     LazyColumn(
