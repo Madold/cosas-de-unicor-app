@@ -49,7 +49,7 @@ fun ChatScreenContent(
         }
     ) {
         ChatList(
-            items = state.globalChatList,
+            state = state,
             modifier = Modifier.padding(it)
         )
     }

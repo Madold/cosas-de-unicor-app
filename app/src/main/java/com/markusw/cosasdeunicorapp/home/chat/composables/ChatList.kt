@@ -9,20 +9,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import com.markusw.cosasdeunicorapp.data.model.Message
+import com.markusw.cosasdeunicorapp.home.HomeState
 
 @Composable
 fun ChatList(
-    items: List<Message>,
+    state: HomeState,
     modifier: Modifier = Modifier
 ) {
 
     val scrollState = rememberLazyListState()
+    val globalChatList = state.globalChatList
 
-    LaunchedEffect(key1 =  items) {
-        scrollState.animateScrollToItem(items.lastIndex)
+    LaunchedEffect(key1 = globalChatList) {
+        scrollState.animateScrollToItem(globalChatList.lastIndex)
     }
 
     LazyColumn(
@@ -31,10 +30,10 @@ fun ChatList(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         state = scrollState
     ) {
-        items(items) { message ->
+        items(globalChatList) { message ->
             ChatItem(
                 message = message,
-                isFromCurrentUser = Firebase.auth.currentUser?.displayName == message.sender.displayName
+                isFromCurrentUser = state.currentUser.displayName == message.sender.displayName
             )
         }
     }

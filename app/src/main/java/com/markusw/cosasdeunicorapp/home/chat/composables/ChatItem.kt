@@ -10,9 +10,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.firebase.annotations.PreviewApi
+import com.markusw.cosasdeunicorapp.core.utils.TextUtils
 import com.markusw.cosasdeunicorapp.data.model.Message
+import com.markusw.cosasdeunicorapp.data.model.User
 
 @Composable
 fun ChatItem(
@@ -47,10 +52,30 @@ fun ChatItem(
                         NameLabel(name = message.sender.displayName)
                     }
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = message.timestamp.toString())
+                    Text(
+                        text = TextUtils.formatTimestamp(message.timestamp),
+                        color = Color.Gray
+                    )
                 }
             }
         }
     }
 
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ChatItemPreview() {
+    ChatItem(
+        message = Message(
+            "Hola",
+            User(
+                "Markus",
+                "mmmm",
+                "https://avatars.githubusercontent.com/u/18093076?v=4",
+                "assas"
+            ),
+            1627777777777L
+        ), isFromCurrentUser = true
+    )
 }

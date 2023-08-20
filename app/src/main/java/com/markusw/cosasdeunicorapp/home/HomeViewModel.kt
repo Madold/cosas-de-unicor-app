@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
 import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.core.utils.TimeUtils
 import com.markusw.cosasdeunicorapp.data.ChatRepository
 import com.markusw.cosasdeunicorapp.data.model.Message
 import com.markusw.cosasdeunicorapp.domain.services.AuthService
@@ -45,6 +46,8 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
+
+        _uiState.update { it.copy(currentUser = getLoggedUser()) }
     }
 
     fun onCloseSession() {
@@ -66,18 +69,18 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onMessageSent() {
-
-        val sender = getLoggedUser()
-
+        val message = uiState.value.message.trim()
+        val sender = uiState.value.currentUser
+        resetMessageField()
         viewModelScope.launch(dispatchers.io) {
             chatRepository.sendMessageToGlobalChat(
                 Message(
-                    uiState.value.message,
+                    message,
                     sender,
-                    System.currentTimeMillis()
+                    TimeUtils.getDeviceHourInTimestamp()
                 )
             )
-            resetMessageField()
+
         }
     }
 
