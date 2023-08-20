@@ -21,7 +21,7 @@ fun ChatList(
     val globalChatList = state.globalChatList
 
     LaunchedEffect(key1 = globalChatList) {
-        scrollState.animateScrollToItem(globalChatList.lastIndex)
+        scrollState.animateScrollToItem(globalChatList.size)
     }
 
     LazyColumn(

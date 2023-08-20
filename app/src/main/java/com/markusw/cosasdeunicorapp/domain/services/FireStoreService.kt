@@ -15,23 +15,26 @@ class FireStoreService constructor(
     companion object {
         const val GLOBAL_CHAT_COLLECTION = "global_chat"
         const val USERS_COLLECTION = "users"
+        const val TIMESTAMP = "timestamp"
     }
 
     override suspend fun getGlobalChatList() = callbackFlow<Resource<List<Message>>> {
         val snapshotListener =
-            fireStore.collection(GLOBAL_CHAT_COLLECTION).addSnapshotListener { value, error ->
-                value?.let {
-                    val messages = it
-                        .documents
-                        .asSequence()
-                        .map { document ->
-                            document.toObject(Message::class.java)!!
-                        }.toList()
-                    trySend(Resource.Success(messages))
-                } ?: run {
-                    trySend(Resource.Error(error?.message.toString()))
+            fireStore.collection(GLOBAL_CHAT_COLLECTION)
+                .orderBy(TIMESTAMP)
+                .addSnapshotListener { value, error ->
+                    value?.let {
+                        val messages = it
+                            .documents
+                            .asSequence()
+                            .map { document ->
+                                document.toObject(Message::class.java)!!
+                            }.toList()
+                        trySend(Resource.Success(messages))
+                    } ?: run {
+                        trySend(Resource.Error(error?.message.toString()))
+                    }
                 }
-            }
 
         awaitClose {
             snapshotListener.remove()
