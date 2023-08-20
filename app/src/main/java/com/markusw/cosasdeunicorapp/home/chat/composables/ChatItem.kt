@@ -3,7 +3,9 @@ package com.markusw.cosasdeunicorapp.home.chat.composables
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,12 +41,12 @@ fun ChatItem(
                     cornerRadius = 20.dp
                 )
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalArrangement = Arrangement.Start,
                 ) {
                     if (!isFromCurrentUser) {
                         NameLabel(name = message.sender.displayName)
                     }
-
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(text = message.timestamp.toString())
                 }
             }

@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.markusw.cosasdeunicorapp.data.model.Message
 
 @Composable
@@ -32,7 +34,7 @@ fun ChatList(
         items(items) { message ->
             ChatItem(
                 message = message,
-                isFromCurrentUser = true
+                isFromCurrentUser = Firebase.auth.currentUser?.displayName == message.sender.displayName
             )
         }
     }
