@@ -5,6 +5,7 @@ package com.markusw.cosasdeunicorapp.home.main
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalDrawerSheet
@@ -16,7 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun HomeScreenContent() {
+fun HomeScreenContent(
+    onLogout: () -> Unit
+) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
@@ -38,7 +41,9 @@ fun HomeScreenContent() {
                             .fillMaxSize()
                             .padding(padding)
                     ) {
-                        Text(text = "Content")
+                        Button(onClick = onLogout) {
+                            Text(text = "Logout")
+                        }
                     }
                 }
             )

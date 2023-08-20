@@ -63,7 +63,9 @@ private fun HomeHost(
         startDestination = HomeScreens.Home.route
     ) {
         composable(route = HomeScreens.Home.route) {
-            HomeScreenContent()
+            HomeScreenContent(
+                onLogout = viewModel::onCloseSession
+            )
         }
         composable(route = HomeScreens.Chat.route) {
             ChatScreenContent(

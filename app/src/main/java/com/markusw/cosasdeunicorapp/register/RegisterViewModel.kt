@@ -91,6 +91,7 @@ class RegisterViewModel @Inject constructor(
                 return@launch
             }
 
+            val name = uiState.value.name
             val email = uiState.value.email
             val password = uiState.value.password
 
@@ -100,7 +101,7 @@ class RegisterViewModel @Inject constructor(
                     isLoading = true,
                 )
             }
-            when (val registrationResult = authService.register(email, password)) {
+            when (val registrationResult = authService.register(name, email, password)) {
                 is Resource.Error -> {
                     registrationEventChannel.send(
                         RegistrationEvent.RegistrationFailed(

@@ -18,7 +18,7 @@ object DomainModule {
 
     @Provides
     @Singleton
-    fun provideAuthService(auth: FirebaseAuth): AuthService = FirebaseAuthService(auth)
+    fun provideAuthService(auth: FirebaseAuth, remoteDatabase: RemoteDatabase): AuthService = FirebaseAuthService(auth, remoteDatabase)
 
     @Provides
     @Singleton
