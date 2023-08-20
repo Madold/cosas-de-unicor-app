@@ -77,6 +77,7 @@ dependencies {
     val navigationComposeVersion = "2.7.0"
     val hiltNavigationComposeVersion = "1.0.0"
     val lifecycleComposeVersion = "2.6.1"
+    val coilComposeVersion = "2.4.0"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.10.1")
@@ -133,6 +134,9 @@ dependencies {
 
     //Hilt navigation Compose
     implementation("androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion")
+
+    //Coil compose
+    implementation("io.coil-kt:coil-compose:$coilComposeVersion")
 
 
     //Test dependencies
