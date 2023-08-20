@@ -3,13 +3,13 @@ package com.markusw.cosasdeunicorapp.data.model;
 public class Message {
 
     private String content;
-    private String sender;
+    private User sender;
     private long timestamp;
 
     public Message() {
     }
 
-    public Message(String content, String sender, long timestamp) {
+    public Message(String content, User sender, long timestamp) {
         this.content = content;
         this.sender = sender;
         this.timestamp = timestamp;
@@ -23,11 +23,11 @@ public class Message {
         this.content = content;
     }
 
-    public String getSender() {
+    public User getSender() {
         return sender;
     }
 
-    public void setSender(String sender) {
+    public void setSender(User sender) {
         this.sender = sender;
     }
 

@@ -7,6 +7,7 @@ import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.data.ChatRepository
 import com.markusw.cosasdeunicorapp.data.model.Message
 import com.markusw.cosasdeunicorapp.domain.services.AuthService
+import com.markusw.cosasdeunicorapp.domain.use_cases.GetLoggedUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +22,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val dispatchers: DispatcherProvider,
     private val authService: AuthService,
-    private val chatRepository: ChatRepository
+    private val chatRepository: ChatRepository,
+    private val getLoggedUser: GetLoggedUser
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(HomeState())
@@ -36,6 +38,7 @@ class HomeViewModel @Inject constructor(
                     is Resource.Error -> {
                         Timber.d("Error: ${response.message}")
                     }
+
                     is Resource.Success -> {
                         _uiState.update { it.copy(globalChatList = response.data!!) }
                     }
@@ -46,10 +49,11 @@ class HomeViewModel @Inject constructor(
 
     fun onCloseSession() {
         viewModelScope.launch(dispatchers.io) {
-            when (val authResult =  authService.logout()) {
+            when (val authResult = authService.logout()) {
                 is Resource.Error -> {
 
                 }
+
                 is Resource.Success -> {
                     homeEventsChannel.send(HomeEvents.LogoutSuccessful)
                 }
@@ -62,11 +66,14 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onMessageSent() {
+
+        val sender = getLoggedUser()
+
         viewModelScope.launch(dispatchers.io) {
             chatRepository.sendMessageToGlobalChat(
                 Message(
                     uiState.value.message,
-                    "Markus",
+                    sender,
                     System.currentTimeMillis()
                 )
             )
