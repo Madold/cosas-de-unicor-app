@@ -25,7 +25,7 @@ fun ChatList(
 
     LazyColumn(
         modifier = modifier
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         state = scrollState
     ) {
