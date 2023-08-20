@@ -32,7 +32,7 @@ fun ChatList(
         items(items) { message ->
             ChatItem(
                 message = message,
-                isFromCurrentUser = false
+                isFromCurrentUser = true
             )
         }
     }

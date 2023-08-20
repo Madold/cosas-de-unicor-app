@@ -24,18 +24,19 @@ fun ChatBubble(
         topEnd = cornerRadius,
         bottomStart = cornerRadius,
         bottomEnd = 0.dp
-    )
-    else RoundedCornerShape(
+    ) else RoundedCornerShape(
         topStart = cornerRadius,
         topEnd = cornerRadius,
         bottomStart = 0.dp,
         bottomEnd = cornerRadius
     )
 
+    val backgroundColor = if (isFromCurrentUser) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.tertiaryContainer
+
     Box(
         modifier = Modifier
             .clip(chatBubbleShape)
-            .background(MaterialTheme.colorScheme.tertiaryContainer)
+            .background(backgroundColor)
             .padding(all = 8.dp),
 
         ) {

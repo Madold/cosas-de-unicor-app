@@ -30,7 +30,9 @@ fun ChatItem(
             if (!isFromCurrentUser) {
                 Avatar(photoUrl = message.sender.photoUrl)
             }
-            Column {
+            Column(
+                horizontalAlignment = if (isFromCurrentUser) Alignment.End else Alignment.Start
+            ) {
                 ChatBubble(
                     content = message.content,
                     isFromCurrentUser = isFromCurrentUser,
@@ -39,7 +41,10 @@ fun ChatItem(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
-                    NameLabel(name = message.sender.displayName)
+                    if (!isFromCurrentUser) {
+                        NameLabel(name = message.sender.displayName)
+                    }
+
                     Text(text = message.timestamp.toString())
                 }
             }
