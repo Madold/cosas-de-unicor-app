@@ -70,6 +70,12 @@ class FirebaseAuthService constructor(
     override suspend fun authenticateWithCredential(credential: AuthCredential): Resource<Unit> {
         return try {
             auth.signInWithCredential(credential).await()
+            val registerResult = remoteDatabase.saveUserInDatabase(auth.currentUser!!.toUserModel())
+
+            if (registerResult is Resource.Error) {
+                return Resource.Error(registerResult.message!!)
+            }
+
             Resource.Success(Unit)
         } catch (e: Exception) {
             Resource.Error("${e.javaClass}: ${e.message}")
