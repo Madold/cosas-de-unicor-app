@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
@@ -20,17 +21,19 @@ fun ChatBubble(
     cornerRadius: Dp = 20.dp
 ) {
 
-    val chatBubbleShape = if (isFromCurrentUser) RoundedCornerShape(
-        topStart = cornerRadius,
-        topEnd = cornerRadius,
-        bottomStart = cornerRadius,
-        bottomEnd = 0.dp
-    ) else RoundedCornerShape(
-        topStart = cornerRadius,
-        topEnd = cornerRadius,
-        bottomStart = 0.dp,
-        bottomEnd = cornerRadius
-    )
+    val chatBubbleShape = remember(isFromCurrentUser) {
+        if (isFromCurrentUser) RoundedCornerShape(
+            topStart = cornerRadius,
+            topEnd = cornerRadius,
+            bottomStart = cornerRadius,
+            bottomEnd = 0.dp
+        ) else RoundedCornerShape(
+            topStart = cornerRadius,
+            topEnd = cornerRadius,
+            bottomStart = 0.dp,
+            bottomEnd = cornerRadius
+        )
+    }
 
     val backgroundColor = if (isFromCurrentUser) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.tertiaryContainer
 
