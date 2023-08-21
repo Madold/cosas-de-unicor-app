@@ -31,7 +31,7 @@ class GoogleAuthUIClient(
             )
         } catch (e: ApiException) {
             Timber.e(e)
-          Resource.Error("Al parecer has intentado iniciar sesión muchas veces con google y has cancelado, este metodo de inicio de sesión ha sido bloqueado temporalmente, intenta de nuevo en 24 horas.")
+          Resource.Error("${e.javaClass} Al parecer has intentado iniciar sesión muchas veces con google y has cancelado, este metodo de inicio de sesión ha sido bloqueado temporalmente, intenta de nuevo en 24 horas.")
         } catch (e: UnsupportedApiCallException) {
             Resource.Error("Al parecer no tienes google play services instalado o actualizado. No puedes iniciar sesión con google si falta este servicio.")
         } catch (e: Exception) {
