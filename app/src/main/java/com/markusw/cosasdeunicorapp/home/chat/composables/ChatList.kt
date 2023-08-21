@@ -3,6 +3,7 @@ package com.markusw.cosasdeunicorapp.home.chat.composables
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -15,10 +16,10 @@ import com.markusw.cosasdeunicorapp.home.HomeState
 @Composable
 fun ChatList(
     state: HomeState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    scrollState: LazyListState = rememberLazyListState()
 ) {
 
-    val scrollState = rememberLazyListState()
     val globalChatList = state.globalChatList
 
     LaunchedEffect(key1 = Unit) {
