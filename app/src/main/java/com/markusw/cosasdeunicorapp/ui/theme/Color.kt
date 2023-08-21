@@ -68,3 +68,4 @@ val md_theme_dark_scrim = Color(0xFF000000)
 val seed = Color(0xFFC00002)
 
 val home_bottom_bar_background = Color(0xFF181717)
+val message_field_color = Color(0xFFF4F4F4)

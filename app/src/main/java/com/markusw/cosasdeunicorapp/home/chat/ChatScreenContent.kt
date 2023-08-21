@@ -12,12 +12,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.markusw.cosasdeunicorapp.home.HomeState
 import com.markusw.cosasdeunicorapp.home.chat.composables.ChatList
+import com.markusw.cosasdeunicorapp.home.chat.composables.MessageField
 
 @Composable
 fun ChatScreenContent(
@@ -33,17 +35,12 @@ fun ChatScreenContent(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                TextField(
+                MessageField(
+                    modifier = Modifier.fillMaxWidth(0.9f),
                     value = state.message,
                     onValueChange = onMessageChange,
-                    trailingIcon = {
-                        IconButton(onClick = onMessageSent) {
-                            Icon(
-                                imageVector = Icons.Default.Send,
-                                contentDescription = "Send message"
-                            )
-                        }
-                    }
+                    isSendIconEnabled = state.message.isNotEmpty(),
+                    onSendIconClick = onMessageSent
                 )
             }
         }
