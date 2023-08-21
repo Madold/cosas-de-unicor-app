@@ -21,6 +21,10 @@ fun ChatList(
     val scrollState = rememberLazyListState()
     val globalChatList = state.globalChatList
 
+    LaunchedEffect(key1 = Unit) {
+        scrollState.animateScrollToItem(globalChatList.size)
+    }
+
     LaunchedEffect(key1 = globalChatList) {
         if (scrollState.isScrolledToTheEnd()) {
             scrollState.animateScrollToItem(globalChatList.size)

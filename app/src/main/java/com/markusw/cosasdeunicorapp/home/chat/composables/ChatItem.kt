@@ -8,13 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.firebase.annotations.PreviewApi
 import com.markusw.cosasdeunicorapp.core.utils.TextUtils
 import com.markusw.cosasdeunicorapp.data.model.Message
 import com.markusw.cosasdeunicorapp.data.model.User
@@ -25,10 +24,14 @@ fun ChatItem(
     isFromCurrentUser: Boolean = false,
 ) {
 
+    val formattedTimestamp = remember(key1 = message.timestamp) { TextUtils.formatTimestamp(message.timestamp) }
+    val horizontalArrangement = remember(key1 = isFromCurrentUser) { if (isFromCurrentUser) Arrangement.End else Arrangement.Start }
+    val horizontalAlignment = remember(key1 = isFromCurrentUser) { if (isFromCurrentUser) Alignment.End else Alignment.Start }
+
     Row(
         modifier = Modifier
             .fillMaxWidth(),
-        horizontalArrangement = if (isFromCurrentUser) Arrangement.End else Arrangement.Start,
+        horizontalArrangement = horizontalArrangement,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
@@ -38,7 +41,7 @@ fun ChatItem(
                 Avatar(photoUrl = message.sender.photoUrl)
             }
             Column(
-                horizontalAlignment = if (isFromCurrentUser) Alignment.End else Alignment.Start
+                horizontalAlignment = horizontalAlignment
             ) {
                 ChatBubble(
                     content = message.content,
@@ -53,7 +56,7 @@ fun ChatItem(
                     }
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = TextUtils.formatTimestamp(message.timestamp),
+                        text = formattedTimestamp,
                         color = Color.Gray
                     )
                 }
