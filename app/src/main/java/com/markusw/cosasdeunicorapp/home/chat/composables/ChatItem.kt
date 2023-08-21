@@ -46,7 +46,7 @@ fun ChatItem(
                 ChatBubble(
                     content = message.content,
                     isFromCurrentUser = isFromCurrentUser,
-                    cornerRadius = 20.dp
+                    cornerRadius = 20.dp,
                 )
                 Row(
                     horizontalArrangement = Arrangement.Start,

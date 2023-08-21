@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ChatBubble(
     content: String,
+    modifier: Modifier = Modifier,
     isFromCurrentUser: Boolean = false,
     cornerRadius: Dp = 20.dp
 ) {
@@ -34,7 +35,7 @@ fun ChatBubble(
     val backgroundColor = if (isFromCurrentUser) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.tertiaryContainer
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(chatBubbleShape)
             .background(backgroundColor)
             .padding(all = 8.dp),
