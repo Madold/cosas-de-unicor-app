@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -25,7 +23,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.isScrolledToTheEnd
 import com.markusw.cosasdeunicorapp.home.HomeState
 import com.markusw.cosasdeunicorapp.home.chat.composables.ChatList
@@ -34,7 +34,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 fun ChatScreenContent(
@@ -90,7 +89,7 @@ fun ChatScreenContent(
                 },
                 content = {
                     Icon(
-                        imageVector = Icons.Default.KeyboardArrowDown,
+                        painter = painterResource(id = R.drawable.ic_arrow_down),
                         contentDescription = "Scroll to bottom"
                     )
                 },
