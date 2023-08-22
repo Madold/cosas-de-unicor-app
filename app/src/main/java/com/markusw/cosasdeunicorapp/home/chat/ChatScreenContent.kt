@@ -55,7 +55,6 @@ fun ChatScreenContent(
         snapshotFlow {
             scrollState.firstVisibleItemIndex
         }.debounce(500).collectLatest {
-            Timber.d("Scrolled to $it. End reached: ${scrollState.isScrolledToTheEnd()}")
             isScrollToEndFABVisible = !scrollState.isScrolledToTheEnd()
         }
     }

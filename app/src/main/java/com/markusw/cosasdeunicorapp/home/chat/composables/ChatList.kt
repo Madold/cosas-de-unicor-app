@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markusw.cosasdeunicorapp.core.ext.isScrolledToTheEnd
+import com.markusw.cosasdeunicorapp.core.ext.isSecondLastItemVisible
 import com.markusw.cosasdeunicorapp.home.HomeState
 
 @Composable
@@ -27,7 +28,7 @@ fun ChatList(
     }
 
     LaunchedEffect(key1 = globalChatList) {
-        if (scrollState.isScrolledToTheEnd()) {
+        if (scrollState.isSecondLastItemVisible()) {
             scrollState.animateScrollToItem(globalChatList.size)
         }
     }
