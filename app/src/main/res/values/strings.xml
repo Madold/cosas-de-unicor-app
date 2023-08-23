@@ -1,7 +1,16 @@
 <resources>
-    <string name="app_name">Cosas de Unicor</string>
-    <string name="sign_in">Inicia sesión en \ntu cuenta</string>
+
+    <!-- Login layout -->
+    <string name="app_name" translatable="false">Cosas de Unicor</string>
+    <string name="sign_in">Login into your account</string>
     <string name="email">Email</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="password">Password</string>
+    <string name="logo_content_description">App logo</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="login">Login</string>
+    <string name="alternative_login">Or sign in with</string>
+    <string name="google" translatable="false">Google</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
+    <string name="register_here">Register here</string>
+
 </resources>

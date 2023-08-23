@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sign_in">Inicia sesión en tu cuenta</string>
+    <string name="email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="logo_content_description">Logo de la aplicación</string>
+    <string name="forgot_password">¿Olvidó su contraseña?</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="alternative_login">O inicia sesión con</string>
+    <string name="dont_have_account">¿No tienes una cuenta?</string>
+    <string name="register_here">Registrate aquí</string>
+</resources>
