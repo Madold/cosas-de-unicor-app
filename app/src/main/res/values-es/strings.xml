@@ -9,4 +9,6 @@
     <string name="alternative_login">O inicia sesión con</string>
     <string name="dont_have_account">¿No tienes una cuenta?</string>
     <string name="register_here">Registrate aquí</string>
+    <string name="blank_email_error">El correo no puede estar en blanco</string>
+    <string name="invalid_email_error">El correo no es un correo valido</string>
 </resources>
