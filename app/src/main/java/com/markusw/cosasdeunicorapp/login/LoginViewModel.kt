@@ -76,6 +76,14 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun onGoogleSignInStarted() {
+        _uiState.update { it.copy(isLoading = true) }
+    }
+
+    fun onGoogleSignInFinished() {
+        _uiState.update { it.copy(isLoading = false) }
+    }
+
     fun onGoogleSignInResult(googleCredential: AuthCredential) {
         viewModelScope.launch(dispatchers.io) {
             when (val authResult = authService.authenticateWithCredential(googleCredential)) {

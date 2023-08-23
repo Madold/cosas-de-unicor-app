@@ -81,12 +81,14 @@ class LoginFragment : Fragment() {
         }
         binding.googleButton.setOnClickListener {
             lifecycleScope.launch {
+                viewModel.onGoogleSignInStarted()
                 when (val signInResult  = googleAuthClient.signIn()) {
                     is Resource.Error -> {
                         showDialog(
                             message = signInResult.message!!,
                             positiveButtonText = "Aceptar"
                         )
+                        viewModel.onGoogleSignInFinished()
                     }
 
                     is Resource.Success -> {
