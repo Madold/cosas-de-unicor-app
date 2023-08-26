@@ -3,6 +3,8 @@ package com.markusw.cosasdeunicorapp.auth.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthCredential
+import com.markusw.cosasdeunicorapp.auth.domain.use_cases.LoginWithCredential
+import com.markusw.cosasdeunicorapp.auth.domain.use_cases.LoginWithEmailAndPassword
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
 import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.core.domain.AuthService
@@ -19,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authService: AuthService,
+    private val loginWithEmailAndPassword: LoginWithEmailAndPassword,
+    private val loginWithCredential: LoginWithCredential,
     private val validateEmail: ValidateEmail,
     private val validatePassword: ValidatePassword,
     private val dispatchers: DispatcherProvider
@@ -63,7 +66,7 @@ class LoginViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true) }
             val email = uiState.value.email
             val password = uiState.value.password
-            when (val authResult = authService.authenticate(email, password)) {
+            when (val authResult = loginWithEmailAndPassword(email, password)) {
                 is Resource.Error -> {
                     authenticationEventChannel.send(AuthenticationEvent.AuthFailed(reason = authResult.message!!))
                 }
@@ -86,7 +89,7 @@ class LoginViewModel @Inject constructor(
 
     fun onGoogleSignInResult(googleCredential: AuthCredential) {
         viewModelScope.launch(dispatchers.io) {
-            when (val authResult = authService.authenticateWithCredential(googleCredential)) {
+            when (val authResult = loginWithCredential(googleCredential)) {
                 is Resource.Error -> {
                     authenticationEventChannel.send(AuthenticationEvent.AuthFailed(reason = authResult.message!!))
                 }
