@@ -5,10 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
 import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.core.utils.TimeUtils
-import com.markusw.cosasdeunicorapp.home.domain.repository.ChatRepository
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
-import com.markusw.cosasdeunicorapp.core.domain.AuthService
+import com.markusw.cosasdeunicorapp.home.domain.use_cases.GetGlobalChatList
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.GetLoggedUser
+import com.markusw.cosasdeunicorapp.home.domain.use_cases.Logout
+import com.markusw.cosasdeunicorapp.home.domain.use_cases.SendMessageToGlobalChat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,9 +23,10 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val dispatchers: DispatcherProvider,
-    private val authService: AuthService,
-    private val chatRepository: ChatRepository,
-    private val getLoggedUser: GetLoggedUser
+    private val getGlobalChatList: GetGlobalChatList,
+    private val sendMessageToGlobalChat: SendMessageToGlobalChat,
+    private val getLoggedUser: GetLoggedUser,
+    private val logout: Logout
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(HomeState())
@@ -34,7 +36,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(dispatchers.io) {
-            chatRepository.getGlobalChatList().collect { response ->
+            getGlobalChatList().collect { response ->
                 when (response) {
                     is Resource.Error -> {
                         Timber.d("Error: ${response.message}")
@@ -52,7 +54,7 @@ class HomeViewModel @Inject constructor(
 
     fun onCloseSession() {
         viewModelScope.launch(dispatchers.io) {
-            when (val authResult = authService.logout()) {
+            when (val authResult = logout()) {
                 is Resource.Error -> {
 
                 }
@@ -73,7 +75,7 @@ class HomeViewModel @Inject constructor(
         val sender = uiState.value.currentUser
         resetMessageField()
         viewModelScope.launch(dispatchers.io) {
-            chatRepository.sendMessageToGlobalChat(
+            sendMessageToGlobalChat(
                 Message(
                     message,
                     sender,
