@@ -3,11 +3,14 @@ package com.markusw.cosasdeunicorapp.login
 
 import com.google.firebase.auth.AuthCredential
 import com.markusw.cosasdeunicorapp.TestDispatchers
+import com.markusw.cosasdeunicorapp.auth.presentation.login.AuthenticationEvent
+import com.markusw.cosasdeunicorapp.auth.presentation.login.LoginState
+import com.markusw.cosasdeunicorapp.auth.presentation.login.LoginViewModel
 import com.markusw.cosasdeunicorapp.core.utils.Resource
-import com.markusw.cosasdeunicorapp.domain.services.AuthService
-import com.markusw.cosasdeunicorapp.domain.use_cases.ValidateEmail
-import com.markusw.cosasdeunicorapp.domain.use_cases.ValidatePassword
-import com.markusw.cosasdeunicorapp.domain.use_cases.ValidationResult
+import com.markusw.cosasdeunicorapp.core.domain.AuthService
+import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidateEmail
+import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidatePassword
+import com.markusw.cosasdeunicorapp.core.utils.ValidationResult
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK

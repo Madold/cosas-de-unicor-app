@@ -2,10 +2,10 @@ package com.markusw.cosasdeunicorapp.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.markusw.cosasdeunicorapp.domain.services.AuthService
-import com.markusw.cosasdeunicorapp.domain.services.FireStoreService
-import com.markusw.cosasdeunicorapp.domain.services.FirebaseAuthService
-import com.markusw.cosasdeunicorapp.domain.services.RemoteDatabase
+import com.markusw.cosasdeunicorapp.core.domain.AuthService
+import com.markusw.cosasdeunicorapp.core.data.FireStoreService
+import com.markusw.cosasdeunicorapp.core.data.FirebaseAuthService
+import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

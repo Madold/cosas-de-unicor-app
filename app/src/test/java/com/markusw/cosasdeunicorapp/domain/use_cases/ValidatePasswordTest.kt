@@ -1,5 +1,6 @@
 package com.markusw.cosasdeunicorapp.domain.use_cases
 
+import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidatePassword
 import org.junit.Before
 import org.junit.Test
 

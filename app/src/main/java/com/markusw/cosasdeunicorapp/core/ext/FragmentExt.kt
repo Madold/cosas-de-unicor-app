@@ -3,7 +3,7 @@ package com.markusw.cosasdeunicorapp.core.ext
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.markusw.cosasdeunicorapp.core.utils.UiText
+import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.R
 
 fun Fragment.toast(message: UiText, duration: Int = Toast.LENGTH_SHORT) {

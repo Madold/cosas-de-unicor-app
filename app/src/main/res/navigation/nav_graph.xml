@@ -6,7 +6,7 @@
     app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.markusw.cosasdeunicorapp.login.LoginFragment"
+        android:name="com.markusw.cosasdeunicorapp.auth.presentation.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -35,7 +35,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.markusw.cosasdeunicorapp.register.RegisterFragment"
+        android:name="com.markusw.cosasdeunicorapp.auth.presentation.register.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
@@ -44,7 +44,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.markusw.cosasdeunicorapp.home.HomeFragment"
+        android:name="com.markusw.cosasdeunicorapp.home.presentation.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -57,7 +57,7 @@
     </fragment>
     <fragment
         android:id="@+id/resetPasswordFragment"
-        android:name="com.markusw.cosasdeunicorapp.resetpassword.ResetPasswordFragment"
+        android:name="com.markusw.cosasdeunicorapp.auth.presentation.resetpassword.ResetPasswordFragment"
         android:label="fragment_reset_password"
         tools:layout="@layout/fragment_reset_password" />
 

@@ -1,5 +1,7 @@
 package com.markusw.cosasdeunicorapp.domain.use_cases
 
+import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidateEmail
+import com.markusw.cosasdeunicorapp.core.utils.ValidationResult
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
