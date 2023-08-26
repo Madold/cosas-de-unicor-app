@@ -20,4 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.markusw.cosasdeunicorapp.data.model.* { *; }
+-keep class com.markusw.cosasdeunicorapp.home.domain.model.* { *; }
