@@ -2,13 +2,13 @@ package com.markusw.cosasdeunicorapp.auth.presentation.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.markusw.cosasdeunicorapp.core.utils.Resource
-import com.markusw.cosasdeunicorapp.core.domain.AuthService
-import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidateEmail
+import com.markusw.cosasdeunicorapp.auth.domain.use_cases.RegisterWithNameEmailAndPassword
 import com.markusw.cosasdeunicorapp.auth.domain.use_cases.ValidateName
-import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidatePassword
 import com.markusw.cosasdeunicorapp.auth.domain.use_cases.ValidateRepeatedPassword
 import com.markusw.cosasdeunicorapp.auth.domain.use_cases.ValidateTerms
+import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidateEmail
+import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidatePassword
+import com.markusw.cosasdeunicorapp.core.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -21,12 +21,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val authService: AuthService,
     private val validateName: ValidateName,
     private val validateEmail: ValidateEmail,
     private val validatePassword: ValidatePassword,
     private val validateRepeatedPassword: ValidateRepeatedPassword,
-    private val validateTerms: ValidateTerms
+    private val validateTerms: ValidateTerms,
+    private val registerWithNameEmailAndPassword: RegisterWithNameEmailAndPassword,
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow(RegisterState())
@@ -101,7 +101,7 @@ class RegisterViewModel @Inject constructor(
                     isLoading = true,
                 )
             }
-            when (val registrationResult = authService.register(name, email, password)) {
+            when (val registrationResult = registerWithNameEmailAndPassword(name, email, password)) {
                 is Resource.Error -> {
                     registrationEventChannel.send(
                         RegistrationEvent.RegistrationFailed(

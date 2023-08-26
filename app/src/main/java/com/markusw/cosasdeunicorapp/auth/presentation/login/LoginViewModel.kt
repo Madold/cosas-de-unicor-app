@@ -6,10 +6,9 @@ import com.google.firebase.auth.AuthCredential
 import com.markusw.cosasdeunicorapp.auth.domain.use_cases.LoginWithCredential
 import com.markusw.cosasdeunicorapp.auth.domain.use_cases.LoginWithEmailAndPassword
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
-import com.markusw.cosasdeunicorapp.core.utils.Resource
-import com.markusw.cosasdeunicorapp.core.domain.AuthService
 import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidateEmail
 import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidatePassword
+import com.markusw.cosasdeunicorapp.core.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
