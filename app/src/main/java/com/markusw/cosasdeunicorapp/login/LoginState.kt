@@ -1,9 +1,11 @@
 package com.markusw.cosasdeunicorapp.login
 
+import com.markusw.cosasdeunicorapp.core.utils.UiText
+
 data class LoginState(
     val email: String = "",
-    val emailError: String? = null,
+    val emailError: UiText? = null,
     val password: String = "",
-    val passwordError: String? = null,
+    val passwordError: UiText? = null,
     val isLoading: Boolean = false
 )

@@ -1,7 +1,9 @@
 package com.markusw.cosasdeunicorapp.domain.services
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.core.utils.UiText
 import com.markusw.cosasdeunicorapp.data.model.Message
 import com.markusw.cosasdeunicorapp.data.model.User
 import kotlinx.coroutines.channels.awaitClose
@@ -32,7 +34,14 @@ class FireStoreService constructor(
                             }.toList()
                         trySend(Resource.Success(messages))
                     } ?: run {
-                        trySend(Resource.Error(error?.message.toString()))
+                        trySend(
+                            Resource.Error(
+                                UiText.StringResource(
+                                    R.string.unknownException,
+                                    "${error?.javaClass} ${error?.message}"
+                                )
+                            )
+                        )
                     }
                 }
 
@@ -46,7 +55,12 @@ class FireStoreService constructor(
             fireStore.collection(GLOBAL_CHAT_COLLECTION).add(message).await()
             Resource.Success(Unit)
         } catch (e: Exception) {
-            Resource.Error(e.message.toString())
+            Resource.Error(
+                UiText.StringResource(
+                    R.string.unknownException,
+                    "${e.javaClass}: ${e.message}"
+                )
+            )
         }
     }
 
@@ -55,7 +69,12 @@ class FireStoreService constructor(
             fireStore.collection(USERS_COLLECTION).document(user.uid).set(user).await()
             Resource.Success(Unit)
         } catch (e: Exception) {
-            Resource.Error(e.message.toString())
+            Resource.Error(
+                UiText.StringResource(
+                    R.string.unknownException,
+                    "${e.javaClass}: ${e.message}"
+                )
+            )
         }
     }
 

@@ -5,9 +5,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.ktx.userProfileChangeRequest
-import com.google.firebase.firestore.FirebaseFirestore
+import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.toUserModel
 import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.core.utils.UiText
 import kotlinx.coroutines.tasks.await
 
 class FirebaseAuthService constructor(
@@ -21,15 +22,20 @@ class FirebaseAuthService constructor(
             auth.currentUser?.let {
                 if (!it.isEmailVerified) {
                     it.sendEmailVerification().await()
-                    return Resource.Error("La cuenta no está verificada. Se ha enviado un correo de verificación.")
+                    return Resource.Error(UiText.StringResource(R.string.account_not_verified))
                 }
             }
 
             Resource.Success(Unit)
         } catch (e: FirebaseAuthInvalidUserException) {
-            Resource.Error("No existe un usuario con ese correo.")
+            Resource.Error(UiText.StringResource(R.string.user_not_exist))
         } catch (e: Exception) {
-            Resource.Error(e.message.toString())
+            Resource.Error(
+                UiText.StringResource(
+                    R.string.unknownException,
+                    "${e.javaClass}: ${e.message}"
+                )
+            )
         }
     }
 
@@ -44,9 +50,14 @@ class FirebaseAuthService constructor(
             auth.signOut()
             Resource.Success(Unit)
         } catch (e: FirebaseAuthUserCollisionException) {
-            Resource.Error("Ya hay un usuario registrado con ese correo.")
+            Resource.Error(UiText.StringResource(R.string.user_already_registered))
         } catch (e: Exception) {
-            Resource.Error("${e.javaClass}: ${e.message.toString()}")
+            Resource.Error(
+                UiText.StringResource(
+                    R.string.unknownException,
+                    "${e.javaClass}: ${e.message}"
+                )
+            )
         }
     }
 
@@ -63,7 +74,12 @@ class FirebaseAuthService constructor(
             auth.signOut()
             Resource.Success(Unit)
         } catch (e: Exception) {
-            Resource.Error("${e.javaClass}: ${e.message}")
+            Resource.Error(
+                UiText.StringResource(
+                    R.string.unknownException,
+                    "${e.javaClass}: ${e.message}"
+                )
+            )
         }
     }
 
@@ -78,7 +94,12 @@ class FirebaseAuthService constructor(
 
             Resource.Success(Unit)
         } catch (e: Exception) {
-            Resource.Error("${e.javaClass}: ${e.message}")
+            Resource.Error(
+                UiText.StringResource(
+                    R.string.unknownException,
+                    "${e.javaClass}: ${e.message}"
+                )
+            )
         }
     }
 
@@ -87,9 +108,14 @@ class FirebaseAuthService constructor(
             auth.sendPasswordResetEmail(email).await()
             Resource.Success(Unit)
         } catch (e: FirebaseAuthInvalidUserException) {
-            Resource.Error("No existe un usuario registrado con ese correo.")
+            Resource.Error(UiText.StringResource(R.string.user_not_exist))
         } catch (e: Exception) {
-            Resource.Error("${e.javaClass}: ${e.message}")
+            Resource.Error(
+                UiText.StringResource(
+                    R.string.unknownException,
+                    "${e.javaClass}: ${e.message}"
+                )
+            )
         }
     }
 

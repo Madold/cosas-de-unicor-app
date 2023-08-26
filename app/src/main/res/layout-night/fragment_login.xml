@@ -30,7 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/header_bg"
-                    android:contentDescription=""
+                    android:contentDescription="@string/logo_content_description"
                     android:scaleType="centerCrop"
                     />
 
@@ -92,7 +92,7 @@
                     android:id="@+id/emailField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Email"
+                    android:hint="@string/email"
                     android:drawableEnd="@drawable/ic_email"
                     android:inputType="textEmailAddress"
                     />
@@ -115,7 +115,7 @@
                     android:id="@+id/passwordField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Password"
+                    android:hint="@string/password"
                     android:inputType="textPassword"
                     />
             </com.google.android.material.textfield.TextInputLayout>
@@ -124,7 +124,7 @@
                 android:id="@+id/forgotPasswordText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="¿Olvidó su contraseña?"
+                android:text="@string/forgot_password"
                 app:layout_constraintTop_toBottomOf="@+id/passwordFieldLayout"
                 app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginEnd="16dp"
@@ -138,7 +138,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/forgotPasswordText"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="10dp"
-                android:text="Iniciar sesión"
+                android:text="@string/login"
                 app:cornerRadius="10dp"
                 android:backgroundTint="@color/md_theme_light_primary"
                 android:textSize="17sp"
@@ -166,7 +166,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="5dp"
-                    android:text="O inicia sesión con"
+                    android:text="@string/alternative_login"
                     android:layout_gravity="center"
                     />
                 <View
@@ -188,7 +188,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="10dp"
-                android:text="Google"
+                android:text="@string/google"
                 app:icon="@drawable/ic_google"
                 app:cornerRadius="10dp"
                 android:textColor="@color/black"
@@ -211,7 +211,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="¿No tienes una cuenta?"
+                    android:text="@string/dont_have_account"
                     android:layout_marginEnd="5dp"
                     android:layout_gravity="center"
                     />
@@ -219,7 +219,7 @@
                     android:id="@+id/registerText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Registrate aquí"
+                    android:text="@string/register_here"
                     android:layout_gravity="center"
                     android:textColor="@color/md_theme_light_primary"
                     android:textStyle="bold"

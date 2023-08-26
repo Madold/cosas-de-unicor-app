@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.showDialog
 import com.markusw.cosasdeunicorapp.core.ext.toast
+import com.markusw.cosasdeunicorapp.core.utils.UiText
 import com.markusw.cosasdeunicorapp.databinding.FragmentRegisterBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -22,6 +24,7 @@ class RegisterFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by viewModels<RegisterViewModel>()
     private val navController by lazy { findNavController() }
+    private val ctx by lazy { requireContext() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,10 +53,10 @@ class RegisterFragment : Fragment() {
     private fun setupObservers() {
         lifecycleScope.launch {
             viewModel.uiState.collect { state ->
-                binding.nameField.error = state.nameError
-                binding.emailField.error = state.emailError
-                binding.passwordFieldLayout.helperText = state.passwordError
-                binding.repeatPasswordFieldLayout.helperText = state.repeatedPasswordError
+                binding.nameField.error = state.nameError?.asString(ctx)
+                binding.emailField.error = state.emailError?.asString(ctx)
+                binding.passwordFieldLayout.helperText = state.passwordError?.asString(ctx)
+                binding.repeatPasswordFieldLayout.helperText = state.repeatedPasswordError?.asString(ctx)
                 binding.loadingLayout.visibility = if (state.isLoading) View.VISIBLE else View.GONE
                 binding.registerButton.isEnabled = !state.isLoading
             }
@@ -65,21 +68,21 @@ class RegisterFragment : Fragment() {
                     is RegistrationEvent.RegistrationFailed -> {
                         showDialog(
                             message = registrationEvent.reason,
-                            title = "Error",
-                            positiveButtonText = "Reintentar",
+                            title = UiText.StringResource(R.string.error),
+                            positiveButtonText = UiText.StringResource(R.string.retry),
                             onPositiveButtonClick = { viewModel.onRegister() },
-                            neutralButtonText = "Cancelar"
+                            neutralButtonText = UiText.StringResource(R.string.cancel)
                         )
                     }
                     is RegistrationEvent.SuccessfullyRegistration -> {
-                        toast("Registro exitoso")
+                        toast(UiText.StringResource(R.string.succesfully_registered))
                         navController.popBackStack()
                     }
                     is RegistrationEvent.TermsNotAccepted -> {
                         showDialog(
-                            title = "Importante",
+                            title = UiText.StringResource(R.string.important),
                             message = registrationEvent.message,
-                            positiveButtonText = "Entendido"
+                            positiveButtonText = UiText.StringResource(R.string.understood)
                         )
                     }
                 }

@@ -7,11 +7,13 @@ import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.UnsupportedApiCallException
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.core.utils.UiText
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import java.util.concurrent.CancellationException
@@ -22,7 +24,7 @@ class GoogleAuthUIClient(
 ) {
     suspend fun signIn(): Resource<IntentSender?> {
         return try {
-            val result =  oneTapClient.beginSignIn(
+            val result = oneTapClient.beginSignIn(
                 buildSignInRequest()
             ).await()
 
@@ -31,13 +33,18 @@ class GoogleAuthUIClient(
             )
         } catch (e: ApiException) {
             Timber.e(e)
-          Resource.Error("${e.javaClass} Al parecer has intentado iniciar sesión muchas veces con google y has cancelado, este metodo de inicio de sesión ha sido bloqueado temporalmente, intenta de nuevo en 24 horas.")
+            handleStatusCode(e.statusCode, e)
         } catch (e: UnsupportedApiCallException) {
-            Resource.Error("Al parecer no tienes google play services instalado o actualizado. No puedes iniciar sesión con google si falta este servicio.")
+            Resource.Error(UiText.StringResource(R.string.unsuportedApiException))
         } catch (e: Exception) {
             Timber.e(e)
             if (e is CancellationException) throw e
-            Resource.Error("${e.javaClass}: ${e.message}")
+            Resource.Error(
+                UiText.StringResource(
+                    R.string.unknownException,
+                    "${e.javaClass} ${e.message}"
+                )
+            )
         }
 
     }
@@ -47,6 +54,7 @@ class GoogleAuthUIClient(
         val googleIdToken = credential.googleIdToken
         return GoogleAuthProvider.getCredential(googleIdToken, null)
     }
+
     private fun buildSignInRequest(): BeginSignInRequest {
         return BeginSignInRequest.Builder()
             .setGoogleIdTokenRequestOptions(
@@ -59,6 +67,27 @@ class GoogleAuthUIClient(
             )
             .setAutoSelectEnabled(false)
             .build()
+    }
+
+    private fun handleStatusCode(
+        code: Int,
+        exception: ApiException
+    ): Resource.Error<IntentSender?> {
+        return when (code) {
+            CommonStatusCodes.NETWORK_ERROR -> {
+                Resource.Error(UiText.StringResource(R.string.network_error))
+            }
+
+            else -> {
+                Timber.d("Unknown error code: $code: ${exception.message}")
+                Resource.Error(
+                    UiText.StringResource(
+                        R.string.unknownException,
+                        "${exception.javaClass} ${exception.message}"
+                    )
+                )
+            }
+        }
     }
 
 }

@@ -1,7 +1,9 @@
 package com.markusw.cosasdeunicorapp.domain.use_cases
 
 import android.util.Patterns
+import com.markusw.cosasdeunicorapp.core.utils.UiText
 import javax.inject.Inject
+import com.markusw.cosasdeunicorapp.R
 
 class ValidateEmail @Inject constructor() {
 
@@ -10,14 +12,14 @@ class ValidateEmail @Inject constructor() {
         if (email.isBlank()) {
             return ValidationResult(
                 successful = false,
-                errorMessage = "El correo no puede estar en blanco"
+                errorMessage = UiText.StringResource(R.string.blank_email_error)
             )
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             return ValidationResult(
                 successful = false,
-                errorMessage = "El correo no es un correo válido"
+                errorMessage = UiText.StringResource(R.string.invalid_email_error)
             )
         }
 

@@ -9,7 +9,9 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.showDialog
+import com.markusw.cosasdeunicorapp.core.utils.UiText
 import com.markusw.cosasdeunicorapp.databinding.FragmentResetPasswordBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -21,6 +23,7 @@ class ResetPasswordFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by viewModels<ResetPasswordViewModel>()
     private val navController by lazy { findNavController() }
+    private val ctx by lazy { requireContext() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +42,7 @@ class ResetPasswordFragment : Fragment() {
     private fun setupObservers() {
         lifecycleScope.launch {
             viewModel.uiState.collect { state ->
-                binding.emailField.error = state.emailError
+                binding.emailField.error = state.emailError?.asString(ctx)
                 binding.loadingLayout.visibility = if (state.isLoading) View.VISIBLE else View.GONE
             }
         }
@@ -49,18 +52,18 @@ class ResetPasswordFragment : Fragment() {
                 when (event) {
                     is ResetPasswordEvents.EmailSentError -> {
                         showDialog(
-                            title = "Error al enviar el correo",
+                            title = UiText.StringResource(R.string.error),
                             message = event.reason,
-                            positiveButtonText = "Reintentar",
+                            positiveButtonText = UiText.StringResource(R.string.retry),
                             onPositiveButtonClick = { viewModel.onContinue() },
-                            neutralButtonText = "Cancelar",
+                            neutralButtonText = UiText.StringResource(R.string.cancel),
                         )
                     }
                     is ResetPasswordEvents.EmailSentSuccessfully -> {
                         showDialog(
-                            title = "Correo enviado exitosamente",
-                            message = "Se ha enviado un correo a ${viewModel.uiState.value.email} con las instrucciones para restablecer la contraseña",
-                            positiveButtonText = "Aceptar",
+                            title = UiText.StringResource(R.string.email_sent_success),
+                            message = UiText.StringResource(R.string.email_sent),
+                            positiveButtonText = UiText.StringResource(R.string.accept),
                             onPositiveButtonClick = { navController.popBackStack() }
                         )
                     }

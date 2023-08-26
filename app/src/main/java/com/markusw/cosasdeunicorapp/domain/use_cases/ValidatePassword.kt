@@ -1,5 +1,7 @@
 package com.markusw.cosasdeunicorapp.domain.use_cases
 
+import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.utils.UiText
 import javax.inject.Inject
 
 class ValidatePassword @Inject constructor() {
@@ -15,21 +17,21 @@ class ValidatePassword @Inject constructor() {
         if (password.isBlank()) {
             return ValidationResult(
                 successful = false,
-                errorMessage = "La contraseña no puede ser vacía"
+                errorMessage = UiText.StringResource(R.string.password_blank)
             )
         }
 
         if (password.length < MINIMUM_PASSWORD_LENGTH) {
             return ValidationResult(
                 successful = false,
-                errorMessage = "La contraseña debe tener al menos 6 caracteres de longitud"
+                errorMessage = UiText.StringResource(R.string.password_too_short)
             )
         }
 
         if (!password.matches(Regex(PASSWORD_REGEX))) {
             return ValidationResult(
                 successful = false,
-                errorMessage = "La contraseña debe empezar por mayuscula, tener almenos un número y un caracter especial"
+                errorMessage = UiText.StringResource(R.string.invalid_password)
             )
         }
 

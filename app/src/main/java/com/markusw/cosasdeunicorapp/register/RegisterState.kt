@@ -1,15 +1,17 @@
 package com.markusw.cosasdeunicorapp.register
 
+import com.markusw.cosasdeunicorapp.core.utils.UiText
+
 data class RegisterState(
     val name: String = "",
-    val nameError: String? = null,
+    val nameError: UiText? = null,
     val email: String = "",
-    val emailError: String? = null,
+    val emailError: UiText? = null,
     val password: String = "",
-    val passwordError: String? = null,
+    val passwordError: UiText? = null,
     val repeatedPassword: String = "",
-    val repeatedPasswordError: String? = null,
+    val repeatedPasswordError: UiText? = null,
     val isTermsAccepted: Boolean = false,
-    val termsError: String? = null,
+    val termsError: UiText? = null,
     val isLoading: Boolean = false
 )

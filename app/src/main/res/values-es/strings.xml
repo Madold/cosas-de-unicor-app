@@ -11,4 +11,48 @@
     <string name="register_here">Registrate aquí</string>
     <string name="blank_email_error">El correo no puede estar en blanco</string>
     <string name="invalid_email_error">El correo no es un correo valido</string>
+    <string name="account_not_verified">La cuenta no está verificada. Se ha enviado un correo de verificación.</string>
+    <string name="user_not_exist">No existe un usuario con ese correo.</string>
+    <string name="user_already_registered">Ya hay un usuario registrado con ese correo.</string>
+
+    <string name="accept">Aceptar</string>
+    <string name="retry">Reintentar</string>
+    <string name="cancel">Cancelar</string>
+
+    <string name="auth_success">Autenticación exitosa</string>
+
+    <string name="unsuportedApiException">Al parecer no tienes google play services instalado o actualizado. No puedes iniciar sesión con google si falta este servicio.</string>
+    <string name="unknownException">Ha ocurrido un error desconocido. Intenta de nuevo mas tarde y contacta a los desarrolladores %d</string>
+
+    <string name="network_error">Error de conexión, intenta de nuevo</string>
+
+    <string name="register">Registrate</string>
+    <string name="create_account">Crea una cuenta</string>
+    <string name="name">Nombre</string>
+    <string name="repeat_password">Repetir contraseña</string>
+    <string name="accept_terms">Acepto los &#32;</string>}
+    <string name="terms">terminos</string>
+    <string name="and">&#32; y &#32;</string>
+    <string name="conditions">condiciones</string>
+
+    <string name="succesfully_registered">Registro exitoso</string>
+    <string name="important">Importante</string>
+    <string name="understood">Entendido</string>
+
+    <string name="reset_password">Restablecer contraseña</string>
+    <string name="reset_password_explanation">Escribe tu correo para restablecer tu contraseña</string>
+    <string name="reset_password_explanation_2">Al correo por el cual creaste la cuenta, te llegará un email con instrucciones para cambiar la contraseña de tu cuenta.</string>
+    <string name="cont">Continuar</string>
+    <string name="error_sending_email">Error al enviar el correo</string>
+    <string name="email_sent_success">Correo enviado exitosamente</string>
+    <string name="email_sent">Se ha enviado un correo a %d con las instrucciones para restablecer la contraseña</string>
+
+    <string name="name_blank">El nombre no puede estar en blanco</string>
+    <string name="name_too_short">El nombre es muy corto</string>
+    <string name="password_blank">La contraseña no puede ser vacía</string>
+    <string name="password_too_short">La contraseña debe tener al menos 6 caracteres de longitud</string>
+    <string name="invalid_password">La contraseña debe empezar por mayuscula, tener almenos un número y un caracter especial</string>
+    <string name="passwords_do_not_match">Las contraseñas no coinciden</string>
+    <string name="terms_not_accepted">Debe aceptar los términos y condiciones para registrarse</string>
+
 </resources>

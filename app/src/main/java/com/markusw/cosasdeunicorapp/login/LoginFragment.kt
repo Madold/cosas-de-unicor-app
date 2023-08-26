@@ -19,11 +19,10 @@ import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.showDialog
 import com.markusw.cosasdeunicorapp.core.ext.toast
 import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.core.utils.UiText
 import com.markusw.cosasdeunicorapp.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -32,6 +31,7 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by viewModels<LoginViewModel>()
     private val navController by lazy { findNavController() }
+    private val ctx by lazy { requireContext() }
     private val googleAuthClient by lazy {
         GoogleAuthUIClient(
             context = requireContext(),
@@ -86,7 +86,7 @@ class LoginFragment : Fragment() {
                     is Resource.Error -> {
                         showDialog(
                             message = signInResult.message!!,
-                            positiveButtonText = "Aceptar"
+                            positiveButtonText = UiText.StringResource(R.string.accept)
                         )
                         viewModel.onGoogleSignInFinished()
                     }
@@ -109,8 +109,8 @@ class LoginFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.uiState.collect { state ->
-                binding.emailField.error = state.emailError
-                binding.passwordFieldLayout.helperText = state.passwordError
+                binding.emailField.error = state.emailError?.asString(ctx)
+                binding.passwordFieldLayout.helperText = state.passwordError?.asString(ctx)
                 binding.loadingLayout.visibility = if (state.isLoading) View.VISIBLE else View.GONE
             }
         }
@@ -120,16 +120,16 @@ class LoginFragment : Fragment() {
                 when (authEvent) {
                     is AuthenticationEvent.AuthFailed -> {
                         showDialog(
-                            title = "Error",
+                            title = UiText.StringResource(R.string.error),
                             message = authEvent.reason,
-                            positiveButtonText = "Reintentar",
+                            positiveButtonText = UiText.StringResource(R.string.retry),
                             onPositiveButtonClick = { viewModel.onLogin() },
-                            neutralButtonText = "Cancelar"
+                            neutralButtonText = UiText.StringResource(R.string.cancel)
                         )
                     }
 
                     is AuthenticationEvent.AuthSuccessful -> {
-                        toast("Auth successful")
+                        toast(UiText.StringResource(R.string.auth_success))
                         navController.navigate(R.id.action_loginFragment_to_homeFragment)
                     }
                 }

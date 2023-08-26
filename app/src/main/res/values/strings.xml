@@ -16,5 +16,52 @@
     <!-- Login error messages -->
     <string name="blank_email_error">Email can\'t be blank</string>
     <string name="invalid_email_error">Email is not valid</string>
+    <string name="account_not_verified">The account is not verified. A verification email has been sent.</string>
+    <string name="user_not_exist">There is no user with that email.</string>
+    <string name="user_already_registered">There is already a registered user with that email address.</string>
+
+    <string name="accept">Accept</string>
+    <string name="error" translatable="false">Error</string>
+    <string name="retry">Retry</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="auth_success">Auth successful</string>
+
+    <string name="unsuportedApiException">It seems you don\'t have Google Play services installed or updated. You can\'t log in with Google if this service is missing.</string>
+    <string name="unknownException">An unknown error has occurred. Please try again later and contact developers. %d</string>
+
+    <string name="network_error">Network error, try again</string>
+
+    <!-- Register layout -->
+    <string name="register">Register</string>
+    <string name="create_account">Create account</string>
+    <string name="name">Name</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="accept_terms">I accept the &#32;</string>
+    <string name="terms">terms</string>
+    <string name="and">&#32; and &#32;</string>
+    <string name="conditions">conditions</string>
+
+    <string name="succesfully_registered">Successfully registered</string>
+    <string name="important">Important</string>
+    <string name="understood">Understood</string>
+
+    <!-- Reset password layout -->
+    <string name="reset_password">Reset password</string>
+    <string name="reset_password_explanation">Write your email to reset your password</string>
+    <string name="reset_password_explanation_2">To the email through which you created the account, you will receive an email with instructions to change your account password.</string>
+    <string name="cont">Continue</string>
+    <string name="error_sending_email">Error sending email</string>
+    <string name="email_sent_success">Email sent successfully</string>
+    <string name="email_sent">An email has been sent to %d with instructions to reset the password.</string>
+
+    <!-- Use cases error messages -->
+    <string name="name_blank">The name cannot be empty</string>
+    <string name="name_too_short">The name is too short</string>
+    <string name="password_blank">The password can\'t be empty</string>
+    <string name="password_too_short">Password must be at least 6 characters long.</string>
+    <string name="invalid_password">The password must begin with a capital letter, have at least one number and one special character.</string>
+    <string name="passwords_do_not_match">Passwords don\'t match</string>
+    <string name="terms_not_accepted">You must accept the terms and conditions to register</string>
 
 </resources>

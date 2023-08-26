@@ -1,5 +1,7 @@
 package com.markusw.cosasdeunicorapp.domain.use_cases
 
+import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.utils.UiText
 import javax.inject.Inject
 
 class ValidateTerms @Inject constructor() {
@@ -9,7 +11,7 @@ class ValidateTerms @Inject constructor() {
         if (!isAccepted) {
             return ValidationResult(
                 successful = false,
-                errorMessage = "Debes aceptar los términos y condiciones para registrarte"
+                errorMessage = UiText.StringResource(R.string.terms_not_accepted)
             )
         }
 
