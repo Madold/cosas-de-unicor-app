@@ -28,7 +28,7 @@
     <string name="auth_success">Auth successful</string>
 
     <string name="unsuportedApiException">It seems you don\'t have Google Play services installed or updated. You can\'t log in with Google if this service is missing.</string>
-    <string name="unknownException">An unknown error has occurred. Please try again later and contact developers. %d</string>
+    <string name="unknownException">An unknown error has occurred. Please try again later and contact developers. %s</string>
 
     <string name="network_error">Network error, try again</string>
 
