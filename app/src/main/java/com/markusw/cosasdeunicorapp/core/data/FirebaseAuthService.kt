@@ -24,6 +24,7 @@ class FirebaseAuthService constructor(
             auth.currentUser?.let {
                 if (!it.isEmailVerified) {
                     it.sendEmailVerification().await()
+                    auth.signOut()
                     return Resource.Error(UiText.StringResource(R.string.account_not_verified))
                 }
             }
