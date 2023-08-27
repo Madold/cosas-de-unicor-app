@@ -22,7 +22,7 @@
     <string name="auth_success">Autenticación exitosa</string>
 
     <string name="unsuportedApiException">Al parecer no tienes google play services instalado o actualizado. No puedes iniciar sesión con google si falta este servicio.</string>
-    <string name="unknownException">Ha ocurrido un error desconocido. Intenta de nuevo mas tarde y contacta a los desarrolladores %d</string>
+    <string name="unknownException">Ha ocurrido un error desconocido. Intenta de nuevo mas tarde y contacta a los desarrolladores: %s</string>
 
     <string name="network_error">Error de conexión, intenta de nuevo</string>
 
@@ -45,7 +45,7 @@
     <string name="cont">Continuar</string>
     <string name="error_sending_email">Error al enviar el correo</string>
     <string name="email_sent_success">Correo enviado exitosamente</string>
-    <string name="email_sent">Se ha enviado un correo a %d con las instrucciones para restablecer la contraseña</string>
+    <string name="email_sent">Se ha enviado un correo a %s con las instrucciones para restablecer la contraseña</string>
 
     <string name="name_blank">El nombre no puede estar en blanco</string>
     <string name="name_too_short">El nombre es muy corto</string>
