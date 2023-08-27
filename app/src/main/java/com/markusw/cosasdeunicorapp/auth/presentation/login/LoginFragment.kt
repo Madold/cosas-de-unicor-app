@@ -23,6 +23,7 @@ import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -44,7 +45,9 @@ class LoginFragment : Fragment() {
         if (result.resultCode == Activity.RESULT_OK) {
             val googleCredentials = googleAuthClient.getGoogleCredentialsFromIntent(result.data)
             viewModel.onGoogleSignInResult(googleCredentials)
+            return@registerForActivityResult
         }
+        viewModel.onGoogleSignInCanceled()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,6 +115,8 @@ class LoginFragment : Fragment() {
                 binding.emailField.error = state.emailError?.asString(ctx)
                 binding.passwordFieldLayout.helperText = state.passwordError?.asString(ctx)
                 binding.loadingLayout.visibility = if (state.isLoading) View.VISIBLE else View.GONE
+                binding.loginButton.isEnabled = !state.isLoading
+                binding.googleButton.isEnabled = !state.isLoading
             }
         }
 

@@ -108,6 +108,10 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun onGoogleSignInCanceled() {
+        _uiState.update { it.copy(isLoading = false) }
+    }
+
     override fun onCleared() {
         super.onCleared()
         authenticationEventChannel.close()
