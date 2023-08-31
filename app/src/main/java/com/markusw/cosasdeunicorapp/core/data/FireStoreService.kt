@@ -32,7 +32,6 @@ class FireStoreService constructor(
         return fireStorePager.loadPage()
     }
 
-    private var initialized = false
     private val systemTimeStamp = TimeUtils.getDeviceHourInTimestamp()
 
     override suspend fun sendMessageToGlobalChat(message: Message): Resource<Unit> {
