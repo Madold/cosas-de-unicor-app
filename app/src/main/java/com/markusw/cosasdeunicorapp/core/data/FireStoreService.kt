@@ -25,7 +25,7 @@ class FireStoreService constructor(
         const val GLOBAL_CHAT_COLLECTION = "global_chat"
         const val USERS_COLLECTION = "users"
         const val TIMESTAMP = "timestamp"
-        const val PAGE_SIZE = 20L
+        const val PAGE_SIZE = 10L
     }
 
     override suspend fun loadPreviousMessages(): List<Message> {
