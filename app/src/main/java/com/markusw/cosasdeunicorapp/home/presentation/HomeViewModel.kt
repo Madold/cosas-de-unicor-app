@@ -38,12 +38,13 @@ class HomeViewModel @Inject constructor(
     val homeEvents = homeEventsChannel.receiveAsFlow()
 
     init {
-
         viewModelScope.launch {
+            _uiState.update { it.copy(isFetchingPreviousGlobalMessages = true) }
             loadPreviousMessages().also { previousMessages ->
                 _uiState.update {
                     it.copy(
                         globalChatList = it.globalChatList + previousMessages,
+                        isFetchingPreviousGlobalMessages = false
                     )
                 }
             }
@@ -52,7 +53,6 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch(dispatchers.io) {
             observeNewMessages().collectLatest { newMessage ->
-
                 _uiState.update { it.copy(globalChatList = it.globalChatList.prepend(newMessage)) }
             }
         }
@@ -91,14 +91,12 @@ class HomeViewModel @Inject constructor(
                     TimeUtils.getDeviceHourInTimestamp()
                 )
             )
-
         }
     }
 
     fun onTopOfListReached() {
-
+        _uiState.update { it.copy(isFetchingPreviousGlobalMessages = true) }
         viewModelScope.launch(dispatchers.io) {
-            _uiState.update { it.copy(isFetchingPreviousGlobalMessages = true) }
             loadPreviousMessages().also { previousMessages ->
                 _uiState.update {
                     it.copy(

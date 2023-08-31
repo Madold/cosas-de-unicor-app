@@ -58,7 +58,7 @@ fun ChatScreenContent(
             scrollState.firstVisibleItemIndex
         }.debounce(500).collectLatest {
             isScrollToEndFABVisible = !scrollState.isScrolledToTheStart()
-            if (scrollState.isScrolledToTheEnd()) {
+            if (scrollState.isScrolledToTheEnd() && !state.isFetchingPreviousGlobalMessages) {
                 onTopOfGlobalChatListReached()
             }
         }
