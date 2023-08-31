@@ -1,11 +1,13 @@
 package com.markusw.cosasdeunicorapp.home.presentation.chat.composables
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -17,14 +19,12 @@ import com.markusw.cosasdeunicorapp.home.presentation.HomeState
 fun ChatList(
     state: HomeState,
     modifier: Modifier = Modifier,
-    scrollState: LazyListState = rememberLazyListState()
+    scrollState: LazyListState = rememberLazyListState(),
+    isFetchingPreviousMessages: Boolean,
 ) {
 
     val globalChatList = state.globalChatList
 
-    LaunchedEffect(key1 = Unit) {
-        scrollState.animateScrollToItem(globalChatList.size)
-    }
 
     LaunchedEffect(key1 = globalChatList) {
         if (scrollState.isSecondLastItemVisible()) {
@@ -36,13 +36,19 @@ fun ChatList(
         modifier = modifier
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        state = scrollState
+        state = scrollState,
+        reverseLayout = true
     ) {
         items(globalChatList) { message ->
             ChatItem(
                 message = message,
                 isFromCurrentUser = state.currentUser.displayName == message.sender.displayName
             )
+        }
+        item {
+            if (isFetchingPreviousMessages) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
         }
     }
 }

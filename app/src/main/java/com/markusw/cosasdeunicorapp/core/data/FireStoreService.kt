@@ -1,55 +1,39 @@
 package com.markusw.cosasdeunicorapp.core.data
 
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
-import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.core.presentation.UiText
+import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.core.utils.TimeUtils
+import com.markusw.cosasdeunicorapp.home.data.repository.FireStorePager
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.home.domain.model.User
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.tasks.await
 
 class FireStoreService constructor(
-    private val fireStore: FirebaseFirestore
+    private val fireStore: FirebaseFirestore,
+    private val fireStorePager: FireStorePager
 ) : RemoteDatabase {
+
     companion object {
         const val GLOBAL_CHAT_COLLECTION = "global_chat"
         const val USERS_COLLECTION = "users"
         const val TIMESTAMP = "timestamp"
+        const val PAGE_SIZE = 10L
     }
 
-    override suspend fun getGlobalChatList() = callbackFlow<Resource<List<Message>>> {
-        val snapshotListener =
-            fireStore.collection(GLOBAL_CHAT_COLLECTION)
-                .orderBy(TIMESTAMP)
-                .addSnapshotListener { value, error ->
-                    value?.let {
-                        val messages = it
-                            .documents
-                            .asSequence()
-                            .map { document ->
-                                document.toObject(Message::class.java)!!
-                            }.toList()
-                        trySend(Resource.Success(messages))
-                    } ?: run {
-                        trySend(
-                            Resource.Error(
-                                UiText.StringResource(
-                                    R.string.unknownException,
-                                    "${error?.javaClass} ${error?.message}"
-                                )
-                            )
-                        )
-                    }
-                }
+    override suspend fun loadPreviousMessages(): List<Message> {
+        return fireStorePager.loadPage()
+    }
 
-        awaitClose {
-            snapshotListener.remove()
-        }
-    }.conflate()
+    private var initialized = false
+    private val systemTimeStamp = TimeUtils.getDeviceHourInTimestamp()
 
     override suspend fun sendMessageToGlobalChat(message: Message): Resource<Unit> {
         return try {
@@ -78,5 +62,37 @@ class FireStoreService constructor(
             )
         }
     }
+
+    override suspend fun onNewMessage(): Flow<Message> = callbackFlow {
+        val snapshotListener = fireStore
+            .collection(GLOBAL_CHAT_COLLECTION)
+            .addSnapshotListener { value, error ->
+
+                error?.let {
+                    close(it)
+                    return@addSnapshotListener
+                }
+
+                value?.let {
+                    it.documentChanges.forEach { change ->
+                        when (change.type) {
+                            DocumentChange.Type.ADDED -> {
+                                val message = change.document.toObject(Message::class.java)
+                                if (message.timestamp > systemTimeStamp) {
+                                    trySend(message)
+                                }
+                            }
+
+                            else -> {}
+                        }
+                    }
+                }
+            }
+
+        awaitClose {
+            snapshotListener.remove()
+        }
+
+    }.conflate()
 
 }

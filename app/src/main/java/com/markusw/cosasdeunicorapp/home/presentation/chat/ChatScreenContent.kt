@@ -10,12 +10,12 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.isScrolledToTheEnd
+import com.markusw.cosasdeunicorapp.core.ext.isScrolledToTheStart
 import com.markusw.cosasdeunicorapp.home.presentation.HomeState
 import com.markusw.cosasdeunicorapp.home.presentation.chat.composables.ChatList
 import com.markusw.cosasdeunicorapp.home.presentation.chat.composables.MessageField
@@ -43,7 +44,8 @@ import kotlinx.coroutines.launch
 fun ChatScreenContent(
     state: HomeState,
     onMessageChange: (String) -> Unit,
-    onMessageSent: () -> Unit
+    onMessageSent: () -> Unit,
+    onTopOfGlobalChatListReached: () -> Unit
 ) {
 
     val scrollState = rememberLazyListState()
@@ -58,13 +60,21 @@ fun ChatScreenContent(
         snapshotFlow {
             scrollState.firstVisibleItemIndex
         }.debounce(500).collectLatest {
-            isScrollToEndFABVisible = !scrollState.isScrolledToTheEnd()
+            isScrollToEndFABVisible = !scrollState.isScrolledToTheStart()
+            if (scrollState.isScrolledToTheEnd() && !state.isFetchingPreviousGlobalMessages) {
+                onTopOfGlobalChatListReached()
+            }
         }
     }
 
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
+        topBar = {
+                 CenterAlignedTopAppBar(title = { 
+                     Text(text = stringResource(id = R.string.global_chat))
+                 })
+        },
         bottomBar = {
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -78,24 +88,17 @@ fun ChatScreenContent(
                     onSendIconClick = {
                         onMessageSent()
                         coroutineScope.launch {
-                            scrollState.animateScrollToItem(state.globalChatList.size)
+                            scrollState.animateScrollToItem(0)
                         }
                     }
                 )
             }
         },
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = stringResource(id = R.string.global_chat))
-                }
-            )
-        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
                     coroutineScope.launch {
-                        scrollState.animateScrollToItem(state.globalChatList.size)
+                        scrollState.animateScrollToItem(0)
                     }
                 },
                 content = {
@@ -112,7 +115,8 @@ fun ChatScreenContent(
         ChatList(
             state = state,
             modifier = Modifier.padding(it),
-            scrollState = scrollState
+            scrollState = scrollState,
+            isFetchingPreviousMessages = state.isFetchingPreviousGlobalMessages
         )
     }
 }

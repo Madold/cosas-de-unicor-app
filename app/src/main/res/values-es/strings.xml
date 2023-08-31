@@ -19,6 +19,8 @@
     <string name="retry">Reintentar</string>
     <string name="cancel">Cancelar</string>
 
+    <string name="global_chat">Chat Unicor</string>
+
     <string name="auth_success">Autenticación exitosa</string>
 
     <string name="unsuportedApiException">Al parecer no tienes google play services instalado o actualizado. No puedes iniciar sesión con google si falta este servicio.</string>

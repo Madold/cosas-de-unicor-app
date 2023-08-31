@@ -6,6 +6,7 @@ import com.markusw.cosasdeunicorapp.core.domain.AuthService
 import com.markusw.cosasdeunicorapp.core.data.FireStoreService
 import com.markusw.cosasdeunicorapp.core.data.FirebaseAuthService
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
+import com.markusw.cosasdeunicorapp.home.data.repository.FireStorePager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,6 +23,6 @@ object DomainModule {
 
     @Provides
     @Singleton
-    fun provideRemoteDatabase(fireStore: FirebaseFirestore): RemoteDatabase = FireStoreService(fireStore)
+    fun provideRemoteDatabase(fireStore: FirebaseFirestore, fireStorePager: FireStorePager): RemoteDatabase = FireStoreService(fireStore, fireStorePager)
 
 }

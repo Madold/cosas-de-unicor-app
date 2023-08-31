@@ -13,6 +13,8 @@
     <string name="dont_have_account">Don\'t have an account?</string>
     <string name="register_here">Register here</string>
 
+    <string name="global_chat">Unicor Chat</string>
+
     <!-- Login error messages -->
     <string name="blank_email_error">Email can\'t be blank</string>
     <string name="invalid_email_error">Email is not valid</string>
