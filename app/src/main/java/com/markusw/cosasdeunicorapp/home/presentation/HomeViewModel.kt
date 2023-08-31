@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -95,6 +96,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onTopOfListReached() {
+        Timber.d("Fetching previous messages")
         _uiState.update { it.copy(isFetchingPreviousGlobalMessages = true) }
         viewModelScope.launch(dispatchers.io) {
             loadPreviousMessages().also { previousMessages ->

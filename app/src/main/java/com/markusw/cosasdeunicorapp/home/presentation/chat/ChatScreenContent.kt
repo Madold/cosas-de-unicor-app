@@ -39,6 +39,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
 fun ChatScreenContent(
@@ -61,7 +62,9 @@ fun ChatScreenContent(
             scrollState.firstVisibleItemIndex
         }.debounce(500).collectLatest {
             isScrollToEndFABVisible = !scrollState.isScrolledToTheStart()
+            Timber.d("${!state.isFetchingPreviousGlobalMessages}")
             if (scrollState.isScrolledToTheEnd() && !state.isFetchingPreviousGlobalMessages) {
+                Timber.d("Fetching previous messages")
                 onTopOfGlobalChatListReached()
             }
         }

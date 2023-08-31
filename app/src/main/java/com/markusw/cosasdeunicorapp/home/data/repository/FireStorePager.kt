@@ -12,8 +12,8 @@ class FireStorePager(
     private var currentPage = initialQuery
     override suspend fun loadPage(): List<Message> {
         val messages = currentPage.get().await()
-        val firstVisibleMessage = messages.documents.lastOrNull()
-        firstVisibleMessage?.let {
+        val lastVisibleMessage = messages.documents.lastOrNull()
+        lastVisibleMessage?.let {
             val previousMessages = currentPage.startAfter(it).get().await()
             currentPage = previousMessages.query
             return messages.toObjects(Message::class.java)
