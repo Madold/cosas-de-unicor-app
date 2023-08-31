@@ -71,7 +71,8 @@ private fun HomeHost(
             ChatScreenContent(
                 state = uiState,
                 onMessageChange = viewModel::onMessageChange,
-                onMessageSent = viewModel::onMessageSent
+                onMessageSent = viewModel::onMessageSent,
+                onTopOfGlobalChatListReached = viewModel::onTopOfListReached
             )
         }
         composable(route = HomeScreens.News.route) {

@@ -5,6 +5,7 @@ import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
-    suspend fun getGlobalChatList(): Flow<Resource<List<Message>>>
+    suspend fun loadPreviousMessages(): List<Message>
     suspend fun sendMessageToGlobalChat(message: Message): Resource<Unit>
+    suspend fun onNewMessage(): Flow<Message>
 }

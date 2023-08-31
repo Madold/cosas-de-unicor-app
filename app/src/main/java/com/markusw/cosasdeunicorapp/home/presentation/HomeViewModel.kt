@@ -3,27 +3,30 @@ package com.markusw.cosasdeunicorapp.home.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
+import com.markusw.cosasdeunicorapp.core.ext.prepend
 import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.core.utils.TimeUtils
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
-import com.markusw.cosasdeunicorapp.home.domain.use_cases.GetGlobalChatList
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.GetLoggedUser
+import com.markusw.cosasdeunicorapp.home.domain.use_cases.LoadPreviousMessages
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.Logout
+import com.markusw.cosasdeunicorapp.home.domain.use_cases.ObserveNewMessages
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.SendMessageToGlobalChat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val dispatchers: DispatcherProvider,
-    private val getGlobalChatList: GetGlobalChatList,
+    private val observeNewMessages: ObserveNewMessages,
+    private val loadPreviousMessages: LoadPreviousMessages,
     private val sendMessageToGlobalChat: SendMessageToGlobalChat,
     private val getLoggedUser: GetLoggedUser,
     private val logout: Logout
@@ -35,19 +38,25 @@ class HomeViewModel @Inject constructor(
     val homeEvents = homeEventsChannel.receiveAsFlow()
 
     init {
-        viewModelScope.launch(dispatchers.io) {
-            getGlobalChatList().collect { response ->
-                when (response) {
-                    is Resource.Error -> {
-                        Timber.d("Error: ${response.message}")
-                    }
 
-                    is Resource.Success -> {
-                        _uiState.update { it.copy(globalChatList = response.data!!) }
-                    }
+        viewModelScope.launch {
+            loadPreviousMessages().also { previousMessages ->
+                _uiState.update {
+                    it.copy(
+                        globalChatList = it.globalChatList + previousMessages,
+                    )
                 }
             }
         }
+
+
+        viewModelScope.launch(dispatchers.io) {
+            observeNewMessages().collectLatest { newMessage ->
+
+                _uiState.update { it.copy(globalChatList = it.globalChatList.prepend(newMessage)) }
+            }
+        }
+
 
         _uiState.update { it.copy(currentUser = getLoggedUser()) }
     }
@@ -83,6 +92,21 @@ class HomeViewModel @Inject constructor(
                 )
             )
 
+        }
+    }
+
+    fun onTopOfListReached() {
+
+        viewModelScope.launch(dispatchers.io) {
+            _uiState.update { it.copy(isFetchingPreviousGlobalMessages = true) }
+            loadPreviousMessages().also { previousMessages ->
+                _uiState.update {
+                    it.copy(
+                        globalChatList = it.globalChatList + previousMessages,
+                        isFetchingPreviousGlobalMessages = false
+                    )
+                }
+            }
         }
     }
 
