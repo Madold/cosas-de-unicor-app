@@ -57,6 +57,5 @@
     <string name="passwords_do_not_match">Las contraseñas no coinciden</string>
     <string name="terms_not_accepted">Debe aceptar los términos y condiciones para registrarse</string>
 
-    <string name="global_chat">Chat global</string>
 
 </resources>
