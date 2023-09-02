@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.isScrolledToTheEnd
 import com.markusw.cosasdeunicorapp.core.ext.isScrolledToTheStart
+import com.markusw.cosasdeunicorapp.core.ext.isSecondLastItemVisible
 import com.markusw.cosasdeunicorapp.home.presentation.HomeState
 import com.markusw.cosasdeunicorapp.home.presentation.chat.composables.ChatList
 import com.markusw.cosasdeunicorapp.home.presentation.chat.composables.MessageField
@@ -62,9 +63,15 @@ fun ChatScreenContent(
             scrollState.firstVisibleItemIndex
         }.debounce(500).collectLatest {
             isScrollToEndFABVisible = !scrollState.isScrolledToTheStart()
-            Timber.d("${!state.isFetchingPreviousGlobalMessages}")
-            if (scrollState.isScrolledToTheEnd() && !state.isFetchingPreviousGlobalMessages) {
-                Timber.d("Fetching previous messages")
+        }
+    }
+
+    LaunchedEffect(key1 = scrollState) {
+        snapshotFlow {
+            scrollState.firstVisibleItemIndex
+        }.collectLatest {
+            Timber.d("${scrollState.isScrolledToTheEnd()}")
+            if ((scrollState.isScrolledToTheEnd() || scrollState.isSecondLastItemVisible()) && !state.isFetchingPreviousGlobalMessages) {
                 onTopOfGlobalChatListReached()
             }
         }
@@ -74,9 +81,9 @@ fun ChatScreenContent(
         modifier = Modifier
             .fillMaxSize(),
         topBar = {
-                 CenterAlignedTopAppBar(title = { 
-                     Text(text = stringResource(id = R.string.global_chat))
-                 })
+            CenterAlignedTopAppBar(title = {
+                Text(text = stringResource(id = R.string.global_chat))
+            })
         },
         bottomBar = {
             Box(
