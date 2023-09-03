@@ -70,11 +70,11 @@ dependencies {
     val flexboxVersion = "3.0.0"
     val timberVersion = "5.0.1"
     val mockkVersion = "1.13.5"
-    val coroutinesTestVersion = "1.6.4"
+    val coroutinesTestVersion = "1.7.1"
     val loggerVersion = "2.2.0"
-    val gmsAuthServicesVersion = "20.6.0"
+    val gmsAuthServicesVersion = "20.7.0"
     val splashScreenVersion = "1.0.1"
-    val navigationComposeVersion = "2.7.0"
+    val navigationComposeVersion = "2.7.1"
     val hiltNavigationComposeVersion = "1.0.0"
     val lifecycleComposeVersion = "2.6.1"
     val coilComposeVersion = "2.4.0"
@@ -84,8 +84,8 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.1")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.1")
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
