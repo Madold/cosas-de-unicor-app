@@ -40,7 +40,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 fun ChatScreenContent(
