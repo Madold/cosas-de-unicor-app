@@ -70,7 +70,6 @@ fun ChatScreenContent(
         snapshotFlow {
             scrollState.firstVisibleItemIndex
         }.collectLatest {
-            Timber.d("${scrollState.isScrolledToTheEnd()}")
             if ((scrollState.isScrolledToTheEnd() || scrollState.isSecondLastItemVisible()) && !state.isFetchingPreviousGlobalMessages) {
                 onTopOfGlobalChatListReached()
             }
