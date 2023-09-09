@@ -34,7 +34,9 @@ fun ChatList(
     val pullRefreshState = rememberPullRefreshState(
         refreshing = false,
         onRefresh = {
-            onEvent(HomeUiEvent.FetchPreviousGlobalMessages)
+            if (!state.isFetchingPreviousGlobalMessages) {
+                onEvent(HomeUiEvent.FetchPreviousGlobalMessages)
+            }
         }
     )
 
