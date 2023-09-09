@@ -15,14 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.markusw.cosasdeunicorapp.home.presentation.HomeUiEvent
 
 @Composable
 fun HomeScreenContent(
-    onLogout: () -> Unit
+    onEvent: (HomeUiEvent) -> Unit,
 ) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -41,7 +41,9 @@ fun HomeScreenContent(
                             .fillMaxSize()
                             .padding(padding)
                     ) {
-                        Button(onClick = onLogout) {
+                        Button(onClick = {
+                            onEvent(HomeUiEvent.CloseSession)
+                        }) {
                             Text(text = "Logout")
                         }
                     }

@@ -26,10 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.markusw.cosasdeunicorapp.R
-import com.markusw.cosasdeunicorapp.core.ext.isScrolledToTheEnd
 import com.markusw.cosasdeunicorapp.core.ext.isScrolledToTheStart
-import com.markusw.cosasdeunicorapp.core.ext.isSecondLastItemVisible
 import com.markusw.cosasdeunicorapp.home.presentation.HomeState
+import com.markusw.cosasdeunicorapp.home.presentation.HomeUiEvent
 import com.markusw.cosasdeunicorapp.home.presentation.chat.composables.ChatList
 import com.markusw.cosasdeunicorapp.home.presentation.chat.composables.MessageField
 import com.markusw.cosasdeunicorapp.home.presentation.chat.composables.RoundedIconButton
@@ -41,9 +40,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ChatScreenContent(
     state: HomeState,
-    onMessageChange: (String) -> Unit,
-    onMessageSent: () -> Unit,
-    onTopOfGlobalChatListReached: () -> Unit
+    onEvent: (HomeUiEvent) -> Unit
 ) {
 
     val scrollState = rememberLazyListState()
@@ -59,16 +56,6 @@ fun ChatScreenContent(
             scrollState.firstVisibleItemIndex
         }.debounce(500).collectLatest {
             isScrollToEndFABVisible = !scrollState.isScrolledToTheStart()
-        }
-    }
-
-    LaunchedEffect(key1 = scrollState) {
-        snapshotFlow {
-            scrollState.firstVisibleItemIndex
-        }.collectLatest {
-            if ((scrollState.isScrolledToTheEnd() || scrollState.isSecondLastItemVisible()) && !state.isFetchingPreviousGlobalMessages) {
-                onTopOfGlobalChatListReached()
-            }
         }
     }
 
@@ -88,10 +75,12 @@ fun ChatScreenContent(
                 MessageField(
                     modifier = Modifier.fillMaxWidth(0.9f),
                     value = state.message,
-                    onValueChange = onMessageChange,
+                    onValueChange = {
+                        onEvent(HomeUiEvent.MessageChanged(it))
+                    },
                     isSendIconEnabled = state.message.isNotEmpty(),
                     onSendIconClick = {
-                        onMessageSent()
+                        onEvent(HomeUiEvent.SendMessageToGlobalChat)
                         coroutineScope.launch {
                             scrollState.animateScrollToItem(0)
                         }
@@ -115,7 +104,7 @@ fun ChatScreenContent(
             state = state,
             modifier = Modifier.padding(it),
             scrollState = scrollState,
-            isFetchingPreviousMessages = state.isFetchingPreviousGlobalMessages
+            onEvent = onEvent
         )
     }
 }

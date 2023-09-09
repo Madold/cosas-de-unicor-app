@@ -138,7 +138,6 @@ dependencies {
     //Coil compose
     implementation("io.coil-kt:coil-compose:$coilComposeVersion")
 
-
     //Test dependencies
     testImplementation("junit:junit:4.13.2")
     //MockK

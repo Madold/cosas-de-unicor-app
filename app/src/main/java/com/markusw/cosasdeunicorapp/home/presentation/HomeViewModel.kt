@@ -38,6 +38,49 @@ class HomeViewModel @Inject constructor(
     val homeEvents = homeEventsChannel.receiveAsFlow()
 
     init {
+        fetchPreviousGlobalMessages()
+
+        viewModelScope.launch(dispatchers.io) {
+            observeNewMessages().collectLatest { newMessage ->
+                _uiState.update { it.copy(globalChatList = it.globalChatList.prepend(newMessage)) }
+            }
+        }
+
+        _uiState.update { it.copy(currentUser = getLoggedUser()) }
+    }
+
+    fun onEvent(event: HomeUiEvent) {
+        when  (event) {
+            is HomeUiEvent.FetchPreviousGlobalMessages -> {
+                fetchPreviousGlobalMessages()
+            }
+            is HomeUiEvent.CloseSession -> {
+                viewModelScope.launch(dispatchers.io) {
+                    val authResult = logout()
+                    handleLogoutResult(authResult)
+                }
+            }
+            is HomeUiEvent.MessageChanged -> {
+                _uiState.update { it.copy(message = event.message) }
+            }
+            is HomeUiEvent.SendMessageToGlobalChat -> {
+                val message = uiState.value.message.trim()
+                val sender = uiState.value.currentUser
+                resetMessageField()
+                viewModelScope.launch(dispatchers.io) {
+                    sendMessageToGlobalChat(
+                        Message(
+                            message,
+                            sender,
+                            TimeUtils.getDeviceHourInTimestamp()
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    private fun fetchPreviousGlobalMessages() {
         viewModelScope.launch {
             _uiState.update { it.copy(isFetchingPreviousGlobalMessages = true) }
             loadPreviousMessages().also { previousMessages ->
@@ -49,63 +92,16 @@ class HomeViewModel @Inject constructor(
             }
             _uiState.update { it.copy(isFetchingPreviousGlobalMessages = false) }
         }
+    }
 
+    private suspend fun handleLogoutResult(result: Resource<Unit>) {
+        when (result) {
+            is Resource.Error -> {
 
-        viewModelScope.launch(dispatchers.io) {
-            observeNewMessages().collectLatest { newMessage ->
-                _uiState.update { it.copy(globalChatList = it.globalChatList.prepend(newMessage)) }
             }
-        }
-
-
-        _uiState.update { it.copy(currentUser = getLoggedUser()) }
-    }
-
-    fun onCloseSession() {
-        viewModelScope.launch(dispatchers.io) {
-            when (val authResult = logout()) {
-                is Resource.Error -> {
-
-                }
-
-                is Resource.Success -> {
-                    homeEventsChannel.send(HomeEvents.LogoutSuccessful)
-                }
+            is Resource.Success -> {
+                homeEventsChannel.send(HomeEvents.LogoutSuccessful)
             }
-        }
-    }
-
-    fun onMessageChange(message: String) {
-        _uiState.update { it.copy(message = message) }
-    }
-
-    fun onMessageSent() {
-        val message = uiState.value.message.trim()
-        val sender = uiState.value.currentUser
-        resetMessageField()
-        viewModelScope.launch(dispatchers.io) {
-            sendMessageToGlobalChat(
-                Message(
-                    message,
-                    sender,
-                    TimeUtils.getDeviceHourInTimestamp()
-                )
-            )
-        }
-    }
-
-    fun onTopOfListReached() {
-        _uiState.update { it.copy(isFetchingPreviousGlobalMessages = true) }
-        viewModelScope.launch(dispatchers.io) {
-            loadPreviousMessages().also { previousMessages ->
-                _uiState.update {
-                    it.copy(
-                        globalChatList = it.globalChatList + previousMessages,
-                        isFetchingPreviousGlobalMessages = false
-                    )
-                }
-            }
-            _uiState.update { it.copy(isFetchingPreviousGlobalMessages = false) }
         }
     }
 
