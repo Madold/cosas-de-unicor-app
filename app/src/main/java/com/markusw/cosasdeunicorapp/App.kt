@@ -15,7 +15,18 @@ class App : Application() {
         super.onCreate()
 
 
+        if (BuildConfig.DEBUG) {
+            setupTimber()
+            disableFirebaseDataCollection()
+        }
+
+    }
+
+    private fun disableFirebaseDataCollection() {
         Firebase.analytics.setAnalyticsCollectionEnabled(false)
+    }
+
+    private fun setupTimber() {
         val formatStrategy = PrettyFormatStrategy
             .newBuilder()
             .showThreadInfo(true)
@@ -30,7 +41,5 @@ class App : Application() {
         })
 
         Timber.d("Starting App...")
-
-
     }
 }
