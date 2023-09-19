@@ -19,15 +19,16 @@ import com.markusw.cosasdeunicorapp.core.ext.isSecondLastItemVisible
 import com.markusw.cosasdeunicorapp.core.presentation.PullRefreshIndicator
 import com.markusw.cosasdeunicorapp.core.presentation.pullRefresh
 import com.markusw.cosasdeunicorapp.core.presentation.rememberPullRefreshState
+import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.home.presentation.HomeState
-import com.markusw.cosasdeunicorapp.home.presentation.HomeUiEvent
 
 @Composable
 fun ChatList(
     state: HomeState,
     modifier: Modifier = Modifier,
     scrollState: LazyListState = rememberLazyListState(),
-    onEvent: (HomeUiEvent) -> Unit
+    onRequestPreviousMessages: () -> Unit = {},
+    onReplyToMessage: (Message) -> Unit = {}
 ) {
 
     val globalChatList = state.globalChatList
@@ -35,7 +36,7 @@ fun ChatList(
         refreshing = false,
         onRefresh = {
             if (!state.isFetchingPreviousGlobalMessages) {
-                onEvent(HomeUiEvent.FetchPreviousGlobalMessages)
+                onRequestPreviousMessages()
             }
         }
     )
@@ -56,12 +57,13 @@ fun ChatList(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             state = scrollState,
-            reverseLayout = true
+            reverseLayout = true,
         ) {
-            items(globalChatList) { message ->
+            items(globalChatList, key = { message -> message.timestamp }) { message ->
                 ChatItem(
                     message = message,
-                    isFromCurrentUser = state.currentUser.displayName == message.sender.displayName
+                    isFromCurrentUser = state.currentUser.displayName == message.sender.displayName,
+                    onReplyToMessage = onReplyToMessage
                 )
             }
         }

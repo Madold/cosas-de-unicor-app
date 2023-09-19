@@ -36,6 +36,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
 fun ChatScreenContent(
@@ -104,7 +105,12 @@ fun ChatScreenContent(
             state = state,
             modifier = Modifier.padding(it),
             scrollState = scrollState,
-            onEvent = onEvent
+            onReplyToMessage = { message ->
+                Timber.d("Reply to message: $message")
+            },
+            onRequestPreviousMessages = {
+                onEvent(HomeUiEvent.FetchPreviousGlobalMessages)
+            }
         )
     }
 }
