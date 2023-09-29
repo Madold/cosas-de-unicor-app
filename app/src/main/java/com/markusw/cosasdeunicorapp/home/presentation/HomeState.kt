@@ -7,5 +7,6 @@ data class HomeState(
     val globalChatList: List<Message> = emptyList(),
     val message: String = "",
     val currentUser: User = User(),
-    val isFetchingPreviousGlobalMessages: Boolean = false
+    val isFetchingPreviousGlobalMessages: Boolean = false,
+    val repliedMessage: Message? = null
 )

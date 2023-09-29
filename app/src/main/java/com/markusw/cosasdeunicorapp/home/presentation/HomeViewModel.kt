@@ -50,7 +50,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onEvent(event: HomeUiEvent) {
-        when  (event) {
+        when (event) {
             is HomeUiEvent.FetchPreviousGlobalMessages -> {
                 fetchPreviousGlobalMessages()
             }
@@ -76,6 +76,13 @@ class HomeViewModel @Inject constructor(
                         )
                     )
                 }
+            }
+
+            is HomeUiEvent.ClearReplyMessage -> {
+                _uiState.update { it.copy(repliedMessage = null) }
+            }
+            is HomeUiEvent.ReplyToMessage -> {
+                _uiState.update { it.copy(repliedMessage = event.message) }
             }
         }
     }
