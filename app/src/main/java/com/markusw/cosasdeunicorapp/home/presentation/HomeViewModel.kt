@@ -7,6 +7,7 @@ import com.markusw.cosasdeunicorapp.core.ext.prepend
 import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.core.utils.TimeUtils
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
+import com.markusw.cosasdeunicorapp.home.domain.model.MessageContent
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.GetLoggedUser
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.LoadPreviousMessages
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.Logout
@@ -54,25 +55,29 @@ class HomeViewModel @Inject constructor(
             is HomeUiEvent.FetchPreviousGlobalMessages -> {
                 fetchPreviousGlobalMessages()
             }
+
             is HomeUiEvent.CloseSession -> {
                 viewModelScope.launch(dispatchers.io) {
                     val authResult = logout()
                     handleLogoutResult(authResult)
                 }
             }
+
             is HomeUiEvent.MessageChanged -> {
                 _uiState.update { it.copy(message = event.message) }
             }
+
             is HomeUiEvent.SendMessageToGlobalChat -> {
                 val message = uiState.value.message.trim()
                 val sender = uiState.value.currentUser
+
                 resetMessageField()
                 viewModelScope.launch(dispatchers.io) {
                     sendMessageToGlobalChat(
                         Message(
-                            message,
-                            sender,
-                            TimeUtils.getDeviceHourInTimestamp()
+                            content = MessageContent(text = message, replyTo = uiState.value.repliedMessage),
+                            sender = sender,
+                            timestamp = TimeUtils.getDeviceHourInTimestamp()
                         )
                     )
                 }
@@ -81,6 +86,7 @@ class HomeViewModel @Inject constructor(
             is HomeUiEvent.ClearReplyMessage -> {
                 _uiState.update { it.copy(repliedMessage = null) }
             }
+
             is HomeUiEvent.ReplyToMessage -> {
                 _uiState.update { it.copy(repliedMessage = event.message) }
             }
@@ -106,6 +112,7 @@ class HomeViewModel @Inject constructor(
             is Resource.Error -> {
 
             }
+
             is Resource.Success -> {
                 homeEventsChannel.send(HomeEvents.LogoutSuccessful)
             }

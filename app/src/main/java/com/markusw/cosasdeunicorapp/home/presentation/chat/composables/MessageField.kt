@@ -60,7 +60,7 @@ fun MessageField(
                     modifier = Modifier.weight(1f)
                 ){
                     Text(text = "Reply to: ${messageToReply?.sender?.displayName}")
-                    Text(text = messageToReply?.content ?: "")
+                    Text(text = messageToReply?.content?.text ?: "")
                 }
                 IconButton(onClick = onDismissReply) {
                     Icon(imageVector = Icons.Default.Clear, contentDescription = null)

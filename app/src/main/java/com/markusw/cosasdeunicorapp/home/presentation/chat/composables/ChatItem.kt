@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.utils.TextUtils
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
+import com.markusw.cosasdeunicorapp.home.domain.model.MessageContent
 import com.markusw.cosasdeunicorapp.home.domain.model.User
 
 @Composable
@@ -90,8 +91,7 @@ fun ChatItem(
         dismissContent = {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surface),
+                    .fillMaxWidth(),
                 horizontalArrangement = horizontalArrangement,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -134,7 +134,7 @@ fun ChatItem(
 fun ChatItemPreview() {
     ChatItem(
         message = Message(
-            "Hola",
+            MessageContent(text = "Example message"),
             User(
                 "Markus",
                 "mmmm",

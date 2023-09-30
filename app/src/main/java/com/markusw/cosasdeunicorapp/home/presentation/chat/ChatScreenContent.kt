@@ -78,7 +78,7 @@ fun ChatScreenContent(
                     onValueChange = {
                         onEvent(HomeUiEvent.MessageChanged(it))
                     },
-                    isSendIconEnabled = state.message.isNotEmpty(),
+                    isSendIconEnabled = state.message.isNotBlank(),
                     onSendIconClick = {
                         onEvent(HomeUiEvent.SendMessageToGlobalChat)
                         coroutineScope.launch {
