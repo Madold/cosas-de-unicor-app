@@ -129,8 +129,6 @@ class FirebaseStorageService(
      * @param context Context to start the activity.
      */
     private suspend fun openFile(fileUri: Uri, context: Context, mimeType: String) {
-        Timber.d("Opening file with mime: $mimeType")
-
         try {
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(fileUri, mimeType)
