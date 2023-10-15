@@ -9,4 +9,5 @@ sealed interface HomeUiEvent {
     object SendMessageToGlobalChat : HomeUiEvent
     data class ReplyToMessage(val message: Message): HomeUiEvent
     object ClearReplyMessage: HomeUiEvent
+    data class DownloadDocument(val fileName: String): HomeUiEvent
 }

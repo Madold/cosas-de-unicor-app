@@ -58,7 +58,7 @@ fun ChatBubble(
         content.replyTo?.let { repliedMessage ->
             Column(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
+                    .clip(RoundedCornerShape(12.dp))
                     .background(color = MaterialTheme.colorScheme.surface)
                     .padding(all = 8.dp)
                 ,

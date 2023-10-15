@@ -57,5 +57,15 @@
     <string name="passwords_do_not_match">Las contraseñas no coinciden</string>
     <string name="terms_not_accepted">Debe aceptar los términos y condiciones para registrarse</string>
 
+    <string name="permission_required">Permiso requerido</string>
+    <string name="permission_denied">Permiso rechazado</string>
+    <string name="OK">OK</string>
+    <string name="grant_permission">Garantizar permiso</string>
+    <string name="write_external_storage_permission_rationale">Para garantizar que Cosas de Unicor funciona correctamente, necesitamos permiso para escribir en el almacenamiento externo de tu dispositivo. Esto nos permite guardar y gestionar archivos, como fotos, documentos y copias de seguridad de datos, en tu dispositivo.</string>
+    <string name="write_external_storage_permission_permanently_denied">Permiso de escritura de almacenamiento externo denegado permanentemente. Por favor, vaya a la configuración y habilitarlo.</string>
+
+    <string name="read_external_storage_permission_rationale">Para garantizar que Cosas de Unicor funciona correctamente, necesitamos permiso para leer el almacenamiento externo de tu dispositivo. Esto nos permite leer archivos, como fotos, documentos y copias de seguridad de datos, en su dispositivo.</string>
+    <string name="read_external_storage_permission_permanently_denied">Permiso de lectura de almacenamiento externo denegado permanentemente. Por favor, vaya a la configuración y habilitarlo.</string>
+
 
 </resources>

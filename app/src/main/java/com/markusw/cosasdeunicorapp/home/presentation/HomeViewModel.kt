@@ -1,5 +1,6 @@
 package com.markusw.cosasdeunicorapp.home.presentation
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
@@ -8,6 +9,7 @@ import com.markusw.cosasdeunicorapp.core.utils.Resource
 import com.markusw.cosasdeunicorapp.core.utils.TimeUtils
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.home.domain.model.MessageContent
+import com.markusw.cosasdeunicorapp.home.domain.use_cases.DownloadDocument
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.GetLoggedUser
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.LoadPreviousMessages
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.Logout
@@ -21,6 +23,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,13 +33,15 @@ class HomeViewModel @Inject constructor(
     private val loadPreviousMessages: LoadPreviousMessages,
     private val sendMessageToGlobalChat: SendMessageToGlobalChat,
     private val getLoggedUser: GetLoggedUser,
-    private val logout: Logout
+    private val logout: Logout,
+    private val downloadDocument: DownloadDocument
 ) : ViewModel() {
 
-    private var _uiState = MutableStateFlow(HomeState())
+    private val _uiState = MutableStateFlow(HomeState())
     val uiState = _uiState.asStateFlow()
     private val homeEventsChannel = Channel<HomeEvents>()
     val homeEvents = homeEventsChannel.receiveAsFlow()
+    val visiblePermissionDialogQueue = mutableStateListOf<String>()
 
     init {
         fetchPreviousGlobalMessages()
@@ -90,6 +95,21 @@ class HomeViewModel @Inject constructor(
             is HomeUiEvent.ReplyToMessage -> {
                 _uiState.update { it.copy(repliedMessage = event.message) }
             }
+
+            is HomeUiEvent.DownloadDocument -> {
+                viewModelScope.launch {
+                    when (val downloadResult = downloadDocument(event.fileName)) {
+                        is Resource.Error -> {
+
+                        }
+
+                        is Resource.Success -> {
+                            Timber.d("Downloaded file Uri: ${downloadResult.data}")
+                        }
+                    }
+
+                }
+            }
         }
     }
 
@@ -121,6 +141,16 @@ class HomeViewModel @Inject constructor(
 
     private fun resetMessageField() {
         _uiState.update { it.copy(message = "") }
+    }
+
+    fun dismissDialog() {
+        visiblePermissionDialogQueue.removeFirst()
+    }
+
+    fun onPermissionResult(permission: String, isGranted: Boolean) {
+        if (!isGranted && !visiblePermissionDialogQueue.contains(permission)) {
+            visiblePermissionDialogQueue.add(permission)
+        }
     }
 
     override fun onCleared() {
