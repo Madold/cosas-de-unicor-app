@@ -2,6 +2,7 @@ package com.markusw.cosasdeunicorapp.home.presentation.docs
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,13 +33,18 @@ fun DocsScreenContent(
     ) {
         Button(onClick = {
 
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                onEvent(HomeUiEvent.DownloadDocument("puntajes_referencia_2022.pdf"))
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    onEvent(HomeUiEvent.DownloadDocument("puntajes_referencia_2022.pdf"))
 
-                return@Button
+                    return@Button
+                }
+
+                multiplePermissionLauncher.launch(permissionsToRequest)
+            } else {
+                onEvent(HomeUiEvent.DownloadDocument("puntajes_referencia_2022.pdf"))
             }
 
-            multiplePermissionLauncher.launch(permissionsToRequest)
         }) {
             Text(text = "Descargar documento")
         }
