@@ -87,7 +87,6 @@ fun ChatScreenContent(
                     },
                     messageToReply = state.repliedMessage,
                     onDismissReply = {
-                        // Hola bb
                         onEvent(HomeUiEvent.ClearReplyMessage)
                     }
                 )
