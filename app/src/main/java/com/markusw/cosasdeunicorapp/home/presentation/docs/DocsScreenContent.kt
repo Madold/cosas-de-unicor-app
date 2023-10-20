@@ -1,21 +1,18 @@
 package com.markusw.cosasdeunicorapp.home.presentation.docs
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.unit.dp
 import com.markusw.cosasdeunicorapp.home.presentation.HomeUiEvent
-import com.markusw.cosasdeunicorapp.home.presentation.permissionsToRequest
 
 @Composable
 fun DocsScreenContent(
@@ -27,10 +24,19 @@ fun DocsScreenContent(
 ) {
 
     val context = LocalContext.current
+    val documentSections = listOf(
+        DocumentSection.ConsejoAcademico,
+        DocumentSection.Admisiones
+    )
+    val scrollState = rememberScrollState()
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(scrollState)
     ) {
+        /*
         Button(onClick = {
 
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
@@ -42,11 +48,28 @@ fun DocsScreenContent(
 
                 multiplePermissionLauncher.launch(permissionsToRequest)
             } else {
-                onEvent(HomeUiEvent.DownloadDocument("puntajes_referencia_2022.pdf"))
+                onEvent(HomeUiEvent.DownloadDocument("requisitos_doble_programa.docx"))
             }
 
         }) {
             Text(text = "Descargar documento")
+        }*/
+        
+        documentSections.forEach { section ->
+            Accordion(
+                title = section.label,
+                content = {
+                    section.documents.forEach { documentReference ->
+                        AccordionItem(
+                            title = documentReference.name,
+                            onItemClick = {
+                                onEvent(HomeUiEvent.DownloadDocument(documentReference.documentName))
+                            }
+                        )
+                    }
+                }
+            )
         }
+        
     }
 }
