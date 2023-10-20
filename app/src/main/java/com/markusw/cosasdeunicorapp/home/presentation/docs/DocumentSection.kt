@@ -1,5 +1,6 @@
 package com.markusw.cosasdeunicorapp.home.presentation.docs
 
+@Suppress("SpellCheckingInspection")
 sealed class DocumentSection(
     val label: String,
     val documents: List<DocumentReference>
