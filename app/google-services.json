@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "723240159464-mgqn0djkq5hss6gbsqnn1vennk3qbcou.apps.googleusercontent.com",
+          "client_id": "723240159464-lfub1dtc5812msftabnj4imthv39taqe.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.markusw.cosasdeunicorapp",
-            "certificate_hash": "17e9bbaa8b02c2e02de12b20d30d5995ccbb3433"
+            "certificate_hash": "bd8cd8bf6a32994ec6e2331794f8cef163fbd113"
           }
         },
         {
