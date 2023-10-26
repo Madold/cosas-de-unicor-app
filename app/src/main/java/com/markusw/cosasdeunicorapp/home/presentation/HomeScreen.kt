@@ -28,7 +28,7 @@ import com.markusw.cosasdeunicorapp.home.presentation.chat.ChatScreenContent
 import com.markusw.cosasdeunicorapp.home.presentation.composables.BottomNavigationBar
 import com.markusw.cosasdeunicorapp.home.presentation.docs.DocsScreenContent
 import com.markusw.cosasdeunicorapp.home.presentation.main.HomeScreenContent
-import com.markusw.cosasdeunicorapp.home.presentation.news.NewsScreenContent
+import com.markusw.cosasdeunicorapp.home.presentation.posts.NewsScreenContent
 
 /**
  * Permissions to request when the user tries to download a document.

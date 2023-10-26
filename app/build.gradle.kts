@@ -80,6 +80,7 @@ dependencies {
     val lifecycleComposeVersion = "2.6.1"
     val coilComposeVersion = "2.4.0"
     val composeBomVersion = "2023.08.00"
+    val playServicesAdsVersion = "22.4.0"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.10.1")
@@ -118,6 +119,9 @@ dependencies {
 
     //GMS Play Services Auth
     implementation("com.google.android.gms:play-services-auth:$gmsAuthServicesVersion")
+
+    //Play services ads
+    implementation("com.google.android.gms:play-services-ads:$playServicesAdsVersion")
 
     //Timber
     implementation("com.jakewharton.timber:timber:$timberVersion")
