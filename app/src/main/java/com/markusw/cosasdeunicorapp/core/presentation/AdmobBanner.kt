@@ -14,6 +14,9 @@ import com.markusw.cosasdeunicorapp.core.utils.Constants.ADS_ID
 fun AdmobBanner(
     modifier: Modifier = Modifier,
     onAdClick: () -> Unit = {},
+    onAdLoaded: () -> Unit = {},
+    onAdClosed: () -> Unit = {},
+    onAdOpened: () -> Unit = {},
     onAdFailedToLoad: (LoadAdError) -> Unit = { _ -> },
 ) {
 
@@ -31,7 +34,24 @@ fun AdmobBanner(
                     super.onAdFailedToLoad(p0)
                     onAdFailedToLoad(p0)
                 }
+
+                override fun onAdLoaded() {
+                    super.onAdLoaded()
+                    onAdLoaded()
+                }
+
+                override fun onAdClosed() {
+                    super.onAdClosed()
+                    onAdClosed()
+                }
+
+                override fun onAdOpened() {
+                    super.onAdOpened()
+                    onAdOpened()
+                }
+
             }
+
             loadAd(AdRequest.Builder().build())
         }
     }, modifier = modifier)

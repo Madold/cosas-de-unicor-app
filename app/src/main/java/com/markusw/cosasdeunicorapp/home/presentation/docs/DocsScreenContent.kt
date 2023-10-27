@@ -37,7 +37,7 @@ fun DocsScreenContent(
             Column(
                 modifier = Modifier
                     .padding(padding)
-                    .padding(16.dp)
+                    .padding(horizontal = 16.dp)
                     .verticalScroll(scrollState)
             ) {
                 documentSections.forEach { section ->
