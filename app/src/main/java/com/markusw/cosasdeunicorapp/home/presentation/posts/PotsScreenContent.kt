@@ -12,6 +12,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.markusw.cosasdeunicorapp.core.presentation.AdmobBanner
 import com.markusw.cosasdeunicorapp.home.domain.model.Post
 import com.markusw.cosasdeunicorapp.home.presentation.posts.composables.PostCard
 

@@ -81,6 +81,7 @@ dependencies {
     val coilComposeVersion = "2.4.0"
     val composeBomVersion = "2023.08.00"
     val playServicesAdsVersion = "22.4.0"
+    val webkitVersion = "1.8.0"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.10.1")
@@ -143,6 +144,9 @@ dependencies {
 
     //Coil compose
     implementation("io.coil-kt:coil-compose:$coilComposeVersion")
+
+    //Webkit
+    implementation("androidx.webkit:webkit:$webkitVersion")
 
     //Test dependencies
     testImplementation("junit:junit:4.13.2")
