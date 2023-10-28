@@ -8,7 +8,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
-import com.markusw.cosasdeunicorapp.core.utils.Constants.ADS_ID
+import com.markusw.cosasdeunicorapp.core.utils.Constants.BANNER_AD_ID
 
 @Composable
 fun AdmobBanner(
@@ -23,7 +23,7 @@ fun AdmobBanner(
     AndroidView(factory = { context ->
         AdView(context).apply {
             setAdSize(AdSize.BANNER)
-            adUnitId = ADS_ID
+            adUnitId = BANNER_AD_ID
             adListener = object: AdListener() {
                 override fun onAdClicked() {
                     super.onAdClicked()

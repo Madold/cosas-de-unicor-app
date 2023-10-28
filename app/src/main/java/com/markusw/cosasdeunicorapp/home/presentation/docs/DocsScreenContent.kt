@@ -13,9 +13,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.markusw.cosasdeunicorapp.core.ext.showInterstitialAd
 import com.markusw.cosasdeunicorapp.core.presentation.AdmobBanner
 import com.markusw.cosasdeunicorapp.home.presentation.HomeUiEvent
+import timber.log.Timber
 
 @Composable
 fun DocsScreenContent(
@@ -31,6 +34,7 @@ fun DocsScreenContent(
         DocumentSection.Admisiones
     )
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
 
     Scaffold(
         content = { padding ->
@@ -48,7 +52,11 @@ fun DocsScreenContent(
                                 AccordionItem(
                                     title = documentReference.name,
                                     onItemClick = {
-                                        onEvent(HomeUiEvent.DownloadDocument(documentReference.documentName))
+                                        context.showInterstitialAd(
+                                            onAdDismissed = {
+                                                onEvent(HomeUiEvent.DownloadDocument(documentReference.documentName))
+                                            }
+                                        )
                                     }
                                 )
                             }
