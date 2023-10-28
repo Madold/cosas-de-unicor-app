@@ -66,11 +66,11 @@ class LoginViewModel @Inject constructor(
             val email = uiState.value.email
             val password = uiState.value.password
             when (val authResult = loginWithEmailAndPassword(email, password)) {
-                is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error -> {
+                is Result.Error -> {
                     authenticationEventChannel.send(AuthenticationEvent.AuthFailed(reason = authResult.message!!))
                 }
 
-                is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Success -> {
+                is Result.Success -> {
                     authenticationEventChannel.send(AuthenticationEvent.AuthSuccessful)
                 }
             }
@@ -89,10 +89,10 @@ class LoginViewModel @Inject constructor(
     fun onGoogleSignInResult(googleCredential: AuthCredential) {
         viewModelScope.launch(dispatchers.io) {
             when (val authResult = loginWithCredential(googleCredential)) {
-                is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error -> {
+                is Result.Error -> {
                     authenticationEventChannel.send(AuthenticationEvent.AuthFailed(reason = authResult.message!!))
                 }
-                is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Success -> {
+                is Result.Success -> {
                     authenticationEventChannel.send(AuthenticationEvent.AuthSuccessful)
                 }
             }

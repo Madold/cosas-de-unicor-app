@@ -102,11 +102,11 @@ class HomeViewModel @Inject constructor(
                     _uiState.update { it.copy(isDownloadingDocument = true) }
 
                     when (val downloadResult = downloadDocument(event.fileName)) {
-                        is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error -> {
+                        is Result.Error -> {
 
                         }
 
-                        is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Success -> {
+                        is Result.Success -> {
                             Timber.d("Document downloaded successfully")
                         }
                     }
@@ -133,11 +133,11 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun handleLogoutResult(result: Result<Unit>) {
         when (result) {
-            is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error -> {
+            is Result.Error -> {
 
             }
 
-            is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Success -> {
+            is Result.Success -> {
                 homeEventsChannel.send(HomeEvents.LogoutSuccessful)
             }
         }

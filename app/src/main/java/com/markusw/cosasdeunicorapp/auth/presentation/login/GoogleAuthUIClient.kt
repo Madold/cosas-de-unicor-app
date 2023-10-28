@@ -72,7 +72,7 @@ class GoogleAuthUIClient(
     private fun handleStatusCode(
         code: Int,
         exception: ApiException
-    ): com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error<IntentSender?> {
+    ): Result.Error<IntentSender?> {
         return when (code) {
             CommonStatusCodes.NETWORK_ERROR -> {
                 Result.Error(UiText.StringResource(R.string.network_error))

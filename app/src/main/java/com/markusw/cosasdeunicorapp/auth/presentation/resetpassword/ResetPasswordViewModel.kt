@@ -49,10 +49,10 @@ class ResetPasswordViewModel @Inject constructor(
         viewModelScope.launch(dispatchers.io) {
             _uiState.update { it.copy(isLoading = true) }
             when (val result = sendPasswordResetByEmail(uiState.value.email)) {
-                is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error -> {
+                is Result.Error -> {
                     resetPasswordEventsChannel.send(ResetPasswordEvents.EmailSentError(result.message!!))
                 }
-                is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Success -> {
+                is Result.Success -> {
                     resetPasswordEventsChannel.send(ResetPasswordEvents.EmailSentSuccessfully)
                 }
             }

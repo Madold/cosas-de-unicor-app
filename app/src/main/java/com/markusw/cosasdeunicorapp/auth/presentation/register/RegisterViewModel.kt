@@ -102,7 +102,7 @@ class RegisterViewModel @Inject constructor(
                 )
             }
             when (val registrationResult = registerWithNameEmailAndPassword(name, email, password)) {
-                is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error -> {
+                is Result.Error -> {
                     registrationEventChannel.send(
                         RegistrationEvent.RegistrationFailed(
                             reason = registrationResult.message!!
@@ -110,7 +110,7 @@ class RegisterViewModel @Inject constructor(
                     )
                 }
 
-                is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Success -> {
+                is Result.Success -> {
                     registrationEventChannel.send(RegistrationEvent.SuccessfullyRegistration)
                 }
             }

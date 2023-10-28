@@ -47,7 +47,7 @@ class FirebaseAuthService constructor(
             auth.createUserWithEmailAndPassword(email, password).await()
             setDisplayName(name)
             val registerResult = remoteDatabase.saveUserInDatabase(auth.currentUser!!.toUserModel())
-            if (registerResult is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error) {
+            if (registerResult is Result.Error) {
                 return Result.Error(registerResult.message!!)
             }
             auth.signOut()
@@ -91,7 +91,7 @@ class FirebaseAuthService constructor(
             auth.signInWithCredential(credential).await()
             val registerResult = remoteDatabase.saveUserInDatabase(auth.currentUser!!.toUserModel())
 
-            if (registerResult is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error) {
+            if (registerResult is Result.Error) {
                 return Result.Error(registerResult.message!!)
             }
 

@@ -85,7 +85,7 @@ class LoginFragment : Fragment() {
             lifecycleScope.launch {
                 viewModel.onGoogleSignInStarted()
                 when (val signInResult  = googleAuthClient.signIn()) {
-                    is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error -> {
+                    is Result.Error -> {
                         showDialog(
                             message = signInResult.message!!,
                             positiveButtonText = UiText.StringResource(R.string.accept)
@@ -93,7 +93,7 @@ class LoginFragment : Fragment() {
                         viewModel.onGoogleSignInFinished()
                     }
 
-                    is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Success -> {
+                    is Result.Success -> {
                         signInResult.data?.let { intentSender ->
                             googleSignInLauncher.launch(
                                 IntentSenderRequest.Builder(
