@@ -15,5 +15,5 @@ interface RemoteStorage {
      * @see Resource
      * @see Resource.Success
      */
-    suspend fun downloadDocument(fileName: String): Resource<String>
+    suspend fun downloadDocument(fileName: String): Resource<Unit>
 }

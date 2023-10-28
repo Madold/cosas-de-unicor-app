@@ -36,7 +36,17 @@ class FirebaseStorageService(
 
     private val storageRef = storage.reference
 
-    override suspend fun downloadDocument(fileName: String): Resource<String> {
+    companion object {
+        private const val PDF_MIME_TYPE = "application/pdf"
+        private const val DOCX_MIME_TYPE = "application/msword"
+        private const val XLSX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        private const val PDF = "pdf"
+        private const val DOCX = "docx"
+        private const val XLSX = "xlsx"
+        private const val GENERIC_MIME_TYPE = "application/*"
+    }
+
+    override suspend fun downloadDocument(fileName: String): Resource<Unit> {
         return try {
             if (!isExternalStorageWritable()) {
                 Resource.Error<Unit>(UiText.DynamicString("No se pudo acceder al almacenamiento externo"))
@@ -58,7 +68,7 @@ class FirebaseStorageService(
             val mimeType = getMimeTypeFromFileExtension(getFileExtension(fileName))
             openFile(documentUri, context, mimeType)
 
-            Resource.Success(documentUri.toString())
+            Resource.Success(Unit)
         } catch (e: Exception) {
             Timber.e(e)
             Resource.Error(UiText.DynamicString("Error al descargar el documento"))
@@ -116,10 +126,10 @@ class FirebaseStorageService(
      */
     private fun getMimeTypeFromFileExtension(fileExtension: String): String {
         return when (fileExtension) {
-            "pdf" -> "application/pdf"
-            "docx" -> "application/msword"
-            "xlsx" -> "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            else -> "application/*"
+            PDF -> PDF_MIME_TYPE
+            DOCX -> DOCX_MIME_TYPE
+            XLSX -> XLSX_MIME_TYPE
+            else -> GENERIC_MIME_TYPE
         }
     }
 

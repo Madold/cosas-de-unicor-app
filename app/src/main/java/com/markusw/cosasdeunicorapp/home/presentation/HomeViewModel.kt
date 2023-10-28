@@ -98,16 +98,20 @@ class HomeViewModel @Inject constructor(
 
             is HomeUiEvent.DownloadDocument -> {
                 viewModelScope.launch {
+
+                    _uiState.update { it.copy(isDownloadingDocument = true) }
+
                     when (val downloadResult = downloadDocument(event.fileName)) {
                         is Resource.Error -> {
 
                         }
 
                         is Resource.Success -> {
-                            Timber.d("Downloaded file Uri: ${downloadResult.data}")
+                            Timber.d("Document downloaded successfully")
                         }
                     }
 
+                    _uiState.update { it.copy(isDownloadingDocument = false) }
                 }
             }
         }

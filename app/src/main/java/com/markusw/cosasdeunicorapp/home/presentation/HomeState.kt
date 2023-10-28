@@ -8,5 +8,6 @@ data class HomeState(
     val message: String = "",
     val currentUser: User = User(),
     val isFetchingPreviousGlobalMessages: Boolean = false,
-    val repliedMessage: Message? = null
+    val repliedMessage: Message? = null,
+    val isDownloadingDocument: Boolean = false
 )
