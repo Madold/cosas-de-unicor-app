@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
 import com.markusw.cosasdeunicorapp.core.presentation.UiText
-import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.core.utils.TimeUtils
 import com.markusw.cosasdeunicorapp.home.data.repository.FireStorePager
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
@@ -34,12 +34,12 @@ class FireStoreService constructor(
 
     private val systemTimeStamp = TimeUtils.getDeviceHourInTimestamp()
 
-    override suspend fun sendMessageToGlobalChat(message: Message): Resource<Unit> {
+    override suspend fun sendMessageToGlobalChat(message: Message): Result<Unit> {
         return try {
             fireStore.collection(GLOBAL_CHAT_COLLECTION).add(message).await()
-            Resource.Success(Unit)
+            Result.Success(Unit)
         } catch (e: Exception) {
-            Resource.Error(
+            Result.Error(
                 UiText.StringResource(
                     R.string.unknownException,
                     "${e.javaClass}: ${e.message}"
@@ -48,12 +48,12 @@ class FireStoreService constructor(
         }
     }
 
-    override suspend fun saveUserInDatabase(user: User): Resource<Unit> {
+    override suspend fun saveUserInDatabase(user: User): Result<Unit> {
         return try {
             fireStore.collection(USERS_COLLECTION).document(user.uid).set(user).await()
-            Resource.Success(Unit)
+            Result.Success(Unit)
         } catch (e: Exception) {
-            Resource.Error(
+            Result.Error(
                 UiText.StringResource(
                     R.string.unknownException,
                     "${e.javaClass}: ${e.message}"

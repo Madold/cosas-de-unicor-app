@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.auth.domain.use_cases.SendPasswordResetByEmail
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
 import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidateEmail
-import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.core.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,10 +49,10 @@ class ResetPasswordViewModel @Inject constructor(
         viewModelScope.launch(dispatchers.io) {
             _uiState.update { it.copy(isLoading = true) }
             when (val result = sendPasswordResetByEmail(uiState.value.email)) {
-                is Resource.Error -> {
+                is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error -> {
                     resetPasswordEventsChannel.send(ResetPasswordEvents.EmailSentError(result.message!!))
                 }
-                is Resource.Success -> {
+                is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Success -> {
                     resetPasswordEventsChannel.send(ResetPasswordEvents.EmailSentSuccessfully)
                 }
             }

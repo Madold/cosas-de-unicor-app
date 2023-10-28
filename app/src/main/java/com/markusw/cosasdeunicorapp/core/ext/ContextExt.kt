@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import android.widget.Toast
@@ -102,4 +103,13 @@ fun Context.showInterstitialAd(
         }
     )
 
+}
+
+/**
+ * Checks if a permission is granted.
+ * @param permission The permission to check.
+ * @return True if the permission is granted, false otherwise.
+ */
+fun Context.isPermissionGranted(permission: String): Boolean {
+    return checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
 }

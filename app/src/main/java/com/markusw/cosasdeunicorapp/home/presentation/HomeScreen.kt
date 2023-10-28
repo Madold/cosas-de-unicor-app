@@ -111,7 +111,8 @@ private fun HomeHost(
 
             DocsScreenContent(
                 onEvent = viewModel::onEvent,
-                multiplePermissionLauncher = permissionLauncher
+                multiplePermissionLauncher = permissionLauncher,
+                state = uiState
             )
 
             viewModel.visiblePermissionDialogQueue

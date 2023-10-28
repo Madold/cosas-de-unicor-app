@@ -8,7 +8,7 @@ import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.domain.AuthService
 import com.markusw.cosasdeunicorapp.core.ext.toUserModel
-import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
 import kotlinx.coroutines.tasks.await
@@ -17,7 +17,7 @@ class FirebaseAuthService constructor(
     private val auth: FirebaseAuth,
     private val remoteDatabase: RemoteDatabase
 ) : AuthService {
-    override suspend fun authenticate(email: String, password: String): Resource<Unit> {
+    override suspend fun authenticate(email: String, password: String): Result<Unit> {
         return try {
             auth.signInWithEmailAndPassword(email, password).await()
 
@@ -25,15 +25,15 @@ class FirebaseAuthService constructor(
                 if (!it.isEmailVerified) {
                     it.sendEmailVerification().await()
                     auth.signOut()
-                    return Resource.Error(UiText.StringResource(R.string.account_not_verified))
+                    return Result.Error(UiText.StringResource(R.string.account_not_verified))
                 }
             }
 
-            Resource.Success(Unit)
+            Result.Success(Unit)
         } catch (e: FirebaseAuthInvalidUserException) {
-            Resource.Error(UiText.StringResource(R.string.user_not_exist))
+            Result.Error(UiText.StringResource(R.string.user_not_exist))
         } catch (e: Exception) {
-            Resource.Error(
+            Result.Error(
                 UiText.StringResource(
                     R.string.unknownException,
                     "${e.javaClass}: ${e.message}"
@@ -42,20 +42,20 @@ class FirebaseAuthService constructor(
         }
     }
 
-    override suspend fun register(name: String, email: String, password: String): Resource<Unit> {
+    override suspend fun register(name: String, email: String, password: String): Result<Unit> {
         return try {
             auth.createUserWithEmailAndPassword(email, password).await()
             setDisplayName(name)
             val registerResult = remoteDatabase.saveUserInDatabase(auth.currentUser!!.toUserModel())
-            if (registerResult is Resource.Error) {
-                return Resource.Error(registerResult.message!!)
+            if (registerResult is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error) {
+                return Result.Error(registerResult.message!!)
             }
             auth.signOut()
-            Resource.Success(Unit)
+            Result.Success(Unit)
         } catch (e: FirebaseAuthUserCollisionException) {
-            Resource.Error(UiText.StringResource(R.string.user_already_registered))
+            Result.Error(UiText.StringResource(R.string.user_already_registered))
         } catch (e: Exception) {
-            Resource.Error(
+            Result.Error(
                 UiText.StringResource(
                     R.string.unknownException,
                     "${e.javaClass}: ${e.message}"
@@ -72,12 +72,12 @@ class FirebaseAuthService constructor(
         ).await()
     }
 
-    override suspend fun logout(): Resource<Unit> {
+    override suspend fun logout(): Result<Unit> {
         return try {
             auth.signOut()
-            Resource.Success(Unit)
+            Result.Success(Unit)
         } catch (e: Exception) {
-            Resource.Error(
+            Result.Error(
                 UiText.StringResource(
                     R.string.unknownException,
                     "${e.javaClass}: ${e.message}"
@@ -86,18 +86,18 @@ class FirebaseAuthService constructor(
         }
     }
 
-    override suspend fun authenticateWithCredential(credential: AuthCredential): Resource<Unit> {
+    override suspend fun authenticateWithCredential(credential: AuthCredential): Result<Unit> {
         return try {
             auth.signInWithCredential(credential).await()
             val registerResult = remoteDatabase.saveUserInDatabase(auth.currentUser!!.toUserModel())
 
-            if (registerResult is Resource.Error) {
-                return Resource.Error(registerResult.message!!)
+            if (registerResult is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error) {
+                return Result.Error(registerResult.message!!)
             }
 
-            Resource.Success(Unit)
+            Result.Success(Unit)
         } catch (e: Exception) {
-            Resource.Error(
+            Result.Error(
                 UiText.StringResource(
                     R.string.unknownException,
                     "${e.javaClass}: ${e.message}"
@@ -106,14 +106,14 @@ class FirebaseAuthService constructor(
         }
     }
 
-    override suspend fun sendPasswordResetByEmail(email: String): Resource<Unit> {
+    override suspend fun sendPasswordResetByEmail(email: String): Result<Unit> {
         return try {
             auth.sendPasswordResetEmail(email).await()
-            Resource.Success(Unit)
+            Result.Success(Unit)
         } catch (e: FirebaseAuthInvalidUserException) {
-            Resource.Error(UiText.StringResource(R.string.user_not_exist))
+            Result.Error(UiText.StringResource(R.string.user_not_exist))
         } catch (e: Exception) {
-            Resource.Error(
+            Result.Error(
                 UiText.StringResource(
                     R.string.unknownException,
                     "${e.javaClass}: ${e.message}"

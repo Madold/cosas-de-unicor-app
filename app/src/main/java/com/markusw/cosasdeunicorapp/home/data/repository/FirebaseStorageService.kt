@@ -7,10 +7,11 @@ import android.net.Uri
 import android.os.Environment
 import androidx.core.content.FileProvider
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageException
 import com.markusw.cosasdeunicorapp.BuildConfig
 import com.markusw.cosasdeunicorapp.core.ext.toast
 import com.markusw.cosasdeunicorapp.core.presentation.UiText
-import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.home.domain.repository.RemoteStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -23,9 +24,9 @@ import java.io.File
  * Implementation of [RemoteStorage] that uses Firebase Storage.
  * @see RemoteStorage
  * @see FirebaseStorage
- * @see Resource
- * @see Resource.Success
- * @see Resource.Error
+ * @see Result
+ * @see Result.Success
+ * @see Result.Error
  * @see UiText
  * @see UiText.DynamicString
  */
@@ -39,17 +40,21 @@ class FirebaseStorageService(
     companion object {
         private const val PDF_MIME_TYPE = "application/pdf"
         private const val DOCX_MIME_TYPE = "application/msword"
-        private const val XLSX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        private const val XLSX_MIME_TYPE =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         private const val PDF = "pdf"
         private const val DOCX = "docx"
         private const val XLSX = "xlsx"
         private const val GENERIC_MIME_TYPE = "application/*"
     }
 
-    override suspend fun downloadDocument(fileName: String): Resource<Unit> {
+    override suspend fun downloadDocument(fileName: String): Result<Unit> {
+
+        Timber.d("Downloading document $fileName")
+
         return try {
             if (!isExternalStorageWritable()) {
-                Resource.Error<Unit>(UiText.DynamicString("No se pudo acceder al almacenamiento externo"))
+                Result.Error<Unit>(UiText.DynamicString("No se pudo acceder al almacenamiento externo"))
             }
 
             val downloadsDirectory =
@@ -68,10 +73,17 @@ class FirebaseStorageService(
             val mimeType = getMimeTypeFromFileExtension(getFileExtension(fileName))
             openFile(documentUri, context, mimeType)
 
-            Resource.Success(Unit)
+            Result.Success(Unit)
+        } catch (e: StorageException) {
+
+            when (e.errorCode) {
+                StorageException.ERROR_OBJECT_NOT_FOUND -> Result.Error(UiText.DynamicString("El documento no existe"))
+                else -> Result.Error(UiText.DynamicString("Error al descargar el documento"))
+            }
+
         } catch (e: Exception) {
             Timber.e(e)
-            Resource.Error(UiText.DynamicString("Error al descargar el documento"))
+            Result.Error(UiText.DynamicString("Error desconocido"))
         }
 
     }

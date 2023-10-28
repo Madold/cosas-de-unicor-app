@@ -12,7 +12,7 @@ import com.google.android.gms.common.api.UnsupportedApiCallException
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
 import com.markusw.cosasdeunicorapp.R
-import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
@@ -22,24 +22,24 @@ class GoogleAuthUIClient(
     private val context: Context,
     private val oneTapClient: SignInClient
 ) {
-    suspend fun signIn(): Resource<IntentSender?> {
+    suspend fun signIn(): Result<IntentSender?> {
         return try {
             val result = oneTapClient.beginSignIn(
                 buildSignInRequest()
             ).await()
 
-            Resource.Success(
+            Result.Success(
                 data = result?.pendingIntent?.intentSender
             )
         } catch (e: ApiException) {
             Timber.e(e)
             handleStatusCode(e.statusCode, e)
         } catch (e: UnsupportedApiCallException) {
-            Resource.Error(UiText.StringResource(R.string.unsuportedApiException))
+            Result.Error(UiText.StringResource(R.string.unsuportedApiException))
         } catch (e: Exception) {
             Timber.e(e)
             if (e is CancellationException) throw e
-            Resource.Error(
+            Result.Error(
                 UiText.StringResource(
                     R.string.unknownException,
                     "${e.javaClass} ${e.message}"
@@ -72,15 +72,15 @@ class GoogleAuthUIClient(
     private fun handleStatusCode(
         code: Int,
         exception: ApiException
-    ): Resource.Error<IntentSender?> {
+    ): com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error<IntentSender?> {
         return when (code) {
             CommonStatusCodes.NETWORK_ERROR -> {
-                Resource.Error(UiText.StringResource(R.string.network_error))
+                Result.Error(UiText.StringResource(R.string.network_error))
             }
 
             else -> {
                 Timber.d("Unknown error code: $code: ${exception.message}")
-                Resource.Error(
+                Result.Error(
                     UiText.StringResource(
                         R.string.unknownException,
                         "${exception.javaClass} ${exception.message}"

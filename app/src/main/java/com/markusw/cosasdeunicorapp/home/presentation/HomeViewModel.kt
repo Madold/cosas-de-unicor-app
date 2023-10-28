@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
 import com.markusw.cosasdeunicorapp.core.ext.prepend
-import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.core.utils.TimeUtils
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.home.domain.model.MessageContent
@@ -102,11 +102,11 @@ class HomeViewModel @Inject constructor(
                     _uiState.update { it.copy(isDownloadingDocument = true) }
 
                     when (val downloadResult = downloadDocument(event.fileName)) {
-                        is Resource.Error -> {
+                        is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error -> {
 
                         }
 
-                        is Resource.Success -> {
+                        is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Success -> {
                             Timber.d("Document downloaded successfully")
                         }
                     }
@@ -131,13 +131,13 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun handleLogoutResult(result: Resource<Unit>) {
+    private suspend fun handleLogoutResult(result: Result<Unit>) {
         when (result) {
-            is Resource.Error -> {
+            is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error -> {
 
             }
 
-            is Resource.Success -> {
+            is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Success -> {
                 homeEventsChannel.send(HomeEvents.LogoutSuccessful)
             }
         }

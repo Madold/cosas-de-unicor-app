@@ -1,12 +1,12 @@
 package com.markusw.cosasdeunicorapp.core.domain
 
 import com.google.firebase.auth.AuthCredential
-import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.core.utils.Result
 
 interface AuthService {
-    suspend fun authenticate(email: String, password: String): Resource<Unit>
-    suspend fun register(name: String, email: String, password: String): Resource<Unit>
-    suspend fun logout(): Resource<Unit>
-    suspend fun authenticateWithCredential(credential: AuthCredential): Resource<Unit>
-    suspend fun sendPasswordResetByEmail(email: String): Resource<Unit>
+    suspend fun authenticate(email: String, password: String): Result<Unit>
+    suspend fun register(name: String, email: String, password: String): Result<Unit>
+    suspend fun logout(): Result<Unit>
+    suspend fun authenticateWithCredential(credential: AuthCredential): Result<Unit>
+    suspend fun sendPasswordResetByEmail(email: String): Result<Unit>
 }

@@ -19,7 +19,7 @@ import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.showDialog
 import com.markusw.cosasdeunicorapp.core.ext.toast
 import com.markusw.cosasdeunicorapp.core.presentation.UiText
-import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -85,7 +85,7 @@ class LoginFragment : Fragment() {
             lifecycleScope.launch {
                 viewModel.onGoogleSignInStarted()
                 when (val signInResult  = googleAuthClient.signIn()) {
-                    is Resource.Error -> {
+                    is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Error -> {
                         showDialog(
                             message = signInResult.message!!,
                             positiveButtonText = UiText.StringResource(R.string.accept)
@@ -93,7 +93,7 @@ class LoginFragment : Fragment() {
                         viewModel.onGoogleSignInFinished()
                     }
 
-                    is Resource.Success -> {
+                    is com.markusw.cosasdeunicorapp.core.utils.Resource.Result.Success -> {
                         signInResult.data?.let { intentSender ->
                             googleSignInLauncher.launch(
                                 IntentSenderRequest.Builder(
