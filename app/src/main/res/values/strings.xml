@@ -18,7 +18,7 @@
     <!-- Login error messages -->
     <string name="blank_email_error">Email can\'t be blank</string>
     <string name="invalid_email_error">Email is not valid</string>
-    <string name="account_not_verified">The account is not verified. A verification email has been sent.</string>
+    <string name="account_not_verified">The account is not verified. Please verify your email.</string>
     <string name="user_not_exist">There is no user with that email.</string>
     <string name="user_already_registered">There is already a registered user with that email address.</string>
 
@@ -44,7 +44,7 @@
     <string name="and">&#32; and &#32;</string>
     <string name="conditions">conditions</string>
 
-    <string name="succesfully_registered">Successfully registered</string>
+    <string name="succesfully_registered">Successfully registered. An email verification was send to your email.</string>
     <string name="important">Important</string>
     <string name="understood">Understood</string>
 

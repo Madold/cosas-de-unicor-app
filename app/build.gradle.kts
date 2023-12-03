@@ -82,6 +82,7 @@ dependencies {
     val composeBomVersion = "2023.08.00"
     val playServicesAdsVersion = "22.4.0"
     val webkitVersion = "1.8.0"
+    val retrofitVersion = "2.9.0"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.10.1")
@@ -117,6 +118,7 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-ktx")
     //FireStore
     implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-messaging-ktx")
 
     //GMS Play Services Auth
     implementation("com.google.android.gms:play-services-auth:$gmsAuthServicesVersion")
@@ -144,6 +146,9 @@ dependencies {
 
     //Coil compose
     implementation("io.coil-kt:coil-compose:$coilComposeVersion")
+
+    //Retrofit
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
 
     //Webkit
     implementation("androidx.webkit:webkit:$webkitVersion")

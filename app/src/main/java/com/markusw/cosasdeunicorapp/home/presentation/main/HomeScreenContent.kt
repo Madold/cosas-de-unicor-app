@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.markusw.cosasdeunicorapp.home.presentation.main
 
 import androidx.compose.foundation.layout.Column

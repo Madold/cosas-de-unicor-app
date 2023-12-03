@@ -11,7 +11,7 @@
     <string name="register_here">Registrate aquí</string>
     <string name="blank_email_error">El correo no puede estar en blanco</string>
     <string name="invalid_email_error">El correo no es un correo valido</string>
-    <string name="account_not_verified">La cuenta no está verificada. Se ha enviado un correo de verificación.</string>
+    <string name="account_not_verified">La cuenta no está verificada. Porfavor verifique su cuenta.</string>
     <string name="user_not_exist">No existe un usuario con ese correo.</string>
     <string name="user_already_registered">Ya hay un usuario registrado con ese correo.</string>
 
@@ -37,7 +37,7 @@
     <string name="and">&#32; y &#32;</string>
     <string name="conditions">condiciones</string>
 
-    <string name="succesfully_registered">Registro exitoso</string>
+    <string name="succesfully_registered">Se ha registrado correctamente. Se ha enviado una verificación a su correo electrónico.</string>
     <string name="important">Importante</string>
     <string name="understood">Entendido</string>
 

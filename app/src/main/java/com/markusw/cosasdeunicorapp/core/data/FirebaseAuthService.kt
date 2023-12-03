@@ -4,18 +4,21 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.messaging.FirebaseMessaging
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.domain.AuthService
-import com.markusw.cosasdeunicorapp.core.ext.toUserModel
-import com.markusw.cosasdeunicorapp.core.utils.Result
-import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
+import com.markusw.cosasdeunicorapp.core.ext.toUserModel
+import com.markusw.cosasdeunicorapp.core.presentation.UiText
+import com.markusw.cosasdeunicorapp.core.utils.Result
 import kotlinx.coroutines.tasks.await
 
-class FirebaseAuthService constructor(
+class FirebaseAuthService(
     private val auth: FirebaseAuth,
-    private val remoteDatabase: RemoteDatabase
+    private val remoteDatabase: RemoteDatabase,
+    private val messaging: FirebaseMessaging
 ) : AuthService {
     override suspend fun authenticate(email: String, password: String): Result<Unit> {
         return try {
@@ -23,7 +26,6 @@ class FirebaseAuthService constructor(
 
             auth.currentUser?.let {
                 if (!it.isEmailVerified) {
-                    it.sendEmailVerification().await()
                     auth.signOut()
                     return Result.Error(UiText.StringResource(R.string.account_not_verified))
                 }
@@ -46,10 +48,16 @@ class FirebaseAuthService constructor(
         return try {
             auth.createUserWithEmailAndPassword(email, password).await()
             setDisplayName(name)
-            val registerResult = remoteDatabase.saveUserInDatabase(auth.currentUser!!.toUserModel())
+            val messagingToken = messaging.token.await()
+            val registerResult = remoteDatabase.saveUserInDatabase(
+                auth.currentUser!!.toUserModel().copy(messagingToken = messagingToken)
+            )
+            sendEmailVerification(auth.currentUser!!)
+
             if (registerResult is Result.Error) {
                 return Result.Error(registerResult.message!!)
             }
+
             auth.signOut()
             Result.Success(Unit)
         } catch (e: FirebaseAuthUserCollisionException) {
@@ -65,11 +73,11 @@ class FirebaseAuthService constructor(
     }
 
     private suspend fun setDisplayName(name: String) {
-        auth.currentUser!!.updateProfile(
-            userProfileChangeRequest {
-                displayName = name
-            }
-        ).await()
+        auth.currentUser?.updateProfile(userProfileChangeRequest { displayName = name })?.await()
+    }
+
+    suspend fun sendEmailVerification(user: FirebaseUser) {
+        user.sendEmailVerification().await()
     }
 
     override suspend fun logout(): Result<Unit> {

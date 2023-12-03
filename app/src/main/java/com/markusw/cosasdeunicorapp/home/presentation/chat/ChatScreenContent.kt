@@ -84,6 +84,7 @@ fun ChatScreenContent(
                         coroutineScope.launch {
                             scrollState.animateScrollToItem(0)
                         }
+                        onEvent(HomeUiEvent.ClearReplyMessage)
                     },
                     messageToReply = state.repliedMessage,
                     onDismissReply = {

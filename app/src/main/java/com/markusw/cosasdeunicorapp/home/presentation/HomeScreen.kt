@@ -3,6 +3,7 @@ package com.markusw.cosasdeunicorapp.home.presentation
 import android.Manifest
 import android.app.Activity
 import android.content.ContextWrapper
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,6 +31,7 @@ import com.markusw.cosasdeunicorapp.home.presentation.composables.BottomNavigati
 import com.markusw.cosasdeunicorapp.home.presentation.docs.DocsScreenContent
 import com.markusw.cosasdeunicorapp.home.presentation.main.HomeScreenContent
 import com.markusw.cosasdeunicorapp.home.presentation.posts.NewsScreenContent
+import timber.log.Timber
 
 /**
  * Permissions to request when the user tries to download a document.
@@ -43,6 +46,22 @@ fun HomeScreen() {
 
     val navController = rememberNavController()
     val viewModel: HomeViewModel = hiltViewModel()
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (isGranted) {
+                Timber.d("Permission granted")
+            } else {
+                Timber.d("Permission denied")
+            }
+        }
+    )
+
+    LaunchedEffect(key1 = Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
 
     Scaffold(
         content = {

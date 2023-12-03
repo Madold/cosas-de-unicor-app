@@ -14,7 +14,10 @@ class FireStorePager(
         val messages = currentPage.get().await()
         val lastVisibleMessage = messages.documents.lastOrNull()
         lastVisibleMessage?.let {
-            val previousMessages = currentPage.startAfter(it).get().await()
+            val previousMessages = currentPage
+                .startAfter(it)
+                .get()
+                .await()
             currentPage = previousMessages.query
             return messages.toObjects(Message::class.java)
         } ?: run {
