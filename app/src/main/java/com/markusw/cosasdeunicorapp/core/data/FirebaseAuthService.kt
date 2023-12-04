@@ -1,19 +1,14 @@
 package com.markusw.cosasdeunicorapp.core.data
 
-import android.content.Context
 import android.net.Uri
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.messaging.FirebaseMessaging
-import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.domain.AuthService
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
 import com.markusw.cosasdeunicorapp.core.ext.toDomainModel
-import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import kotlinx.coroutines.tasks.await
 
@@ -21,25 +16,7 @@ class FirebaseAuthService(
     private val auth: FirebaseAuth,
     private val remoteDatabase: RemoteDatabase,
     private val messaging: FirebaseMessaging,
-    private val context: Context
-) : AuthService {
-
-    private suspend fun <T> executeFirebaseOperation(operation: suspend () -> T): Result<T> {
-        return try {
-            Result.Success(operation())
-        } catch (e: FirebaseAuthInvalidUserException) {
-            Result.Error(UiText.StringResource(R.string.user_not_exist))
-        } catch (e: FirebaseAuthUserCollisionException) {
-            Result.Error(UiText.StringResource(R.string.user_already_registered))
-        } catch (e: Exception) {
-            Result.Error(
-                UiText.StringResource(
-                    R.string.unknownException,
-                    "${e.javaClass}: ${e.message}"
-                )
-            )
-        }
-    }
+) : FirebaseService(), AuthService {
 
     override suspend fun authenticate(email: String, password: String): Result<Unit> {
         return executeFirebaseOperation {
@@ -48,7 +25,6 @@ class FirebaseAuthService(
             auth.currentUser?.let {
                 if (!it.isEmailVerified) {
                     auth.signOut()
-                    throw FirebaseAuthInvalidUserException("", context.getString(R.string.account_not_verified))
                 }
             }
         }
