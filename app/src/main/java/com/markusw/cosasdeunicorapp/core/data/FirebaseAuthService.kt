@@ -76,7 +76,7 @@ class FirebaseAuthService(
         auth.currentUser?.updateProfile(userProfileChangeRequest { displayName = name })?.await()
     }
 
-    suspend fun sendEmailVerification(user: FirebaseUser) {
+    private suspend fun sendEmailVerification(user: FirebaseUser) {
         user.sendEmailVerification().await()
     }
 
