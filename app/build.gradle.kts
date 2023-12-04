@@ -149,6 +149,7 @@ dependencies {
 
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     //Webkit
     implementation("androidx.webkit:webkit:$webkitVersion")
