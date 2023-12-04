@@ -1,5 +1,7 @@
 package com.markusw.cosasdeunicorapp.home.domain.model
 
+import com.markusw.cosasdeunicorapp.core.domain.model.User
+
 data class Message(
     val content: MessageContent = MessageContent(text = "Example message"),
     val sender: User = User(),

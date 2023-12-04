@@ -10,7 +10,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.domain.AuthService
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
-import com.markusw.cosasdeunicorapp.core.ext.toUserModel
+import com.markusw.cosasdeunicorapp.core.ext.toDomainModel
 import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import kotlinx.coroutines.tasks.await
@@ -48,10 +48,7 @@ class FirebaseAuthService(
         return try {
             auth.createUserWithEmailAndPassword(email, password).await()
             setDisplayName(name)
-            val messagingToken = messaging.token.await()
-            val registerResult = remoteDatabase.saveUserInDatabase(
-                auth.currentUser!!.toUserModel().copy(messagingToken = messagingToken)
-            )
+            val registerResult = remoteDatabase.saveUserInDatabase(auth.currentUser!!.toDomainModel())
             sendEmailVerification(auth.currentUser!!)
 
             if (registerResult is Result.Error) {
@@ -76,8 +73,8 @@ class FirebaseAuthService(
         auth.currentUser?.updateProfile(userProfileChangeRequest { displayName = name })?.await()
     }
 
-    private suspend fun sendEmailVerification(user: FirebaseUser) {
-        user.sendEmailVerification().await()
+    private suspend fun sendEmailVerification(user: FirebaseUser?) {
+        user?.sendEmailVerification()?.await()
     }
 
     override suspend fun logout(): Result<Unit> {
@@ -97,7 +94,7 @@ class FirebaseAuthService(
     override suspend fun authenticateWithCredential(credential: AuthCredential): Result<Unit> {
         return try {
             auth.signInWithCredential(credential).await()
-            val registerResult = remoteDatabase.saveUserInDatabase(auth.currentUser!!.toUserModel())
+            val registerResult = remoteDatabase.saveUserInDatabase(auth.currentUser!!.toDomainModel())
 
             if (registerResult is Result.Error) {
                 return Result.Error(registerResult.message!!)

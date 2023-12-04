@@ -4,19 +4,19 @@ import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
+import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.core.utils.TimeUtils
 import com.markusw.cosasdeunicorapp.home.data.repository.FireStorePager
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
-import com.markusw.cosasdeunicorapp.home.domain.model.User
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.tasks.await
 
-class FireStoreService constructor(
+class FireStoreService(
     private val fireStore: FirebaseFirestore,
     private val fireStorePager: FireStorePager
 ) : RemoteDatabase {
