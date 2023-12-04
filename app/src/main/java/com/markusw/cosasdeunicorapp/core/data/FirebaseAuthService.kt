@@ -1,5 +1,6 @@
 package com.markusw.cosasdeunicorapp.core.data
 
+import android.net.Uri
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -20,6 +21,7 @@ class FirebaseAuthService(
     private val remoteDatabase: RemoteDatabase,
     private val messaging: FirebaseMessaging
 ) : AuthService {
+
     override suspend fun authenticate(email: String, password: String): Result<Unit> {
         return try {
             auth.signInWithEmailAndPassword(email, password).await()
@@ -46,10 +48,11 @@ class FirebaseAuthService(
 
     override suspend fun register(name: String, email: String, password: String): Result<Unit> {
         return try {
+            val loggedUser = auth.currentUser!!
             auth.createUserWithEmailAndPassword(email, password).await()
-            setDisplayName(name)
-            val registerResult = remoteDatabase.saveUserInDatabase(auth.currentUser!!.toDomainModel())
-            sendEmailVerification(auth.currentUser!!)
+            updateUserProfileData(displayName = name)
+            val registerResult = remoteDatabase.saveUserInDatabase(loggedUser.toDomainModel())
+            sendEmailVerification(loggedUser)
 
             if (registerResult is Result.Error) {
                 return Result.Error(registerResult.message!!)
@@ -69,8 +72,13 @@ class FirebaseAuthService(
         }
     }
 
-    private suspend fun setDisplayName(name: String) {
-        auth.currentUser?.updateProfile(userProfileChangeRequest { displayName = name })?.await()
+    private suspend fun updateUserProfileData(displayName: String? = null, photoUri: Uri? = null) {
+        auth.currentUser?.updateProfile(
+            userProfileChangeRequest {
+                displayName?.let { this.displayName = it }
+                photoUri?.let { this.photoUri = it }
+            }
+        )?.await()
     }
 
     private suspend fun sendEmailVerification(user: FirebaseUser?) {
@@ -94,7 +102,8 @@ class FirebaseAuthService(
     override suspend fun authenticateWithCredential(credential: AuthCredential): Result<Unit> {
         return try {
             auth.signInWithCredential(credential).await()
-            val registerResult = remoteDatabase.saveUserInDatabase(auth.currentUser!!.toDomainModel())
+            val registerResult =
+                remoteDatabase.saveUserInDatabase(auth.currentUser!!.toDomainModel())
 
             if (registerResult is Result.Error) {
                 return Result.Error(registerResult.message!!)
