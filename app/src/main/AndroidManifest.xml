@@ -48,7 +48,7 @@
             android:value="ca-app-pub-3940256099942544~3347511713" />
 
         <service
-            android:name=".MyFirebaseMessagingService"
+            android:name=".RemoteMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

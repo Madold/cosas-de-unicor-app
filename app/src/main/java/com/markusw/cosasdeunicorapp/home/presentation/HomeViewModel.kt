@@ -75,17 +75,22 @@ class HomeViewModel @Inject constructor(
             is HomeUiEvent.SendMessageToGlobalChat -> {
                 val message = uiState.value.message.trim()
                 val sender = uiState.value.currentUser
+                val repliedMessage = uiState.value.repliedMessage
 
-                resetMessageField()
-                viewModelScope.launch(dispatchers.io) {
+                viewModelScope.launch {
                     sendMessageToGlobalChat(
                         Message(
-                            content = MessageContent(text = message, replyTo = uiState.value.repliedMessage),
+                            content = MessageContent(
+                                text = message,
+                                replyTo = repliedMessage
+                            ),
                             sender = sender,
                             timestamp = TimeUtils.getDeviceHourInTimestamp()
                         )
                     )
                 }
+
+                resetMessageField()
             }
 
             is HomeUiEvent.ClearReplyMessage -> {

@@ -12,6 +12,17 @@ import com.markusw.cosasdeunicorapp.core.ext.toDomainModel
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import kotlinx.coroutines.tasks.await
 
+/**
+ * Created by Markus on 3-12-2023.
+ * Concrete implementation of the AuthService interface for android
+ * @param auth the firebase auth instance
+ * @param remoteDatabase the remote database to get the data from
+ * @param messaging the messaging service to subscribe to topics
+ * @see AuthService
+ * @see FirebaseAuth
+ * @see RemoteDatabase
+ * @see FirebaseMessaging
+ */
 class FirebaseAuthService(
     private val auth: FirebaseAuth,
     private val remoteDatabase: RemoteDatabase,
@@ -37,6 +48,7 @@ class FirebaseAuthService(
             updateUserProfileData(displayName = name)
             remoteDatabase.saveUserInDatabase(loggedUser.toDomainModel())
             sendEmailVerification(loggedUser)
+            messaging.subscribeToTopic("/topics/${loggedUser.uid}")
             auth.signOut()
             Result.Success(Unit)
         }
@@ -64,7 +76,9 @@ class FirebaseAuthService(
     override suspend fun authenticateWithCredential(credential: AuthCredential): Result<Unit> {
         return executeFirebaseOperation {
             auth.signInWithCredential(credential).await()
+            val loggedUser = auth.currentUser!!
             remoteDatabase.saveUserInDatabase(auth.currentUser!!.toDomainModel())
+            messaging.subscribeToTopic("/topics/${loggedUser.uid}")
         }
     }
 
