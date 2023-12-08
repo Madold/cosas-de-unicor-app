@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.messaging.FirebaseMessaging
+import com.markusw.cosasdeunicorapp.core.EmailNotVerifiedException
 import com.markusw.cosasdeunicorapp.core.domain.AuthService
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
 import com.markusw.cosasdeunicorapp.core.ext.toDomainModel
@@ -36,6 +37,7 @@ class FirebaseAuthService(
             auth.currentUser?.let {
                 if (!it.isEmailVerified) {
                     auth.signOut()
+                    throw EmailNotVerifiedException()
                 }
             }
         }
@@ -43,14 +45,13 @@ class FirebaseAuthService(
 
     override suspend fun register(name: String, email: String, password: String): Result<Unit> {
         return executeFirebaseOperation {
-            val loggedUser = auth.currentUser!!
             auth.createUserWithEmailAndPassword(email, password).await()
+            val loggedUser = auth.currentUser!!
             updateUserProfileData(displayName = name)
             remoteDatabase.saveUserInDatabase(loggedUser.toDomainModel())
             sendEmailVerification(loggedUser)
             messaging.subscribeToTopic("/topics/${loggedUser.uid}")
             auth.signOut()
-            Result.Success(Unit)
         }
     }
 
@@ -69,6 +70,8 @@ class FirebaseAuthService(
 
     override suspend fun logout(): Result<Unit> {
         return executeFirebaseOperation {
+            val loggedUser = auth.currentUser!!
+            messaging.unsubscribeFromTopic("/topics/${loggedUser.uid}")
             auth.signOut()
         }
     }

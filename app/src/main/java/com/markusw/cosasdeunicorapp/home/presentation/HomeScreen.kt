@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +32,7 @@ import com.markusw.cosasdeunicorapp.home.presentation.composables.BottomNavigati
 import com.markusw.cosasdeunicorapp.home.presentation.docs.DocsScreenContent
 import com.markusw.cosasdeunicorapp.home.presentation.main.HomeScreenContent
 import com.markusw.cosasdeunicorapp.home.presentation.posts.NewsScreenContent
+import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 
 /**
@@ -103,9 +105,24 @@ private fun HomeHost(
         }
 
         composable(route = HomeScreens.Chat.route) {
+
+            val scrollState = rememberLazyListState()
+
+            LaunchedEffect(key1 = viewModel.chatListEvents) {
+                viewModel.chatListEvents.collectLatest { chatListEvent ->
+                    when (chatListEvent) {
+                        is ChatListEvent.MessageAdded -> {
+                            Timber.d("Message added scrolling to bottom")
+                            scrollState.animateScrollToItem(0)
+                        }
+                    }
+                }
+            }
+
             ChatScreenContent(
                 state = uiState,
-                onEvent = viewModel::onEvent
+                onEvent = viewModel::onEvent,
+                scrollState = scrollState
             )
         }
 

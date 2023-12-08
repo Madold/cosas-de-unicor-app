@@ -76,4 +76,7 @@
     <string name="read_external_storage_permission_rationale">To ensure that Cosas de Unicor functions correctly, we require permission to read your device\'s external storage. This allows us to read files, such as photos, documents, and data backups, on your device.</string>
     <string name="read_external_storage_permission_permanently_denied">Read external storage permission permanently denied. Please go to settings and enable it.</string>
 
+    <!-- Notifications -->
+    <string name="replied_text">%s replied</string>
+
 </resources>

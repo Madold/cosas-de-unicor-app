@@ -1,17 +1,19 @@
 package com.markusw.cosasdeunicorapp.di
 
 import android.content.Context
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.markusw.cosasdeunicorapp.core.data.FireStoreService
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
 import com.markusw.cosasdeunicorapp.core.utils.Constants.PUSH_NOTIFICATION_API_BASE_URL
-import com.markusw.cosasdeunicorapp.home.data.remote.PushNotificationApi
-import com.markusw.cosasdeunicorapp.home.data.remote.PushNotificationService
+import com.markusw.cosasdeunicorapp.home.data.remote.FirebasePushNotificationService
+import com.markusw.cosasdeunicorapp.home.data.remote.FirebaseCloudMessagingApi
 import com.markusw.cosasdeunicorapp.home.data.repository.AndroidChatRepository
 import com.markusw.cosasdeunicorapp.home.data.repository.FireStorePager
 import com.markusw.cosasdeunicorapp.home.data.repository.FirebaseStorageService
+import com.markusw.cosasdeunicorapp.home.domain.remote.PushNotificationService
 import com.markusw.cosasdeunicorapp.home.domain.repository.ChatRepository
 import com.markusw.cosasdeunicorapp.home.domain.repository.RemoteStorage
 import dagger.Module
@@ -31,8 +33,7 @@ object DataModule {
     @Singleton
     fun provideChatRepository(
         remoteDatabase: RemoteDatabase,
-        pushNotificationService: PushNotificationService
-    ): ChatRepository = AndroidChatRepository(remoteDatabase, pushNotificationService)
+    ): ChatRepository = AndroidChatRepository(remoteDatabase)
 
     @Provides
     @Singleton
@@ -52,18 +53,33 @@ object DataModule {
     fun provideRemoteStorage(
         @ApplicationContext context: Context,
         storage: FirebaseStorage
-    ): RemoteStorage = FirebaseStorageService(context, storage)
+    ): RemoteStorage = FirebaseStorageService(
+        context,
+        storage
+    )
 
     @Provides
     @Singleton
-    fun providePushNotificationApi(): PushNotificationApi {
+    fun providePushNotificationApi(): FirebaseCloudMessagingApi {
         val retrofitClient = Retrofit
             .Builder()
             .baseUrl(PUSH_NOTIFICATION_API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        return retrofitClient.create(PushNotificationApi::class.java)
+        return retrofitClient.create(FirebaseCloudMessagingApi::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun providePushNotificationService(
+        api: FirebaseCloudMessagingApi,
+        auth: FirebaseAuth,
+        @ApplicationContext context: Context
+    ): PushNotificationService = FirebasePushNotificationService(
+        api,
+        auth,
+        context
+    )
 
 }

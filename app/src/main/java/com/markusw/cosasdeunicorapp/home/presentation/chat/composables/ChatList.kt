@@ -11,11 +11,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markusw.cosasdeunicorapp.core.ext.isSecondLastItemVisible
 import com.markusw.cosasdeunicorapp.core.presentation.PullRefreshIndicator
 import com.markusw.cosasdeunicorapp.core.presentation.pullRefresh
 import com.markusw.cosasdeunicorapp.core.presentation.rememberPullRefreshState
@@ -40,12 +38,6 @@ fun ChatList(
             }
         }
     )
-
-    LaunchedEffect(key1 = globalChatList) {
-        if (scrollState.isSecondLastItemVisible()) {
-            scrollState.animateScrollToItem(globalChatList.size)
-        }
-    }
 
     Box(
         modifier = modifier

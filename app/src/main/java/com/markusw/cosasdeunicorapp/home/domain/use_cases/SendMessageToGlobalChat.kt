@@ -11,7 +11,6 @@ class SendMessageToGlobalChat @Inject constructor(
 ) {
 
     suspend operator fun invoke(message: Message): Result<Unit> {
-        Timber.d("Sending message with reply: ${message.content.replyTo?.content?.text}")
         return chatRepository.sendMessageToGlobalChat(message)
     }
 

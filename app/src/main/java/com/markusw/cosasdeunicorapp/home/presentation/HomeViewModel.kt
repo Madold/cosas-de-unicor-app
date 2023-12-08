@@ -15,6 +15,7 @@ import com.markusw.cosasdeunicorapp.home.domain.use_cases.LoadPreviousMessages
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.Logout
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.ObserveNewMessages
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.SendMessageToGlobalChat
+import com.markusw.cosasdeunicorapp.home.domain.use_cases.SendPushNotification
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,13 +35,16 @@ class HomeViewModel @Inject constructor(
     private val sendMessageToGlobalChat: SendMessageToGlobalChat,
     private val getLoggedUser: GetLoggedUser,
     private val logout: Logout,
-    private val downloadDocument: DownloadDocument
+    private val downloadDocument: DownloadDocument,
+    private val sendPushNotification: SendPushNotification,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeState())
     val uiState = _uiState.asStateFlow()
     private val homeEventsChannel = Channel<HomeEvents>()
     val homeEvents = homeEventsChannel.receiveAsFlow()
+    private val chatListEventsChannel = Channel<ChatListEvent>()
+    val chatListEvents = chatListEventsChannel.receiveAsFlow()
     val visiblePermissionDialogQueue = mutableStateListOf<String>()
 
     init {
@@ -49,6 +53,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(dispatchers.io) {
             observeNewMessages().collectLatest { newMessage ->
                 _uiState.update { it.copy(globalChatList = it.globalChatList.prepend(newMessage)) }
+                chatListEventsChannel.send(ChatListEvent.MessageAdded)
             }
         }
 
@@ -86,7 +91,7 @@ class HomeViewModel @Inject constructor(
                             ),
                             sender = sender,
                             timestamp = TimeUtils.getDeviceHourInTimestamp()
-                        )
+                        ).also { viewModelScope.launch { sendPushNotification(it) } }
                     )
                 }
 

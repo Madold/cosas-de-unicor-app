@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,10 +41,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun ChatScreenContent(
     state: HomeState,
-    onEvent: (HomeUiEvent) -> Unit
+    onEvent: (HomeUiEvent) -> Unit,
+    scrollState: LazyListState = rememberLazyListState(),
 ) {
 
-    val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     var isScrollToEndFABVisible by remember { mutableStateOf(false) }
     val fabOffset by animateDpAsState(
@@ -63,9 +64,11 @@ fun ChatScreenContent(
         modifier = Modifier
             .fillMaxSize(),
         topBar = {
-            CenterAlignedTopAppBar(title = {
-                Text(text = stringResource(id = R.string.global_chat))
-            })
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(text = stringResource(id = R.string.global_chat))
+                }
+            )
         },
         bottomBar = {
             Box(
@@ -81,9 +84,6 @@ fun ChatScreenContent(
                     isSendIconEnabled = state.message.isNotBlank(),
                     onSendIconClick = {
                         onEvent(HomeUiEvent.SendMessageToGlobalChat)
-                        coroutineScope.launch {
-                            scrollState.animateScrollToItem(0)
-                        }
                         onEvent(HomeUiEvent.ClearReplyMessage)
                     },
                     messageToReply = state.repliedMessage,

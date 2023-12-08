@@ -3,6 +3,7 @@ package com.markusw.cosasdeunicorapp.core.data
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.EmailNotVerifiedException
 import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.core.utils.Result
 
@@ -24,6 +25,8 @@ abstract class FirebaseService {
     protected suspend fun <T> executeFirebaseOperation(operation: suspend () -> T): Result<T> {
         return try {
             Result.Success(operation())
+        } catch (e: EmailNotVerifiedException) {
+            Result.Error(UiText.StringResource(R.string.account_not_verified))
         } catch (e: FirebaseAuthInvalidUserException) {
             Result.Error(UiText.StringResource(R.string.user_not_exist))
         } catch (e: FirebaseAuthUserCollisionException) {
