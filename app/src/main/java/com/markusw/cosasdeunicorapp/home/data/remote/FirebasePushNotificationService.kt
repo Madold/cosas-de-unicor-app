@@ -26,9 +26,9 @@ class FirebasePushNotificationService(
 ): PushNotificationService {
 
     /**
-     * Posts a notification to the server to be sent to a device
-     * @param notification the notification to be sent
-     * @return a Result indicating the success of the operation
+     * Sends a push notification to the user that sent the message that was replied to
+     * @param message the message that was replied to
+     * @return a Result with the success or error
      */
     override suspend fun postNotification(message: Message): Result<Unit> {
         return withContext(Dispatchers.IO) {
