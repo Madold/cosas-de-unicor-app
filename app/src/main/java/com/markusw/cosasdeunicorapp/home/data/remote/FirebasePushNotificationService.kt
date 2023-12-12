@@ -62,6 +62,8 @@ class FirebasePushNotificationService(
                             )
                         )
                     }
+
+                    Timber.d("Notification sent successfully")
                 }
                 Result.Success(Unit)
             } catch (e: Exception) {
