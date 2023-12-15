@@ -4,11 +4,13 @@ package com.markusw.cosasdeunicorapp.home.presentation.chat.composables
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -21,7 +23,12 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.markusw.cosasdeunicorapp.R
@@ -43,7 +50,13 @@ fun MessageField(
 ) {
 
     val sendIconColor by animateColorAsState(
-        targetValue = if (isSendIconEnabled) md_theme_light_primary else md_theme_light_primary.copy(alpha = 0.5f),
+        targetValue = if (isSendIconEnabled) md_theme_light_primary else md_theme_light_primary.copy(
+            alpha = 0.5f
+        ),
+        label = ""
+    )
+    val messageFieldCornerRadius by animateDpAsState(
+        targetValue = if (messageToReply != null) 0.dp else 20.dp,
         label = ""
     )
 
@@ -54,12 +67,32 @@ fun MessageField(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clip(
+                        RoundedCornerShape(
+                            topStart = 20.dp,
+                            topEnd = 20.dp,
+                            bottomStart = 0.dp,
+                            bottomEnd = 0.dp
+                        )
+                    )
                     .background(message_field_color)
             ) {
                 Column(
-                    modifier = Modifier.weight(1f)
-                ){
-                    Text(text = "Reply to: ${messageToReply?.sender?.displayName}")
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(8.dp)
+                ) {
+                    Text(text = buildAnnotatedString {
+                        append("Respondiendo a ")
+                        withStyle(
+                            style = SpanStyle(
+                                fontWeight = FontWeight.Bold
+                            )
+                        ) {
+                            append(messageToReply?.sender?.displayName ?: "")
+                        }
+
+                    })
                     Text(text = messageToReply?.content?.text ?: "")
                 }
                 IconButton(onClick = onDismissReply) {
@@ -71,7 +104,12 @@ fun MessageField(
             modifier = Modifier.fillMaxWidth(),
             value = value,
             onValueChange = onValueChange,
-            shape = RoundedCornerShape(20.dp),
+            shape = RoundedCornerShape(
+                topStart = messageFieldCornerRadius,
+                topEnd = messageFieldCornerRadius,
+                bottomStart = 20.dp,
+                bottomEnd = 20.dp
+            ),
             trailingIcon = {
                 RoundedIconButton(
                     icon = R.drawable.ic_send,
