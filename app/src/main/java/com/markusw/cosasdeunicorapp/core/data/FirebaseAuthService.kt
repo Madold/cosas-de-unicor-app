@@ -33,13 +33,14 @@ class FirebaseAuthService(
     override suspend fun authenticate(email: String, password: String): Result<Unit> {
         return executeFirebaseOperation {
             auth.signInWithEmailAndPassword(email, password).await()
-
-            auth.currentUser?.let {
+            val loggedUser = auth.currentUser!!
+            loggedUser.let {
                 if (!it.isEmailVerified) {
                     auth.signOut()
                     throw EmailNotVerifiedException()
                 }
             }
+            messaging.subscribeToTopic("/topics/${loggedUser.uid}")
         }
     }
 
@@ -50,7 +51,6 @@ class FirebaseAuthService(
             updateUserProfileData(displayName = name)
             remoteDatabase.saveUserInDatabase(loggedUser.toDomainModel())
             sendEmailVerification(loggedUser)
-            messaging.subscribeToTopic("/topics/${loggedUser.uid}")
             auth.signOut()
         }
     }
