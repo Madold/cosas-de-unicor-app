@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -77,26 +78,35 @@ fun MessageField(
                     )
                     .background(message_field_color)
             ) {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(8.dp)
-                ) {
-                    Text(text = buildAnnotatedString {
-                        append("Respondiendo a ")
-                        withStyle(
-                            style = SpanStyle(
-                                fontWeight = FontWeight.Bold
-                            )
-                        ) {
-                            append(messageToReply?.sender?.displayName ?: "")
-                        }
+                Row {
 
-                    })
-                    Text(text = messageToReply?.content?.text ?: "")
-                }
-                IconButton(onClick = onDismissReply) {
-                    Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Red)
+                            .padding(8.dp)
+                    )
+
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(8.dp)
+                    ) {
+                        Text(text = buildAnnotatedString {
+                            append("Respondiendo a ")
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Bold
+                                )
+                            ) {
+                                append(messageToReply?.sender?.displayName ?: "")
+                            }
+
+                        })
+                        Text(text = messageToReply?.content?.text ?: "")
+                    }
+                    IconButton(onClick = onDismissReply) {
+                        Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+                    }
                 }
             }
         }

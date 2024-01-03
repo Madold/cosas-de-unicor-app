@@ -31,7 +31,7 @@ import com.markusw.cosasdeunicorapp.home.presentation.chat.ChatScreenContent
 import com.markusw.cosasdeunicorapp.home.presentation.composables.BottomNavigationBar
 import com.markusw.cosasdeunicorapp.home.presentation.docs.DocsScreenContent
 import com.markusw.cosasdeunicorapp.home.presentation.main.HomeScreenContent
-import com.markusw.cosasdeunicorapp.home.presentation.posts.NewsScreenContent
+import com.markusw.cosasdeunicorapp.home.presentation.news.NewsScreenContent
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 

@@ -1,9 +1,8 @@
-package com.markusw.cosasdeunicorapp.home.presentation.posts.composables
+package com.markusw.cosasdeunicorapp.home.presentation.news.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
