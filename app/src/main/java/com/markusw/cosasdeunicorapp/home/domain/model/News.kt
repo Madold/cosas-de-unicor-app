@@ -1,8 +1,8 @@
 package com.markusw.cosasdeunicorapp.home.domain.model
 
-data class Post(
+data class News(
     val title: String,
-    val body: String,
-    val imageURL: String,
+    val content: String,
+    val coverUrl: String,
     val timestamp: Long,
 )
