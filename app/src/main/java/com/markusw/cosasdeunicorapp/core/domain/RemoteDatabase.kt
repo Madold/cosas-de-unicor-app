@@ -3,6 +3,7 @@ package com.markusw.cosasdeunicorapp.core.domain
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.core.domain.model.User
+import com.markusw.cosasdeunicorapp.home.domain.model.News
 import kotlinx.coroutines.flow.Flow
 
 interface RemoteDatabase {
@@ -11,12 +12,14 @@ interface RemoteDatabase {
      * @return a list of messages
      */
     suspend fun loadPreviousMessages(): List<Message>
+
     /**
      * Sends a message to the global chat
      * @param message the message to send
      * @return a Result object
      */
     suspend fun sendMessageToGlobalChat(message: Message): Result<Unit>
+
     /**
      * Saves the user in the database
      * @param user the user to save
@@ -33,4 +36,13 @@ interface RemoteDatabase {
      * @see Flow
      */
     suspend fun onNewMessage(): Flow<Message>
+
+    /**
+     * Loads the previous news from the database
+     * @return a list of news
+     */
+    suspend fun loadPreviousNews(): List<News>
+
+    suspend fun onNewNews(): Flow<News>
+
 }

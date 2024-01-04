@@ -5,7 +5,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.home.domain.repository.PaginationSource
 import kotlinx.coroutines.tasks.await
-class FireStorePager(
+class MessageFireStorePager(
     initialQuery: Query
 ) : PaginationSource<QuerySnapshot, Message> {
 

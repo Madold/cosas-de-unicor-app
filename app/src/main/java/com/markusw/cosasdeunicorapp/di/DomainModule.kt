@@ -1,6 +1,5 @@
 package com.markusw.cosasdeunicorapp.di
 
-import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
@@ -8,11 +7,11 @@ import com.markusw.cosasdeunicorapp.core.domain.AuthService
 import com.markusw.cosasdeunicorapp.core.data.FireStoreService
 import com.markusw.cosasdeunicorapp.core.data.FirebaseAuthService
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
-import com.markusw.cosasdeunicorapp.home.data.repository.FireStorePager
+import com.markusw.cosasdeunicorapp.home.data.repository.MessageFireStorePager
+import com.markusw.cosasdeunicorapp.home.data.repository.NewsFireStorePager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -34,6 +33,14 @@ object DomainModule {
 
     @Provides
     @Singleton
-    fun provideRemoteDatabase(fireStore: FirebaseFirestore, fireStorePager: FireStorePager): RemoteDatabase = FireStoreService(fireStore, fireStorePager)
+    fun provideRemoteDatabase(
+        fireStore: FirebaseFirestore,
+        messagesFireStorePager: MessageFireStorePager,
+        newsFireStorePager: NewsFireStorePager
+    ): RemoteDatabase = FireStoreService(
+        fireStore,
+        messagesFireStorePager,
+        newsFireStorePager
+    )
 
 }

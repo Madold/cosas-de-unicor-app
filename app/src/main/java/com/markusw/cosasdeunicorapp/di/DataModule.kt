@@ -11,10 +11,13 @@ import com.markusw.cosasdeunicorapp.core.utils.Constants.PUSH_NOTIFICATION_API_B
 import com.markusw.cosasdeunicorapp.home.data.remote.FirebasePushNotificationService
 import com.markusw.cosasdeunicorapp.home.data.remote.FirebaseCloudMessagingApi
 import com.markusw.cosasdeunicorapp.home.data.repository.AndroidChatRepository
-import com.markusw.cosasdeunicorapp.home.data.repository.FireStorePager
+import com.markusw.cosasdeunicorapp.home.data.repository.AndroidNewsRepository
+import com.markusw.cosasdeunicorapp.home.data.repository.MessageFireStorePager
 import com.markusw.cosasdeunicorapp.home.data.repository.FirebaseStorageService
+import com.markusw.cosasdeunicorapp.home.data.repository.NewsFireStorePager
 import com.markusw.cosasdeunicorapp.home.domain.remote.PushNotificationService
 import com.markusw.cosasdeunicorapp.home.domain.repository.ChatRepository
+import com.markusw.cosasdeunicorapp.home.domain.repository.NewsRepository
 import com.markusw.cosasdeunicorapp.home.domain.repository.RemoteStorage
 import dagger.Module
 import dagger.Provides
@@ -37,6 +40,12 @@ object DataModule {
 
     @Provides
     @Singleton
+    fun provideNewsRepository(
+        remoteDatabase: RemoteDatabase,
+    ): NewsRepository = AndroidNewsRepository(remoteDatabase)
+
+    @Provides
+    @Singleton
     fun provideInitialQuery(fireStore: FirebaseFirestore): Query {
         return fireStore
             .collection(FireStoreService.GLOBAL_CHAT_COLLECTION)
@@ -46,7 +55,18 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideFireStorePager(initialQuery: Query): FireStorePager = FireStorePager(initialQuery)
+    fun provideFireStorePager(initialQuery: Query): MessageFireStorePager = MessageFireStorePager(initialQuery)
+
+    @Provides
+    @Singleton
+    fun provideNewsPager(fireStore: FirebaseFirestore): NewsFireStorePager {
+        val initialQuery = fireStore
+            .collection(FireStoreService.NEWS_COLLECTION)
+            .limit(FireStoreService.PAGE_SIZE)
+            .orderBy(FireStoreService.TIMESTAMP, Query.Direction.DESCENDING)
+
+        return NewsFireStorePager(initialQuery)
+    }
 
     @Provides
     @Singleton

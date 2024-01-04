@@ -12,8 +12,10 @@ import com.markusw.cosasdeunicorapp.home.domain.model.MessageContent
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.DownloadDocument
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.GetLoggedUser
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.LoadPreviousMessages
+import com.markusw.cosasdeunicorapp.home.domain.use_cases.LoadPreviousNews
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.Logout
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.ObserveNewMessages
+import com.markusw.cosasdeunicorapp.home.domain.use_cases.ObserveNewNews
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.SendMessageToGlobalChat
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.SendPushNotification
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,6 +39,8 @@ class HomeViewModel @Inject constructor(
     private val logout: Logout,
     private val downloadDocument: DownloadDocument,
     private val sendPushNotification: SendPushNotification,
+    private val loadPreviousNews: LoadPreviousNews,
+    private val observeNewNews: ObserveNewNews
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeState())
@@ -46,14 +50,24 @@ class HomeViewModel @Inject constructor(
     private val chatListEventsChannel = Channel<ChatListEvent>()
     val chatListEvents = chatListEventsChannel.receiveAsFlow()
     val visiblePermissionDialogQueue = mutableStateListOf<String>()
+    private val newsListEventChannel = Channel<NewsListEvent>()
+    val newsListEvents = newsListEventChannel.receiveAsFlow()
 
     init {
         fetchPreviousGlobalMessages()
+        loadInitialNews()
 
         viewModelScope.launch(dispatchers.io) {
             observeNewMessages().collectLatest { newMessage ->
                 _uiState.update { it.copy(globalChatList = it.globalChatList.prepend(newMessage)) }
                 chatListEventsChannel.send(ChatListEvent.MessageAdded)
+            }
+        }
+
+        viewModelScope.launch(dispatchers.io) {
+            observeNewNews().collectLatest { newNews ->
+                _uiState.update { it.copy(newsList = it.newsList.prepend(newNews)) }
+                newsListEventChannel.send(NewsListEvent.NewsAdded)
             }
         }
 
@@ -124,6 +138,8 @@ class HomeViewModel @Inject constructor(
                     _uiState.update { it.copy(isDownloadingDocument = false) }
                 }
             }
+
+            is HomeUiEvent.FetchPreviousNews -> fetchPreviousNews()
         }
     }
 
@@ -138,6 +154,34 @@ class HomeViewModel @Inject constructor(
                 }
             }
             _uiState.update { it.copy(isFetchingPreviousGlobalMessages = false) }
+        }
+    }
+
+    private fun fetchPreviousNews() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isFetchingPreviousNews = true) }
+            loadPreviousNews().also { previousNews ->
+                _uiState.update {
+                    it.copy(
+                        newsList = it.newsList + previousNews
+                    )
+                }
+            }
+            _uiState.update { it.copy(isFetchingPreviousNews = false) }
+        }
+    }
+
+    private fun loadInitialNews() {
+        _uiState.update { it.copy(isFetchingPreviousNews = true) }
+        viewModelScope.launch {
+            loadPreviousNews().also { previousNews ->
+                _uiState.update {
+                    it.copy(
+                        newsList = it.newsList + previousNews
+                    )
+                }
+            }
+            _uiState.update { it.copy(isFetchingPreviousNews = false) }
         }
     }
 
@@ -170,6 +214,7 @@ class HomeViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         homeEventsChannel.close()
+        chatListEventsChannel.close()
     }
 
 }

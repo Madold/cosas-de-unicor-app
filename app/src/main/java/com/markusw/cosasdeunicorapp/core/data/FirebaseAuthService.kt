@@ -41,6 +41,7 @@ class FirebaseAuthService(
                 }
             }
             messaging.subscribeToTopic("/topics/${loggedUser.uid}")
+            messaging.subscribeToTopic("/topics/news")
         }
     }
 
@@ -72,6 +73,7 @@ class FirebaseAuthService(
         return executeFirebaseOperation {
             val loggedUser = auth.currentUser!!
             messaging.unsubscribeFromTopic("/topics/${loggedUser.uid}")
+            messaging.unsubscribeFromTopic("/topics/news")
             auth.signOut()
         }
     }
@@ -82,6 +84,7 @@ class FirebaseAuthService(
             val loggedUser = auth.currentUser!!
             remoteDatabase.saveUserInDatabase(auth.currentUser!!.toDomainModel())
             messaging.subscribeToTopic("/topics/${loggedUser.uid}")
+            messaging.subscribeToTopic("/topics/news")
         }
     }
 

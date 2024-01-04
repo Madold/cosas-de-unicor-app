@@ -127,7 +127,20 @@ private fun HomeHost(
         }
 
         composable(route = HomeScreens.News.route) {
-            NewsScreenContent()
+
+            val scrollState = rememberLazyListState()
+
+            LaunchedEffect(key1 = viewModel.newsListEvents) {
+                viewModel.newsListEvents.collectLatest { newsListEvent ->
+                    scrollState.animateScrollToItem(0)
+                }
+            }
+
+            NewsScreenContent(
+                state = uiState,
+                onEvent = viewModel::onEvent,
+                scrollState = scrollState
+            )
         }
 
         composable(route = HomeScreens.Documents.route) {
