@@ -16,9 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import com.markusw.cosasdeunicorapp.core.presentation.ExpandableText
 import com.markusw.cosasdeunicorapp.home.domain.model.News
 
 @Composable
@@ -57,12 +57,19 @@ fun NewsCard(
                     style = MaterialTheme.typography.titleLarge
                 )
                 Divider()
-                Text(
+                /*Text(
                     text = news.content,
                     maxLines = 10,
                     style = MaterialTheme.typography.bodyLarge,
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Justify
+                )*/
+                ExpandableText(
+                    text = news.content,
+                    collapsedMaxLine = 5,
+                    showMoreText = "...Mostrar más",
+                    showLessText = " Mostrar menos",
+                    textAlign = TextAlign.Justify,
                 )
             }
         }
