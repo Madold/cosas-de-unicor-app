@@ -40,11 +40,6 @@ fun NewsList(
             state = scrollState,
             reverseLayout = true
         ) {
-            item {
-                if (state.isFetchingPreviousNews) {
-                    LinearProgressIndicator()
-                }
-            }
             items(state.newsList) { news ->
                 NewsCard(
                     news = news,
@@ -57,6 +52,11 @@ fun NewsList(
             refreshing = false,
             state = pullRefreshState
         )
+        if (state.isFetchingPreviousNews) {
+            LinearProgressIndicator(
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
+        }
     }
 
 
