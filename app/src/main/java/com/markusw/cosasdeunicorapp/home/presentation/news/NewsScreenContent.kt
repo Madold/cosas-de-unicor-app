@@ -62,7 +62,7 @@ fun NewsScreenContent(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = "Noticias")
+                    Text(text = "Canal de Noticias")
                 }
             )
         },
