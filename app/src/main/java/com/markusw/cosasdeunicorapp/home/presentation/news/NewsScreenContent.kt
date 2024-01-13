@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.isScrolledToTheStart
+import com.markusw.cosasdeunicorapp.core.presentation.AdmobBanner
 import com.markusw.cosasdeunicorapp.home.presentation.HomeState
 import com.markusw.cosasdeunicorapp.home.presentation.HomeUiEvent
 import com.markusw.cosasdeunicorapp.home.presentation.chat.composables.RoundedIconButton
@@ -89,6 +90,9 @@ fun NewsScreenContent(
                 },
                 enabled = isScrollToEndFABVisible
             )
+        },
+        bottomBar = {
+            AdmobBanner()
         }
     )
 

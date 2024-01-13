@@ -2,6 +2,7 @@ package com.markusw.cosasdeunicorapp.core.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -20,9 +21,12 @@ fun AdmobBanner(
     onAdFailedToLoad: (LoadAdError) -> Unit = { _ -> },
 ) {
 
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val height = 60
+
     AndroidView(factory = { context ->
         AdView(context).apply {
-            setAdSize(AdSize.BANNER)
+            setAdSize(AdSize(screenWidth, height))
             adUnitId = BANNER_AD_ID
             adListener = object: AdListener() {
                 override fun onAdClicked() {
