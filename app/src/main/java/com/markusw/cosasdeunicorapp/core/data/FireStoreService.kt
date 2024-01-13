@@ -1,6 +1,7 @@
 package com.markusw.cosasdeunicorapp.core.data
 
 import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 
 class FireStoreService(
     private val fireStore: FirebaseFirestore,
@@ -121,11 +123,16 @@ class FireStoreService(
                     it.documentChanges.forEach { change ->
                         when (change.type) {
                             DocumentChange.Type.ADDED -> {
-                                val news = change.document.toObject(News::class.java)
+                                val news = change
+                                    .document
+                                    .toObject(News::class.java)
+                                    .copy(id = change.document.id)
+
                                 if (news.timestamp > systemTimeStamp) {
                                     trySend(news)
                                 }
                             }
+
                             else -> {}
                         }
                     }
@@ -137,5 +144,57 @@ class FireStoreService(
         }
 
     }.conflate()
+
+    override suspend fun removeUserFromLikedByList(newsId: String, user: User): Result<Unit> {
+        return try {
+
+            fireStore
+                .collection(NEWS_COLLECTION)
+                .document(newsId)
+                .update(
+                    mapOf(
+                        "likedBy" to FieldValue.arrayRemove(user)
+                    )
+                )
+                .await()
+
+            Result.Success(Unit)
+
+        } catch (e: Exception) {
+            Result.Error(
+                UiText.DynamicString(
+                    "${e.javaClass}: ${e.message}"
+                )
+            )
+        }
+
+    }
+
+    override suspend fun addUserToLikedByList(newsId: String, user: User): Result<Unit> {
+        return try {
+
+            Timber.d("addUserToLikedByList: $newsId, $user")
+
+            fireStore
+                .collection(NEWS_COLLECTION)
+                .document(newsId)
+                .update(
+                    mapOf(
+                        "likedBy" to FieldValue.arrayUnion(user)
+                    )
+                )
+                .await()
+
+            Timber.d("Success")
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Timber.d("Error: ${e.message}")
+            Result.Error(
+                UiText.DynamicString(
+                    "${e.javaClass}: ${e.message}"
+                )
+            )
+        }
+    }
 
 }

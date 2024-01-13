@@ -9,6 +9,7 @@ import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.core.utils.TimeUtils
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.home.domain.model.MessageContent
+import com.markusw.cosasdeunicorapp.home.domain.use_cases.AddUserToLikedByList
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.DownloadDocument
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.GetLoggedUser
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.LoadPreviousMessages
@@ -16,6 +17,7 @@ import com.markusw.cosasdeunicorapp.home.domain.use_cases.LoadPreviousNews
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.Logout
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.ObserveNewMessages
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.ObserveNewNews
+import com.markusw.cosasdeunicorapp.home.domain.use_cases.RemoveUserFromLikedByList
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.SendMessageToGlobalChat
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.SendPushNotification
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,7 +42,9 @@ class HomeViewModel @Inject constructor(
     private val downloadDocument: DownloadDocument,
     private val sendPushNotification: SendPushNotification,
     private val loadPreviousNews: LoadPreviousNews,
-    private val observeNewNews: ObserveNewNews
+    private val observeNewNews: ObserveNewNews,
+    private val addUserToLikedByList: AddUserToLikedByList,
+    private val removeUserFromLikedByList: RemoveUserFromLikedByList
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeState())
@@ -140,6 +144,50 @@ class HomeViewModel @Inject constructor(
             }
 
             is HomeUiEvent.FetchPreviousNews -> fetchPreviousNews()
+
+            is HomeUiEvent.LikeNews -> {
+
+                val isUserInLikedList = event.news.likedBy.contains(uiState.value.currentUser)
+
+                if (isUserInLikedList) {
+
+                    val newsIndex = uiState.value.newsList.indexOf(event.news)
+                    val updatedNews = event.news.copy(
+                        likedBy = event.news.likedBy.filter { it != uiState.value.currentUser }
+                    )
+                    _uiState.update {
+                        it.copy(
+                            newsList = it.newsList.toMutableList().also { newsList ->
+                                newsList[newsIndex] = updatedNews
+                            }
+                        )
+                    }
+
+                    viewModelScope.launch(dispatchers.io) {
+                        removeUserFromLikedByList(event.news.id!!, uiState.value.currentUser)
+                    }
+                } else {
+
+                    val newsIndex = uiState.value.newsList.indexOf(event.news)
+                    val updatedNews = event.news.copy(
+                        likedBy = event.news.likedBy + uiState.value.currentUser
+                    )
+                    _uiState.update {
+                        it.copy(
+                            newsList = it.newsList.toMutableList().also { newsList ->
+                                newsList[newsIndex] = updatedNews
+                            }
+                        )
+                    }
+
+                    viewModelScope.launch(dispatchers.io) {
+                        addUserToLikedByList(event.news.id!!, uiState.value.currentUser)
+                    }
+
+                }
+
+
+            }
         }
     }
 

@@ -5,6 +5,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.markusw.cosasdeunicorapp.home.domain.model.News
 import com.markusw.cosasdeunicorapp.home.domain.repository.PaginationSource
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 
 class NewsFireStorePager(
     initialQuery: Query
@@ -13,8 +14,8 @@ class NewsFireStorePager(
     private var currentPage = initialQuery
 
     override suspend fun loadPage(): List<News> {
-        val news = currentPage.get().await()
-        val lastNews = news.documents.lastOrNull()
+        val newsPage = currentPage.get().await()
+        val lastNews = newsPage.documents.lastOrNull()
 
         lastNews?.let {
             val previousNews = currentPage
@@ -22,7 +23,9 @@ class NewsFireStorePager(
                 .get()
                 .await()
             currentPage = previousNews.query
-            return news.toObjects(News::class.java)
+            return newsPage.map { document ->
+                document.toObject(News::class.java).copy(id = document.id)
+            }
         } ?: run {
             return emptyList()
         }

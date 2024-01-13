@@ -24,8 +24,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,15 +43,23 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.SubcomposeAsyncImage
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.home.domain.model.News
+import timber.log.Timber
 
 @Composable
 fun NewsCard(
     modifier: Modifier = Modifier,
-    news: News
+    news: News,
+    onNewsLiked: (News) -> Unit = {},
+    loggedUser: User = User(),
 ) {
 
     var isNewsDetailsDialogVisible by rememberSaveable { mutableStateOf(false) }
+    val isLiked = news.likedBy.contains(loggedUser)
+    val heartIcon = if (isLiked) R.drawable.ic_heart else R.drawable.ic_heart_outline
+
+    Timber.d("likedBy: ${news.likedBy} - isLiked: $isLiked user: $loggedUser")
 
     Row(
         modifier = modifier
@@ -75,24 +85,19 @@ fun NewsCard(
                 text = news.title,
                 style = MaterialTheme.typography.titleLarge
             )
-            /*ExpandableText(
-                text = news.content,
-                collapsedMaxLine = 5,
-                showMoreText = "...Mostrar más",
-                showLessText = " Mostrar menos",
-                textAlign = TextAlign.Justify,
-            )*/
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { onNewsLiked(news) }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_heart),
+                        painter = painterResource(id = heartIcon),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
+                Text(text = news.likedBy.size.toString())
             }
         }
     }

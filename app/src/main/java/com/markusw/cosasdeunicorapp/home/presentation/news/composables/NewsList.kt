@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import com.markusw.cosasdeunicorapp.core.presentation.PullRefreshIndicator
 import com.markusw.cosasdeunicorapp.core.presentation.pullRefresh
 import com.markusw.cosasdeunicorapp.core.presentation.rememberPullRefreshState
+import com.markusw.cosasdeunicorapp.home.domain.model.News
 import com.markusw.cosasdeunicorapp.home.presentation.HomeState
 
 @Composable
@@ -21,6 +22,7 @@ fun NewsList(
     modifier: Modifier = Modifier,
     scrollState: LazyListState = rememberLazyListState(),
     onRequestPreviousNews: () -> Unit = {},
+    onNewsLiked: (News) -> Unit = {},
 ) {
 
     val pullRefreshState = rememberPullRefreshState(
@@ -43,6 +45,8 @@ fun NewsList(
             items(state.newsList) { news ->
                 NewsCard(
                     news = news,
+                    onNewsLiked = onNewsLiked,
+                    loggedUser = state.currentUser
                 )
             }
         }
@@ -51,6 +55,7 @@ fun NewsList(
             refreshing = false,
             state = pullRefreshState
         )
+
         if (state.isFetchingPreviousNews) {
             LinearProgressIndicator(
                 modifier = Modifier.align(Alignment.TopCenter)

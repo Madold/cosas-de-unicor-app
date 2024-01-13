@@ -1,6 +1,7 @@
 package com.markusw.cosasdeunicorapp.home.presentation
 
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
+import com.markusw.cosasdeunicorapp.home.domain.model.News
 
 sealed interface HomeUiEvent {
     object FetchPreviousGlobalMessages : HomeUiEvent
@@ -11,4 +12,5 @@ sealed interface HomeUiEvent {
     object ClearReplyMessage: HomeUiEvent
     data class DownloadDocument(val fileName: String): HomeUiEvent
     object FetchPreviousNews: HomeUiEvent
+    data class LikeNews(val news: News): HomeUiEvent
 }

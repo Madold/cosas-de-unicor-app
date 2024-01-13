@@ -23,7 +23,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.markusw.cosasdeunicorapp.R
-import com.markusw.cosasdeunicorapp.core.ext.isScrolledToTheEnd
 import com.markusw.cosasdeunicorapp.core.ext.isScrolledToTheStart
 import com.markusw.cosasdeunicorapp.home.presentation.HomeState
 import com.markusw.cosasdeunicorapp.home.presentation.HomeUiEvent
@@ -33,7 +32,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 fun NewsScreenContent(
@@ -74,7 +72,10 @@ fun NewsScreenContent(
                 scrollState = scrollState,
                 onRequestPreviousNews = {
                     onEvent(HomeUiEvent.FetchPreviousNews)
-                }
+                },
+                onNewsLiked = { likedNews ->
+                    onEvent(HomeUiEvent.LikeNews(likedNews))
+                },
             )
         },
         floatingActionButton = {

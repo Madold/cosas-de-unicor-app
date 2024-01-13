@@ -45,4 +45,22 @@ interface RemoteDatabase {
 
     suspend fun onNewNews(): Flow<News>
 
+    /**
+     * Removes a user from the likedBy list of a news
+     * @param newsId the id of the news
+     * @param user the user to remove
+     * @return a Result object
+     * @see Result
+     */
+    suspend fun removeUserFromLikedByList(newsId: String, user: User): Result<Unit>
+
+    /**
+     * Adds a user to the likedBy list of a news
+     * @param newsId the id of the news
+     * @param user the user to add
+     * @return a Result object
+     * @see Result
+     */
+    suspend fun addUserToLikedByList(newsId: String, user: User): Result<Unit>
+
 }
