@@ -43,7 +43,6 @@ fun NewsList(
             items(state.newsList) { news ->
                 NewsCard(
                     news = news,
-                    onNewsClicked = {},
                 )
             }
         }
