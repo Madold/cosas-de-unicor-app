@@ -23,19 +23,19 @@ fun ChatBubble(
     content: MessageContent,
     modifier: Modifier = Modifier,
     isFromCurrentUser: Boolean = false,
-    cornerRadius: Dp = 20.dp
+    cornerRadius: Dp = 15.dp
 ) {
 
     val chatBubbleShape = remember(isFromCurrentUser) {
         if (isFromCurrentUser) RoundedCornerShape(
             topStart = cornerRadius,
+            topEnd = 0.dp,
+            bottomStart = cornerRadius,
+            bottomEnd = cornerRadius
+        ) else RoundedCornerShape(
+            topStart = 0.dp,
             topEnd = cornerRadius,
             bottomStart = cornerRadius,
-            bottomEnd = 0.dp
-        ) else RoundedCornerShape(
-            topStart = cornerRadius,
-            topEnd = cornerRadius,
-            bottomStart = 0.dp,
             bottomEnd = cornerRadius
         )
     }
