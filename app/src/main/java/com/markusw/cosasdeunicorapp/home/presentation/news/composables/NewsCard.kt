@@ -114,13 +114,10 @@ fun NewsCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = { onNewsLiked(news) }) {
-                        Icon(
-                            painter = painterResource(id = heartIcon),
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
+                    AnimatedLikeHeart(
+                        isLiked = isLiked,
+                        onToggleLike = { onNewsLiked(news) }
+                    )
                     Text(text = news.likedBy.size.toString())
                 }
             }
