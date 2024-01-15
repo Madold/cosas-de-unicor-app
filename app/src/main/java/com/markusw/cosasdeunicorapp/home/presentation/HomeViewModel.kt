@@ -25,6 +25,7 @@ import com.markusw.cosasdeunicorapp.home.domain.use_cases.SendMessageToGlobalCha
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.SendPushNotification
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -127,9 +128,16 @@ class HomeViewModel @Inject constructor(
             }
 
             is HomeUiEvent.CloseSession -> {
+                _uiState.update {
+                    it.copy(isClosingSession = true)
+                }
                 viewModelScope.launch(dispatchers.io) {
                     val authResult = logout()
+                    delay(1000)
                     handleLogoutResult(authResult)
+                    _uiState.update {
+                        it.copy(isClosingSession = false)
+                    }
                 }
             }
 

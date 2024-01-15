@@ -16,4 +16,5 @@ data class HomeState(
     val newsList: List<News> = emptyList(),
     val usersCount: Int = 0,
     val localSettings: LocalSettings = LocalSettings(),
+    val isClosingSession: Boolean = false,
 )

@@ -100,6 +100,7 @@ private fun HomeHost(
     ) {
         composable(route = HomeScreens.Home.route) {
             HomeScreenContent(
+                state = uiState,
                 onEvent = viewModel::onEvent
             )
         }
