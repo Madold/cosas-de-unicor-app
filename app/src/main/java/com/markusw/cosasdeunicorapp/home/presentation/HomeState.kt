@@ -13,4 +13,5 @@ data class HomeState(
     val isDownloadingDocument: Boolean = false,
     val isFetchingPreviousNews: Boolean = false,
     val newsList: List<News> = emptyList(),
+    val usersCount: Int = 0,
 )
