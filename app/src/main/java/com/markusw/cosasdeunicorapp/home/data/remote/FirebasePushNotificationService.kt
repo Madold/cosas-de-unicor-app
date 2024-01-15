@@ -2,6 +2,7 @@ package com.markusw.cosasdeunicorapp.home.data.remote
 
 import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.core.utils.Result
@@ -22,8 +23,11 @@ import timber.log.Timber
 class FirebasePushNotificationService(
     private val api: FirebaseCloudMessagingApi,
     private val auth: FirebaseAuth,
-    private val context: Context
+    private val context: Context,
+    private val messaging: FirebaseMessaging,
 ): PushNotificationService {
+
+    private val loggedUser by lazy { auth.currentUser }
 
     /**
      * Sends a push notification to the user that sent the message that was replied to
@@ -72,6 +76,14 @@ class FirebasePushNotificationService(
             }
         }
 
+    }
+
+    override fun enableGeneralChatNotifications() {
+        messaging.subscribeToTopic("/topics/${loggedUser?.uid}")
+    }
+
+    override fun disableGeneralChatNotifications() {
+        messaging.unsubscribeFromTopic("/topics/${loggedUser?.uid}")
     }
 
 }

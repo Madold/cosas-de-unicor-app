@@ -4,11 +4,13 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
+import com.markusw.cosasdeunicorapp.core.domain.LocalDataStore
 import com.markusw.cosasdeunicorapp.core.ext.prepend
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.core.utils.TimeUtils
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.home.domain.model.MessageContent
+import com.markusw.cosasdeunicorapp.home.domain.remote.PushNotificationService
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.AddUserToLikedByList
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.DownloadDocument
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.GetLoggedUser
@@ -47,7 +49,9 @@ class HomeViewModel @Inject constructor(
     private val observeNewNews: ObserveNewNews,
     private val addUserToLikedByList: AddUserToLikedByList,
     private val removeUserFromLikedByList: RemoveUserFromLikedByList,
-    private val getUsersCount: GetUsersCount
+    private val getUsersCount: GetUsersCount,
+    private val localDataStore: LocalDataStore,
+    private val pushNotificationService: PushNotificationService
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeState())
@@ -59,6 +63,10 @@ class HomeViewModel @Inject constructor(
     val visiblePermissionDialogQueue = mutableStateListOf<String>()
     private val newsListEventChannel = Channel<NewsListEvent>()
     val newsListEvents = newsListEventChannel.receiveAsFlow()
+
+    companion object {
+        const val GENERAL_CHAT_NOTIFICATIONS_KEY = "isGeneralChatNotificationsEnabled"
+    }
 
     init {
         loadInitialData()
@@ -78,36 +86,22 @@ class HomeViewModel @Inject constructor(
         }
 
         _uiState.update { it.copy(currentUser = getLoggedUser()) }
-    }
-
-    private fun loadInitialData() {
-        _uiState.update { state ->
-            state.copy(
-                isFetchingPreviousNews = true,
-                isFetchingPreviousGlobalMessages = true
-            )
-        }
 
         viewModelScope.launch(dispatchers.io) {
-            val initialNews = loadPreviousNews()
-            val initialMessages = loadPreviousMessages()
-            val usersCount = when (val result = getUsersCount()) {
-                is Result.Error -> 0
-                is Result.Success -> result.data
-            }
-
-            withContext(dispatchers.main) {
-                _uiState.update { state ->
-                    state.copy(
-                        globalChatList = state.globalChatList + initialMessages,
-                        newsList = state.newsList + initialNews,
-                        isFetchingPreviousGlobalMessages = false,
-                        isFetchingPreviousNews = false,
-                        usersCount = usersCount ?: 0
-                    )
+            localDataStore
+                .get(GENERAL_CHAT_NOTIFICATIONS_KEY)
+                .collectLatest { isGeneralChatNotificationsEnabled ->
+                    _uiState.update { state ->
+                        state.copy(
+                            localSettings = state.localSettings.copy(
+                                isGeneralChatNotificationsEnabled = isGeneralChatNotificationsEnabled?.toBoolean()
+                                    ?: true
+                            )
+                        )
+                    }
                 }
-            }
         }
+
     }
 
     fun onEvent(event: HomeUiEvent) {
@@ -217,8 +211,55 @@ class HomeViewModel @Inject constructor(
                     }
 
                 }
+            }
 
+            is HomeUiEvent.ToggleGeneralChatNotifications -> {
 
+                val isGeneralChatNotificationsEnabled =
+                    uiState.value.localSettings.isGeneralChatNotificationsEnabled
+
+                if (isGeneralChatNotificationsEnabled) {
+                    pushNotificationService.disableGeneralChatNotifications()
+                } else {
+                    pushNotificationService.enableGeneralChatNotifications()
+                }
+
+                viewModelScope.launch(dispatchers.io) {
+                    localDataStore.save(
+                        GENERAL_CHAT_NOTIFICATIONS_KEY,
+                        (!isGeneralChatNotificationsEnabled).toString()
+                    )
+                }
+            }
+        }
+    }
+
+    private fun loadInitialData() {
+        _uiState.update { state ->
+            state.copy(
+                isFetchingPreviousNews = true,
+                isFetchingPreviousGlobalMessages = true
+            )
+        }
+
+        viewModelScope.launch(dispatchers.io) {
+            val initialNews = loadPreviousNews()
+            val initialMessages = loadPreviousMessages()
+            val usersCount = when (val result = getUsersCount()) {
+                is Result.Error -> 0
+                is Result.Success -> result.data
+            }
+
+            withContext(dispatchers.main) {
+                _uiState.update { state ->
+                    state.copy(
+                        globalChatList = state.globalChatList + initialMessages,
+                        newsList = state.newsList + initialNews,
+                        isFetchingPreviousGlobalMessages = false,
+                        isFetchingPreviousNews = false,
+                        usersCount = usersCount ?: 0
+                    )
+                }
             }
         }
     }

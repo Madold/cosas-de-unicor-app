@@ -4,8 +4,11 @@ import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
+import com.markusw.cosasdeunicorapp.core.data.AndroidDataStore
 import com.markusw.cosasdeunicorapp.core.data.FireStoreService
+import com.markusw.cosasdeunicorapp.core.domain.LocalDataStore
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
 import com.markusw.cosasdeunicorapp.core.utils.Constants.PUSH_NOTIFICATION_API_BASE_URL
 import com.markusw.cosasdeunicorapp.home.data.remote.FirebasePushNotificationService
@@ -95,11 +98,19 @@ object DataModule {
     fun providePushNotificationService(
         api: FirebaseCloudMessagingApi,
         auth: FirebaseAuth,
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
+        messaging: FirebaseMessaging
     ): PushNotificationService = FirebasePushNotificationService(
         api,
         auth,
-        context
+        context,
+        messaging
     )
+
+    @Provides
+    @Singleton
+    fun provideDataStore(
+        @ApplicationContext context: Context
+    ): LocalDataStore = AndroidDataStore(context)
 
 }

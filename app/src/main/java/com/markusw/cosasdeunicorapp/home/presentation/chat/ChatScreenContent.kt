@@ -77,6 +77,15 @@ fun ChatScreenContent(
     val usersCountText = remember {
         "${state.usersCount} Usuarios"
     }
+    val isGeneralChatNotificationsEnabled = state.localSettings.isGeneralChatNotificationsEnabled
+    val notificationsText = remember(isGeneralChatNotificationsEnabled) {
+        if (isGeneralChatNotificationsEnabled) {
+            "Silenciar notificaciones"
+        } else {
+            "Activar notificaciones"
+        }
+
+    }
 
     LaunchedEffect(key1 = scrollState) {
         snapshotFlow {
@@ -141,17 +150,20 @@ fun ChatScreenContent(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Icon(
-                                        painter = painterResource(id = R.drawable.ic_silenced_bell),
+                                        painter = painterResource(id = if(isGeneralChatNotificationsEnabled) R.drawable.ic_silenced_bell else R.drawable.ic_bell),
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.surface,
                                     )
                                     Text(
-                                        "Silenciar notificaciones",
+                                        notificationsText,
                                         color = MaterialTheme.colorScheme.surface
                                     )
                                 }
                             },
-                            onClick = { isActionsMenuVisible = false },
+                            onClick = {
+                                isActionsMenuVisible = false
+                                onEvent(HomeUiEvent.ToggleGeneralChatNotifications)
+                            },
                             colors = MenuDefaults.itemColors(
 
                             )

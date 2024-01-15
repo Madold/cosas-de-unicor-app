@@ -1,5 +1,6 @@
 package com.markusw.cosasdeunicorapp.home.presentation
 
+import com.markusw.cosasdeunicorapp.core.domain.model.LocalSettings
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.home.domain.model.News
@@ -14,4 +15,5 @@ data class HomeState(
     val isFetchingPreviousNews: Boolean = false,
     val newsList: List<News> = emptyList(),
     val usersCount: Int = 0,
+    val localSettings: LocalSettings = LocalSettings(),
 )

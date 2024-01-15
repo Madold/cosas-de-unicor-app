@@ -84,6 +84,7 @@ dependencies {
     val retrofitVersion = "2.9.0"
     val paletteVersion = "1.0.0"
     val roomVersion = "2.5.0"
+    val dataStoreVersion = "1.0.0"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.12.0")
@@ -158,6 +159,9 @@ dependencies {
     //Room
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
+
+    //DataStore
+    implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
 
 
     //Test dependencies
