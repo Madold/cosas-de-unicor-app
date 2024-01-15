@@ -172,9 +172,6 @@ class FireStoreService(
 
     override suspend fun addUserToLikedByList(newsId: String, user: User): Result<Unit> {
         return try {
-
-            Timber.d("addUserToLikedByList: $newsId, $user")
-
             fireStore
                 .collection(NEWS_COLLECTION)
                 .document(newsId)
@@ -185,10 +182,28 @@ class FireStoreService(
                 )
                 .await()
 
-            Timber.d("Success")
             Result.Success(Unit)
         } catch (e: Exception) {
-            Timber.d("Error: ${e.message}")
+            Result.Error(
+                UiText.DynamicString(
+                    "${e.javaClass}: ${e.message}"
+                )
+            )
+        }
+    }
+
+    override suspend fun getUsersCount(): Result<Int> {
+        return try {
+             val usersCount =  fireStore
+                .collection(USERS_COLLECTION)
+                .get()
+                .await()
+                .toObjects(User::class.java)
+                .size
+
+            Result.Success(usersCount)
+
+        } catch (e: Exception) {
             Result.Error(
                 UiText.DynamicString(
                     "${e.javaClass}: ${e.message}"

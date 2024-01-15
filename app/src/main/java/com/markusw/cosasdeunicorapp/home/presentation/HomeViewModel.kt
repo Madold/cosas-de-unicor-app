@@ -12,6 +12,7 @@ import com.markusw.cosasdeunicorapp.home.domain.model.MessageContent
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.AddUserToLikedByList
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.DownloadDocument
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.GetLoggedUser
+import com.markusw.cosasdeunicorapp.home.domain.use_cases.GetUsersCount
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.LoadPreviousMessages
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.LoadPreviousNews
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.Logout
@@ -44,7 +45,8 @@ class HomeViewModel @Inject constructor(
     private val loadPreviousNews: LoadPreviousNews,
     private val observeNewNews: ObserveNewNews,
     private val addUserToLikedByList: AddUserToLikedByList,
-    private val removeUserFromLikedByList: RemoveUserFromLikedByList
+    private val removeUserFromLikedByList: RemoveUserFromLikedByList,
+    private val getUsersCount: GetUsersCount
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeState())
@@ -58,8 +60,7 @@ class HomeViewModel @Inject constructor(
     val newsListEvents = newsListEventChannel.receiveAsFlow()
 
     init {
-        fetchPreviousGlobalMessages()
-        loadInitialNews()
+        loadInitialData()
 
         viewModelScope.launch(dispatchers.io) {
             observeNewMessages().collectLatest { newMessage ->
@@ -76,6 +77,34 @@ class HomeViewModel @Inject constructor(
         }
 
         _uiState.update { it.copy(currentUser = getLoggedUser()) }
+    }
+
+    private fun loadInitialData() {
+        _uiState.update { state ->
+            state.copy(
+                isFetchingPreviousNews = true,
+                isFetchingPreviousGlobalMessages = true
+            )
+        }
+
+        viewModelScope.launch(dispatchers.io) {
+            val initialNews = loadPreviousNews()
+            val initialMessages = loadPreviousMessages()
+            val usersCount = when (val result = getUsersCount()) {
+                is Result.Error -> 0
+                is Result.Success -> result.data
+            }
+
+            _uiState.update { state ->
+                state.copy(
+                    globalChatList = state.globalChatList + initialMessages,
+                    newsList = state.newsList + initialNews,
+                    isFetchingPreviousGlobalMessages = false,
+                    isFetchingPreviousNews = false,
+                    usersCount = usersCount ?: 0
+                )
+            }
+        }
     }
 
     fun onEvent(event: HomeUiEvent) {
@@ -129,7 +158,7 @@ class HomeViewModel @Inject constructor(
 
                     _uiState.update { it.copy(isDownloadingDocument = true) }
 
-                    when (val downloadResult = downloadDocument(event.fileName)) {
+                    when (downloadDocument(event.fileName)) {
                         is Result.Error -> {
 
                         }
@@ -219,19 +248,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun loadInitialNews() {
-        _uiState.update { it.copy(isFetchingPreviousNews = true) }
-        viewModelScope.launch {
-            loadPreviousNews().also { previousNews ->
-                _uiState.update {
-                    it.copy(
-                        newsList = it.newsList + previousNews
-                    )
-                }
-            }
-            _uiState.update { it.copy(isFetchingPreviousNews = false) }
-        }
-    }
 
     private suspend fun handleLogoutResult(result: Result<Unit>) {
         when (result) {

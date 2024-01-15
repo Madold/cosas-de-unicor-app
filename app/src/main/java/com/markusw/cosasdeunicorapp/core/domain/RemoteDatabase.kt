@@ -63,4 +63,10 @@ interface RemoteDatabase {
      */
     suspend fun addUserToLikedByList(newsId: String, user: User): Result<Unit>
 
+    /**
+     * Returns the number of users in the database
+     * @return the number of users
+     */
+    suspend fun getUsersCount(): Result<Int>
+
 }
