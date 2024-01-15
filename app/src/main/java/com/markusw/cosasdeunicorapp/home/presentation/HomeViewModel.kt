@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -95,14 +96,16 @@ class HomeViewModel @Inject constructor(
                 is Result.Success -> result.data
             }
 
-            _uiState.update { state ->
-                state.copy(
-                    globalChatList = state.globalChatList + initialMessages,
-                    newsList = state.newsList + initialNews,
-                    isFetchingPreviousGlobalMessages = false,
-                    isFetchingPreviousNews = false,
-                    usersCount = usersCount ?: 0
-                )
+            withContext(dispatchers.main) {
+                _uiState.update { state ->
+                    state.copy(
+                        globalChatList = state.globalChatList + initialMessages,
+                        newsList = state.newsList + initialNews,
+                        isFetchingPreviousGlobalMessages = false,
+                        isFetchingPreviousNews = false,
+                        usersCount = usersCount ?: 0
+                    )
+                }
             }
         }
     }
