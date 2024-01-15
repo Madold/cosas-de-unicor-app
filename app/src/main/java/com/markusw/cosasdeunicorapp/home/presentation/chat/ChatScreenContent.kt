@@ -1,22 +1,33 @@
-@file:OptIn(ExperimentalMaterial3Api::class, FlowPreview::class, ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, FlowPreview::class)
 
 package com.markusw.cosasdeunicorapp.home.presentation.chat
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -26,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -57,6 +69,7 @@ fun ChatScreenContent(
 
     val coroutineScope = rememberCoroutineScope()
     var isScrollToEndFABVisible by remember { mutableStateOf(false) }
+    var isActionsMenuVisible by rememberSaveable { mutableStateOf(false) }
     val fabOffset by animateDpAsState(
         targetValue = if (isScrollToEndFABVisible) 0.dp else 1000.dp,
         label = ""
@@ -106,6 +119,44 @@ fun ChatScreenContent(
                         modifier = Modifier
                             .size(62.dp)
                     )
+                },
+                actions = {
+                    IconButton(onClick = { isActionsMenuVisible = true }) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.surface,
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = isActionsMenuVisible,
+                        onDismissRequest = { isActionsMenuVisible = false },
+                        modifier = Modifier.background(home_bottom_bar_background)
+                    ) {
+                        DropdownMenuItem(
+                            text = {
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_silenced_bell),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.surface,
+                                    )
+                                    Text(
+                                        "Silenciar notificaciones",
+                                        color = MaterialTheme.colorScheme.surface
+                                    )
+                                }
+                            },
+                            onClick = { isActionsMenuVisible = false },
+                            colors = MenuDefaults.itemColors(
+
+                            )
+                        )
+                    }
                 }
             )
         },
@@ -144,17 +195,21 @@ fun ChatScreenContent(
             )
         }
     ) {
-        ChatList(
-            state = state,
-            modifier = Modifier.padding(it),
-            scrollState = scrollState,
-            onReplyToMessage = { message ->
-                onEvent(HomeUiEvent.ReplyToMessage(message))
-            },
-            onRequestPreviousMessages = {
-                onEvent(HomeUiEvent.FetchPreviousGlobalMessages)
-            }
-        )
+        Column(
+            modifier = Modifier.padding(it)
+        ) {
+            Spacer(modifier = Modifier.height(8.dp))
+            ChatList(
+                state = state,
+                scrollState = scrollState,
+                onReplyToMessage = { message ->
+                    onEvent(HomeUiEvent.ReplyToMessage(message))
+                },
+                onRequestPreviousMessages = {
+                    onEvent(HomeUiEvent.FetchPreviousGlobalMessages)
+                }
+            )
+        }
     }
 }
 
