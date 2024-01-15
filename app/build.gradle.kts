@@ -83,6 +83,7 @@ dependencies {
     val playServicesAdsVersion = "22.6.0"
     val retrofitVersion = "2.9.0"
     val paletteVersion = "1.0.0"
+    val roomVersion = "2.5.0"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.12.0")
@@ -153,6 +154,10 @@ dependencies {
 
     //Palette
     implementation("androidx.palette:palette:$paletteVersion")
+
+    //Room
+    implementation("androidx.room:room-ktx:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
 
 
     //Test dependencies
