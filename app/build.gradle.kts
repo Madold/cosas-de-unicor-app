@@ -67,7 +67,7 @@ android {
 
 dependencies {
 
-    val daggerHiltVersion = "2.44"
+    val daggerHiltVersion = "2.48"
     val flexboxVersion = "3.0.0"
     val timberVersion = "5.0.1"
     val mockkVersion = "1.13.5"
