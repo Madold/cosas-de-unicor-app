@@ -16,4 +16,14 @@ interface PushNotificationService {
      * This method is used to disable notifications for the general chat
      */
     fun disableGeneralChatNotifications()
+
+    /**
+     * This method is used to enable notifications for the news
+     */
+    fun enableNewsNotifications()
+
+    /**
+     * This method is used to disable notifications for the news
+     */
+    fun disableNewsNotifications()
 }

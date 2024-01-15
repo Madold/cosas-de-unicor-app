@@ -86,4 +86,12 @@ class FirebasePushNotificationService(
         messaging.unsubscribeFromTopic("/topics/${loggedUser?.uid}")
     }
 
+    override fun enableNewsNotifications() {
+        messaging.subscribeToTopic("/topics/news")
+    }
+
+    override fun disableNewsNotifications() {
+        messaging.unsubscribeFromTopic("/topics/news")
+    }
+
 }

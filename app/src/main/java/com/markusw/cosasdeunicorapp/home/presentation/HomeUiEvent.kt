@@ -14,4 +14,5 @@ sealed interface HomeUiEvent {
     data object FetchPreviousNews: HomeUiEvent
     data class LikeNews(val news: News): HomeUiEvent
     data object ToggleGeneralChatNotifications: HomeUiEvent
+    data object ToggleNewsNotifications: HomeUiEvent
 }

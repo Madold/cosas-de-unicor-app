@@ -66,6 +66,7 @@ class HomeViewModel @Inject constructor(
 
     companion object {
         const val GENERAL_CHAT_NOTIFICATIONS_KEY = "isGeneralChatNotificationsEnabled"
+        const val NEWS_NOTIFICATIONS_KEY = "isNewsNotificationsEnabled"
     }
 
     init {
@@ -95,6 +96,21 @@ class HomeViewModel @Inject constructor(
                         state.copy(
                             localSettings = state.localSettings.copy(
                                 isGeneralChatNotificationsEnabled = isGeneralChatNotificationsEnabled?.toBoolean()
+                                    ?: true
+                            )
+                        )
+                    }
+                }
+        }
+
+        viewModelScope.launch(dispatchers.io) {
+            localDataStore
+                .get(NEWS_NOTIFICATIONS_KEY)
+                .collectLatest { isNewsNotificationsEnabled ->
+                    _uiState.update { state ->
+                        state.copy(
+                            localSettings = state.localSettings.copy(
+                                isNewsNotificationsEnabled = isNewsNotificationsEnabled?.toBoolean()
                                     ?: true
                             )
                         )
@@ -214,7 +230,6 @@ class HomeViewModel @Inject constructor(
             }
 
             is HomeUiEvent.ToggleGeneralChatNotifications -> {
-
                 val isGeneralChatNotificationsEnabled =
                     uiState.value.localSettings.isGeneralChatNotificationsEnabled
 
@@ -228,6 +243,24 @@ class HomeViewModel @Inject constructor(
                     localDataStore.save(
                         GENERAL_CHAT_NOTIFICATIONS_KEY,
                         (!isGeneralChatNotificationsEnabled).toString()
+                    )
+                }
+            }
+
+            is HomeUiEvent.ToggleNewsNotifications -> {
+                val isNewsNotificationsEnabled =
+                    uiState.value.localSettings.isNewsNotificationsEnabled
+
+                if (isNewsNotificationsEnabled) {
+                    pushNotificationService.disableNewsNotifications()
+                } else {
+                    pushNotificationService.enableNewsNotifications()
+                }
+
+                viewModelScope.launch(dispatchers.io) {
+                    localDataStore.save(
+                        NEWS_NOTIFICATIONS_KEY,
+                        (!isNewsNotificationsEnabled).toString()
                     )
                 }
             }
