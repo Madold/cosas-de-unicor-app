@@ -75,23 +75,22 @@ dependencies {
     val loggerVersion = "2.2.0"
     val gmsAuthServicesVersion = "20.7.0"
     val splashScreenVersion = "1.0.1"
-    val navigationComposeVersion = "2.7.1"
-    val hiltNavigationComposeVersion = "1.0.0"
-    val lifecycleComposeVersion = "2.6.1"
+    val navigationComposeVersion = "2.7.6"
+    val hiltNavigationComposeVersion = "1.1.0"
+    val lifecycleComposeVersion = "2.7.0"
     val coilComposeVersion = "2.4.0"
-    val composeBomVersion = "2023.08.00"
-    val playServicesAdsVersion = "22.4.0"
-    val webkitVersion = "1.8.0"
+    val composeBomVersion = "2023.10.01"
+    val playServicesAdsVersion = "22.6.0"
     val retrofitVersion = "2.9.0"
     val paletteVersion = "1.0.0"
 
     //App dependencies
-    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.1")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.1")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
     implementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -99,8 +98,8 @@ dependencies {
     implementation("androidx.compose.material3:material3")
 
     //Architecture components
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
 
     //Dagger hilt
     implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
@@ -155,8 +154,6 @@ dependencies {
     //Palette
     implementation("androidx.palette:palette:$paletteVersion")
 
-    //Webkit
-    implementation("androidx.webkit:webkit:$webkitVersion")
 
     //Test dependencies
     testImplementation("junit:junit:4.13.2")
