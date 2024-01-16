@@ -6,7 +6,9 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,8 +20,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
@@ -36,6 +46,7 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -50,13 +61,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.utils.TextUtils
+import com.markusw.cosasdeunicorapp.core.utils.TextUtils.DOCX
+import com.markusw.cosasdeunicorapp.core.utils.TextUtils.PDF
+import com.markusw.cosasdeunicorapp.core.utils.TextUtils.XLSX
+import com.markusw.cosasdeunicorapp.home.domain.model.News
 import com.markusw.cosasdeunicorapp.home.presentation.HomeState
 import com.markusw.cosasdeunicorapp.home.presentation.HomeUiEvent
+import com.markusw.cosasdeunicorapp.home.presentation.chat.composables.ChatBubble
+import com.markusw.cosasdeunicorapp.home.presentation.chat.composables.ChatItem
+import com.markusw.cosasdeunicorapp.home.presentation.docs.DocumentReference
+import com.markusw.cosasdeunicorapp.home.presentation.news.composables.NewsCard
 import com.markusw.cosasdeunicorapp.ui.theme.home_bottom_bar_background
 import kotlinx.coroutines.launch
 
@@ -125,12 +146,101 @@ fun HomeScreenContent(
                     )
                 },
                 content = { padding ->
-
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(padding)
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 16.dp)
                     ) {
+
+                        Section(
+                            title = {
+                                Text(
+                                    text = "Documentos populares",
+                                    style = MaterialTheme.typography.titleLarge.copy(
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+                            },
+                            trailingIcon = {
+                                TextButton(onClick = { }) {
+                                    Text(text = "Ver todo")
+                                }
+                            },
+                            content = {
+                                Row {
+                                    DocumentCard(
+                                        document = DocumentReference(
+                                            name = "Solicitud de doble programa",
+                                            documentName = "solicitud_doble_programa.docx"
+                                        ),
+                                        onClick = {},
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    DocumentCard(
+                                        document = DocumentReference(
+                                            name = "Simulador de ingreso a la universidad",
+                                            documentName = "simulador_promedio_ponderado_programa.xlsx"
+                                        ),
+                                        onClick = {},
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                }
+                            }
+                        )
+
+                        Section(
+                            title = {
+                                Text(
+                                    text = "¿Qué esta pasando?",
+                                    style = MaterialTheme.typography.titleLarge.copy(
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+                            },
+                            trailingIcon = {
+                                TextButton(onClick = { }) {
+                                    Text(text = "Ver todo")
+                                }
+                            },
+                            content = {
+                                LazyRow {
+                                    items(state.newsList.take(3)) { news ->
+                                        NewsCard(
+                                            news = news,
+                                            onNewsLiked = {  },
+                                            modifier = Modifier
+                                                .width(290.dp)
+                                                .weight(1f)
+                                        )
+                                    }
+                                }
+                            })
+
+                        Section(
+                            title = {
+                                Text(
+                                    text = "Mantente comunicado",
+                                    style = MaterialTheme.typography.titleLarge.copy(
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+                            },
+                            trailingIcon = {
+                                TextButton(onClick = { }) {
+                                    Text(text = "Ir al chat general")
+                                }
+                            },
+                            content = {
+
+                                if (state.globalChatList.isNotEmpty()) {
+                                    val lastMessage = state.globalChatList.first()
+
+                                    ChatItem(message = lastMessage, swipeEnabled = false)
+                                }
+
+                            })
 
                         if (isUserInfoDialogVisible) {
                             UserInfoDialog(
@@ -141,14 +251,6 @@ fun HomeScreenContent(
                         }
 
                     }
-
-                    /*
-                    * Button(onClick = {
-                            onEvent(HomeUiEvent.CloseSession)
-                        }) {
-                            Text(text = "Logout")
-                        }
-                    * */
                 }
             )
         }
@@ -167,12 +269,53 @@ private fun Section(
         modifier = modifier
     ) {
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
         ) {
             title()
             trailingIcon()
         }
         content()
+    }
+}
+
+@Composable
+private fun DocumentCard(
+    document: DocumentReference,
+    modifier: Modifier = Modifier,
+    onClick: (DocumentReference) -> Unit
+) {
+
+    val documentCover = when (TextUtils.getFileExtensionFromName(document.documentName)) {
+        DOCX -> painterResource(id = R.drawable.word_icon)
+        PDF -> painterResource(id = R.drawable.pdf_icon)
+        XLSX -> painterResource(id = R.drawable.excel_icon)
+        else -> painterResource(id = R.drawable.file_icon)
+    }
+
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(20.dp))
+            .clickable(onClick = { onClick(document) })
+            .padding(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+
+        Image(
+            painter = documentCover,
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+
+        Text(
+            text = document.name,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+        )
     }
 }
 

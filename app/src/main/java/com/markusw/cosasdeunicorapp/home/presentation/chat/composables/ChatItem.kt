@@ -37,7 +37,8 @@ import com.markusw.cosasdeunicorapp.core.domain.model.User
 fun ChatItem(
     message: Message,
     isFromCurrentUser: Boolean = false,
-    onReplyToMessage: (Message) -> Unit = {}
+    onReplyToMessage: (Message) -> Unit = {},
+    swipeEnabled: Boolean = true
 ) {
 
     val formattedTimestamp = remember(key1 = message.timestamp) {
@@ -81,7 +82,7 @@ fun ChatItem(
                 Spacer(modifier = Modifier.width(4.dp))
             }
         },
-        directions = setOf(DismissDirection.StartToEnd),
+        directions = if(swipeEnabled) setOf(DismissDirection.StartToEnd) else emptySet() ,
         dismissContent = {
             Row(
                 modifier = Modifier

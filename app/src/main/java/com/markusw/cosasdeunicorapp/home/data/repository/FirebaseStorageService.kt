@@ -12,6 +12,10 @@ import com.markusw.cosasdeunicorapp.BuildConfig
 import com.markusw.cosasdeunicorapp.core.ext.toast
 import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.core.utils.Result
+import com.markusw.cosasdeunicorapp.core.utils.TextUtils
+import com.markusw.cosasdeunicorapp.core.utils.TextUtils.DOCX
+import com.markusw.cosasdeunicorapp.core.utils.TextUtils.PDF
+import com.markusw.cosasdeunicorapp.core.utils.TextUtils.XLSX
 import com.markusw.cosasdeunicorapp.home.domain.repository.RemoteStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -42,9 +46,6 @@ class FirebaseStorageService(
         private const val DOCX_MIME_TYPE = "application/msword"
         private const val XLSX_MIME_TYPE =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        private const val PDF = "pdf"
-        private const val DOCX = "docx"
-        private const val XLSX = "xlsx"
         private const val GENERIC_MIME_TYPE = "application/*"
     }
 
@@ -70,7 +71,7 @@ class FirebaseStorageService(
                 "${BuildConfig.APPLICATION_ID}.provider",
                 localFile
             )
-            val mimeType = getMimeTypeFromFileExtension(getFileExtension(fileName))
+            val mimeType = getMimeTypeFromFileExtension(TextUtils.getFileExtensionFromName(fileName))
             openFile(documentUri, context, mimeType)
 
             Result.Success(Unit)
@@ -115,21 +116,6 @@ class FirebaseStorageService(
         return Environment.MEDIA_MOUNTED == state
     }
 
-    /**
-     * Gets the file extension of a file.
-     * @param fileName Name of the file.
-     * @return The file extension.
-     */
-    private fun getFileExtension(fileName: String): String {
-        val lastDotIndex = fileName.lastIndexOf(".")
-        return if (lastDotIndex == -1 || lastDotIndex == fileName.length - 1) {
-            // If there's no dot in the file name or it's the last character, there's no extension.
-            ""
-        } else {
-            // Return the substring after the last dot (which is the file extension).
-            fileName.substring(lastDotIndex + 1)
-        }
-    }
 
     /**
      * Gets the mime type of a file from its extension.

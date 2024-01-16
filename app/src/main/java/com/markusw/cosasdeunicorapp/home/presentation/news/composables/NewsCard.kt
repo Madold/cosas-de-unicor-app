@@ -68,16 +68,14 @@ fun NewsCard(
         TextUtils.formatDate(news.timestamp)
     }
 
-    Row(
+    Box(
         modifier = modifier
-            .fillMaxWidth()
             .clickable { isNewsDetailsDialogVisible = true }
             .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 0.dp),
-        horizontalArrangement = Arrangement.Center
+        contentAlignment = Alignment.CenterStart
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(8.dp)
         ) {
             SubcomposeAsyncImage(
@@ -123,6 +121,7 @@ fun NewsCard(
             }
         }
     }
+
     Divider()
 
     if (isNewsDetailsDialogVisible) {
