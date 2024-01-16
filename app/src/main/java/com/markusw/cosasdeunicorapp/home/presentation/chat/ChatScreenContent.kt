@@ -73,7 +73,7 @@ fun ChatScreenContent(
         targetValue = if (isScrollToEndFABVisible) 0.dp else 1000.dp,
         label = ""
     )
-    val usersCountText = remember {
+    val usersCountText = remember(state.usersCount) {
         "${state.usersCount} Usuarios"
     }
     val isGeneralChatNotificationsEnabled = state.localSettings.isGeneralChatNotificationsEnabled
