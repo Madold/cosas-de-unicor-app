@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -44,10 +45,12 @@ val permissionsToRequest = arrayOf(
 )
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    mainNavController: NavController,
+    viewModel: HomeViewModel
+) {
 
     val navController = rememberNavController()
-    val viewModel: HomeViewModel = hiltViewModel()
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
@@ -70,7 +73,8 @@ fun HomeScreen() {
             HomeHost(
                 navController = navController,
                 contentPadding = it,
-                viewModel = viewModel
+                viewModel = viewModel,
+                mainNavController = mainNavController
             )
         },
         bottomBar = {
@@ -85,6 +89,7 @@ fun HomeScreen() {
 private fun HomeHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    mainNavController: NavController,
     contentPadding: PaddingValues,
     viewModel: HomeViewModel
 ) {
@@ -101,7 +106,8 @@ private fun HomeHost(
         composable(route = HomeScreens.Home.route) {
             HomeScreenContent(
                 state = uiState,
-                onEvent = viewModel::onEvent
+                onEvent = viewModel::onEvent,
+                mainNavController = mainNavController
             )
         }
 

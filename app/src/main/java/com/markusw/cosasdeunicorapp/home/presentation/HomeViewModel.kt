@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
 import com.markusw.cosasdeunicorapp.core.domain.LocalDataStore
+import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
 import com.markusw.cosasdeunicorapp.core.ext.prepend
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.core.utils.TimeUtils
@@ -52,7 +53,8 @@ class HomeViewModel @Inject constructor(
     private val removeUserFromLikedByList: RemoveUserFromLikedByList,
     private val getUsersCount: GetUsersCount,
     private val localDataStore: LocalDataStore,
-    private val pushNotificationService: PushNotificationService
+    private val pushNotificationService: PushNotificationService,
+    private val remoteDatabase: RemoteDatabase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeState())
@@ -85,6 +87,13 @@ class HomeViewModel @Inject constructor(
                 _uiState.update { it.copy(newsList = it.newsList.prepend(newNews)) }
                 newsListEventChannel.send(NewsListEvent.NewsAdded)
             }
+        }
+
+        viewModelScope.launch(dispatchers.io) {
+            remoteDatabase.onUserInfoUpdate().collectLatest { updatedUser ->
+                _uiState.update { it.copy(currentUser = updatedUser) }
+            }
+
         }
 
         _uiState.update { it.copy(currentUser = getLoggedUser()) }
@@ -133,8 +142,8 @@ class HomeViewModel @Inject constructor(
                 }
                 viewModelScope.launch(dispatchers.io) {
                     val authResult = logout()
-                    delay(1000)
                     handleLogoutResult(authResult)
+                    Timber.d("After logout handled")
                     _uiState.update {
                         it.copy(isClosingSession = false)
                     }
@@ -337,7 +346,7 @@ class HomeViewModel @Inject constructor(
     private suspend fun handleLogoutResult(result: Result<Unit>) {
         when (result) {
             is Result.Error -> {
-
+                Timber.d("Error logging out: ${result.message}")
             }
 
             is Result.Success -> {

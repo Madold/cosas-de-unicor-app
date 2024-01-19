@@ -8,10 +8,12 @@ import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.messaging.FirebaseMessaging
 import com.markusw.cosasdeunicorapp.core.EmailNotVerifiedException
 import com.markusw.cosasdeunicorapp.core.domain.AuthService
+import com.markusw.cosasdeunicorapp.core.domain.ProfileUpdateData
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
 import com.markusw.cosasdeunicorapp.core.ext.toDomainModel
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 
 /**
  * Created by Markus on 3-12-2023.
@@ -49,20 +51,29 @@ class FirebaseAuthService(
         return executeFirebaseOperation {
             auth.createUserWithEmailAndPassword(email, password).await()
             val loggedUser = auth.currentUser!!
-            updateUserProfileData(displayName = name)
+            updateUserProfileData(ProfileUpdateData(displayName = name))
             remoteDatabase.saveUserInDatabase(loggedUser.toDomainModel())
             sendEmailVerification(loggedUser)
             auth.signOut()
         }
     }
 
-    private suspend fun updateUserProfileData(displayName: String? = null, photoUri: Uri? = null) {
-        auth.currentUser?.updateProfile(
-            userProfileChangeRequest {
-                displayName?.let { this.displayName = it }
-                photoUri?.let { this.photoUri = it }
-            }
-        )?.await()
+    override suspend fun updateUserProfileData(data: ProfileUpdateData): Result<Unit> {
+
+        val (displayName, email, profilePhotoUri) = data
+
+        return executeFirebaseOperation {
+            auth.currentUser?.updateProfile(
+                userProfileChangeRequest {
+                    displayName?.let { this.displayName = it }
+                    profilePhotoUri?.let { this.photoUri = Uri.parse(it) }
+                }
+            )?.await()
+
+            email?.let { auth.currentUser?.updateEmail(it)?.await() }
+            auth.currentUser?.reload()?.await()
+            auth.currentUser?.let { remoteDatabase.updateUserInfo(it.toDomainModel()) }
+        }
     }
 
     private suspend fun sendEmailVerification(user: FirebaseUser?) {
@@ -71,10 +82,12 @@ class FirebaseAuthService(
 
     override suspend fun logout(): Result<Unit> {
         return executeFirebaseOperation {
+            Timber.d("Started logout")
             val loggedUser = auth.currentUser!!
             messaging.unsubscribeFromTopic("/topics/${loggedUser.uid}")
             messaging.unsubscribeFromTopic("/topics/news")
             auth.signOut()
+            Timber.d("finished logout")
         }
     }
 
@@ -93,5 +106,7 @@ class FirebaseAuthService(
             auth.sendPasswordResetEmail(email).await()
         }
     }
+
+
 
 }

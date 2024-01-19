@@ -1,5 +1,6 @@
 package com.markusw.cosasdeunicorapp.core.data
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -18,12 +19,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.tasks.await
-import timber.log.Timber
 
 class FireStoreService(
     private val fireStore: FirebaseFirestore,
     private val messagesPager: MessageFireStorePager,
-    private val newsPager: NewsFireStorePager
+    private val newsPager: NewsFireStorePager,
+    private val auth: FirebaseAuth,
 ) : RemoteDatabase {
 
     companion object {
@@ -210,6 +211,48 @@ class FireStoreService(
                 )
             )
         }
+    }
+
+    override suspend fun updateUserInfo(user: User): Result<Unit> {
+
+        return try {
+            fireStore
+                .collection(USERS_COLLECTION)
+                .document(user.uid)
+                .set(user)
+                .await()
+
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Result.Error(
+                UiText.DynamicString(
+                    "${e.javaClass}: ${e.message}"
+                )
+            )
+        }
+
+    }
+
+    override suspend fun onUserInfoUpdate(): Flow<User> {
+        return callbackFlow {
+            val snapshotListener = fireStore
+                .collection(USERS_COLLECTION)
+                .document(auth.currentUser!!.uid)
+                .addSnapshotListener { value, error ->
+                    error?.let {
+                        close(it)
+                    }
+
+                    value?.let {
+                        val user = it.toObject(User::class.java)!!
+                        trySend(user)
+                    }
+                }
+
+            awaitClose {
+                snapshotListener.remove()
+            }
+        }.conflate()
     }
 
 }

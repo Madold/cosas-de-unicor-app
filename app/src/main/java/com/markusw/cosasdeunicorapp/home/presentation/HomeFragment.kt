@@ -7,17 +7,29 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.fragment.findNavController
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.presentation.Screens
+import com.markusw.cosasdeunicorapp.profile.presentation.ChangePasswordScreen
+import com.markusw.cosasdeunicorapp.profile.presentation.EditProfileScreen
+import com.markusw.cosasdeunicorapp.profile.presentation.ProfileScreen
+import com.markusw.cosasdeunicorapp.profile.presentation.ProfileViewModel
 import com.markusw.cosasdeunicorapp.ui.theme.CosasDeUnicorAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -41,12 +53,64 @@ class HomeFragment : Fragment() {
         composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
+
+                val mainNavController = rememberNavController()
+
                 CosasDeUnicorAppTheme {
                     Surface(
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-                        HomeScreen()
+
+                        NavHost(
+                            navController = mainNavController,
+                            startDestination = Screens.Home.route
+                        ) {
+
+                            composable(route = Screens.Home.route) {
+                                HomeScreen(
+                                    mainNavController = mainNavController,
+                                    viewModel = viewModel
+                                )
+                            }
+
+                            composable(route = Screens.Profile.route) {
+
+                                val viewModel = hiltViewModel<ProfileViewModel>()
+                                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+                                ProfileScreen(
+                                    mainNavController = mainNavController,
+                                    state = uiState,
+                                    onEvent = viewModel::onEvent
+                                )
+                            }
+
+                            composable(route = Screens.EditProfile.route) {
+
+                                val viewModel = hiltViewModel<ProfileViewModel>()
+                                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+                                EditProfileScreen(
+                                    mainNavController = mainNavController,
+                                    state = uiState,
+                                    onEvent = viewModel::onEvent
+                                )
+                            }
+
+                            composable(route = Screens.ResetPassword.route) {
+
+                                val viewModel = hiltViewModel<ProfileViewModel>()
+                                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+                                ChangePasswordScreen(
+                                    mainNavController = mainNavController,
+                                    state = uiState,
+                                    onEvent = viewModel::onEvent
+                                )
+                            }
+
+                        }
                     }
                 }
             }
@@ -59,6 +123,7 @@ class HomeFragment : Fragment() {
             viewModel.homeEvents.collect { homeEvent ->
                 when (homeEvent) {
                     is HomeEvents.LogoutSuccessful -> {
+                        Timber.d("Logout successful")
                         navController.navigate(R.id.action_homeFragment_to_loginFragment)
                     }
                 }

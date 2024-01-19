@@ -69,4 +69,9 @@ interface RemoteDatabase {
      */
     suspend fun getUsersCount(): Result<Int>
 
+    suspend fun updateUserInfo(user: User): Result<Unit>
+
+    suspend fun onUserInfoUpdate(): Flow<User>
+
+
 }

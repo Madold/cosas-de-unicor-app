@@ -45,4 +45,14 @@ interface AuthService {
      * @see Result
      */
     suspend fun sendPasswordResetByEmail(email: String): Result<Unit>
+
+    /**
+     * Updates the user profile data
+     * @param data the data to update the user profile with
+     * @return a Result object
+     * @see Result
+     * @see ProfileUpdateData
+     */
+    suspend fun updateUserProfileData(data: ProfileUpdateData): Result<Unit>
+
 }

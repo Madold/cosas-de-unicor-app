@@ -58,15 +58,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.presentation.Screens
 import com.markusw.cosasdeunicorapp.core.utils.TextUtils
 import com.markusw.cosasdeunicorapp.core.utils.TextUtils.DOCX
 import com.markusw.cosasdeunicorapp.core.utils.TextUtils.PDF
@@ -85,6 +88,7 @@ import kotlinx.coroutines.launch
 fun HomeScreenContent(
     state: HomeState,
     onEvent: (HomeUiEvent) -> Unit,
+    mainNavController: NavController,
 ) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -246,7 +250,8 @@ fun HomeScreenContent(
                             UserInfoDialog(
                                 state = state,
                                 onEvent = onEvent,
-                                onDismiss = { isUserInfoDialogVisible = false }
+                                onDismiss = { isUserInfoDialogVisible = false },
+                                mainNavController = mainNavController
                             )
                         }
 
@@ -324,7 +329,8 @@ private fun UserInfoDialog(
     state: HomeState,
     onEvent: (HomeUiEvent) -> Unit,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    mainNavController: NavController,
+    modifier: Modifier = Modifier,
 ) {
 
     val user = state.currentUser
@@ -357,7 +363,7 @@ private fun UserInfoDialog(
                     contentDescription = null,
                     modifier = Modifier
                         .size(70.dp)
-                        .clip(CircleShape)
+                        .clip(CircleShape),
                 )
 
                 Text(
@@ -383,7 +389,8 @@ private fun UserInfoDialog(
                         Text(text = "Perfil")
                     },
                     onClick = {
-
+                        onDismiss()
+                        mainNavController.navigate(Screens.Profile.route)
                     }
                 )
 
