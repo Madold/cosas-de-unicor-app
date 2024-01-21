@@ -3,35 +3,30 @@ package com.markusw.cosasdeunicorapp.home.presentation.docs
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import com.markusw.cosasdeunicorapp.R
 
 
 @Composable
 fun Accordion(
-    title: String,
+    trailingIcon: @Composable () -> Unit,
+    label: @Composable () -> Unit,
     content: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -48,32 +43,34 @@ fun Accordion(
         label = ""
     )
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .clip(shape = RoundedCornerShape(8.dp))
-                .background(color = accordionBackgroundColor)
-                .clickable {
-                    isExpanded = !isExpanded
-                }
-                .padding(horizontal = 8.dp, vertical = 16.dp)
-            ,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxWidth(0.95f)
         ) {
-            Text(text = title)
-            Icon(
-                painter = painterResource(id = R.drawable.ic_slim_arrow_down),
-                contentDescription = null,
-                modifier = Modifier.rotate(arrowRotation)
+            NavigationDrawerItem(
+                icon = trailingIcon,
+                label = label,
+                selected = isExpanded,
+                onClick = { isExpanded = !isExpanded },
+                badge = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_slim_arrow_down),
+                        contentDescription = null,
+                        modifier = Modifier.rotate(arrowRotation)
+                    )
+                },
+                colors = NavigationDrawerItemDefaults.colors(
+                    selectedContainerColor = accordionBackgroundColor,
+                )
             )
-        }
-        AnimatedVisibility(visible = isExpanded) {
-            Column {
-                content()
+            AnimatedVisibility(visible = isExpanded) {
+                Column {
+                    content()
+                }
             }
         }
     }

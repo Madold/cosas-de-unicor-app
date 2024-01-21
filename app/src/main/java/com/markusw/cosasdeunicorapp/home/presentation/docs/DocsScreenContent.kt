@@ -8,25 +8,44 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.isPermissionGranted
 import com.markusw.cosasdeunicorapp.core.ext.showInterstitialAd
 import com.markusw.cosasdeunicorapp.core.presentation.AdmobBanner
+import com.markusw.cosasdeunicorapp.core.presentation.AppTopBar
+import com.markusw.cosasdeunicorapp.core.utils.TextUtils
+import com.markusw.cosasdeunicorapp.core.utils.TextUtils.DOCX
+import com.markusw.cosasdeunicorapp.core.utils.TextUtils.PDF
+import com.markusw.cosasdeunicorapp.core.utils.TextUtils.XLSX
 import com.markusw.cosasdeunicorapp.home.presentation.HomeState
 import com.markusw.cosasdeunicorapp.home.presentation.HomeUiEvent
 import com.markusw.cosasdeunicorapp.home.presentation.permissionsToRequest
@@ -87,6 +106,28 @@ fun DocsScreenContent(
     }
 
     Scaffold(
+        topBar = {
+            AppTopBar(
+                title = {
+                    Text(
+                        text = "Formatos",
+                        color = MaterialTheme.colorScheme.surface,
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                },
+                actions = {
+                    IconButton(onClick = { }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_search),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.surface
+                        )
+                    }
+                }
+            )
+        },
         content = { padding ->
             Box(
                 Modifier.padding(padding)
@@ -94,19 +135,57 @@ fun DocsScreenContent(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp)
                         .verticalScroll(scrollState)
                 ) {
+                    Spacer(modifier = Modifier.height(8.dp))
                     documentSections.forEach { section ->
                         Accordion(
-                            title = section.label,
+                            modifier = Modifier.fillMaxWidth(),
+                            label = {
+                                Text(
+                                    text = section.label,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                            },
                             content = {
                                 section.documents.forEach { documentReference ->
+
+                                    val documentCover = remember {
+                                        when (TextUtils.getFileExtensionFromName(documentReference.documentName)) {
+                                            PDF -> R.drawable.pdf_icon
+                                            XLSX -> R.drawable.excel_icon
+                                            DOCX -> R.drawable.word_icon
+                                            else -> R.drawable.file_icon
+                                        }
+                                    }
+
                                     AccordionItem(
-                                        title = documentReference.name,
-                                        onItemClick = { handleOnDownloadDocument(documentReference.documentName) }
+                                        label = {
+                                            Text(text = documentReference.name)
+                                        },
+                                        onItemClick = { handleOnDownloadDocument(documentReference.documentName) },
+                                        icon = {
+                                            Box(
+                                                modifier = Modifier
+                                                    .clip(CircleShape)
+                                                    .background(Color.White)
+                                                    .padding(5.dp)
+                                            ) {
+                                                Image(
+                                                    painter = painterResource(id = documentCover),
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(24.dp)
+                                                )
+                                            }
+                                        }
                                     )
                                 }
+                            },
+                            trailingIcon = {
+                                Icon(
+                                    painter = painterResource(id = section.icon),
+                                    contentDescription = null
+                                )
                             }
                         )
                     }

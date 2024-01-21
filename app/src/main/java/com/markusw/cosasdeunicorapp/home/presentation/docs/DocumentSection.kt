@@ -1,12 +1,16 @@
 package com.markusw.cosasdeunicorapp.home.presentation.docs
 
+import android.support.annotation.DrawableRes
+import com.markusw.cosasdeunicorapp.R
+
 @Suppress("SpellCheckingInspection")
 sealed class DocumentSection(
     val label: String,
-    val documents: List<DocumentReference>
+    val documents: List<DocumentReference>,
+    @DrawableRes val icon: Int
 ) {
 
-    object ConsejoAcademico: DocumentSection(
+    data object ConsejoAcademico : DocumentSection(
         label = "Consejo Académico",
         documents = listOf(
             DocumentReference(
@@ -21,10 +25,11 @@ sealed class DocumentSection(
                 name = "Formato de crédito extra",
                 documentName = "formato_credito_extra.docx"
             )
-        )
+        ),
+        icon = R.drawable.ic_academic
     )
 
-    object Admisiones: DocumentSection(
+    data object Admisiones : DocumentSection(
         label = "Registro y admisiones",
         documents = listOf(
             DocumentReference(
@@ -63,7 +68,8 @@ sealed class DocumentSection(
                 name = "Calendario Acádemico 2023-2",
                 documentName = "calendario_academico_2023_2.pdf"
             )
-        )
+        ),
+        icon = R.drawable.ic_registration
     )
 
 }
