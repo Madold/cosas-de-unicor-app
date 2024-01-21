@@ -11,13 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -32,6 +30,7 @@ import com.markusw.cosasdeunicorapp.home.presentation.chat.ChatScreenContent
 import com.markusw.cosasdeunicorapp.home.presentation.composables.BottomNavigationBar
 import com.markusw.cosasdeunicorapp.home.presentation.docs.DocsScreenContent
 import com.markusw.cosasdeunicorapp.home.presentation.main.HomeScreenContent
+import com.markusw.cosasdeunicorapp.home.presentation.more.MoreScreenContent
 import com.markusw.cosasdeunicorapp.home.presentation.news.NewsScreenContent
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
@@ -195,7 +194,7 @@ private fun HomeHost(
         }
 
         composable(route = HomeScreens.More.route) {
-            Text(text = "Coming soon...")
+            MoreScreenContent()
         }
     }
 }
