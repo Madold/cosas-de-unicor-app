@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
@@ -26,8 +27,10 @@ import com.markusw.cosasdeunicorapp.profile.presentation.ChangePasswordScreen
 import com.markusw.cosasdeunicorapp.profile.presentation.EditProfileScreen
 import com.markusw.cosasdeunicorapp.profile.presentation.ProfileScreen
 import com.markusw.cosasdeunicorapp.profile.presentation.ProfileViewModel
+import com.markusw.cosasdeunicorapp.profile.presentation.ProfileViewModelEvent
 import com.markusw.cosasdeunicorapp.ui.theme.CosasDeUnicorAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -91,6 +94,19 @@ class HomeFragment : Fragment() {
                                 val viewModel = hiltViewModel<ProfileViewModel>()
                                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+                                LaunchedEffect(key1 = viewModel.events) {
+                                    viewModel.events.collectLatest { event ->
+                                        when (event) {
+                                            ProfileViewModelEvent.ProfileUpdatedError -> TODO()
+                                            ProfileViewModelEvent.ProfileUpdatedSuccess -> {
+                                                mainNavController.popBackStack()
+                                            }
+
+                                            else -> return@collectLatest
+                                        }
+                                    }
+                                }
+
                                 EditProfileScreen(
                                     mainNavController = mainNavController,
                                     state = uiState,
@@ -102,6 +118,18 @@ class HomeFragment : Fragment() {
 
                                 val viewModel = hiltViewModel<ProfileViewModel>()
                                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+                                LaunchedEffect(key1 = viewModel.events) {
+                                    viewModel.events.collectLatest { event ->
+                                        when (event) {
+                                            ProfileViewModelEvent.PasswordResetSentSuccess -> {
+                                                mainNavController.popBackStack()
+                                            }
+
+                                            else -> return@collectLatest
+                                        }
+                                    }
+                                }
 
                                 ChangePasswordScreen(
                                     mainNavController = mainNavController,

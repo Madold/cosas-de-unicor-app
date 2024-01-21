@@ -6,4 +6,6 @@ sealed interface ProfileScreenEvent {
     data class ChangeProfilePhoto(val profilePhoto: String): ProfileScreenEvent
     data object SaveChanges: ProfileScreenEvent
     data object SendPasswordResetByEmail: ProfileScreenEvent
+    data object DismissProfileUpdatedDialog: ProfileScreenEvent
+    data object DismissPasswordResetDialog: ProfileScreenEvent
 }

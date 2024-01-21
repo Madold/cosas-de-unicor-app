@@ -1,6 +1,7 @@
 package com.markusw.cosasdeunicorapp.core.domain
 
 import com.google.firebase.auth.AuthCredential
+import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.core.utils.Result
 
 /**
@@ -44,7 +45,7 @@ interface AuthService {
      * @return a Result object
      * @see Result
      */
-    suspend fun sendPasswordResetByEmail(email: String): Result<Unit>
+    suspend fun sendPasswordResetByEmail(email: String)
 
     /**
      * Updates the user profile data
@@ -53,6 +54,8 @@ interface AuthService {
      * @see Result
      * @see ProfileUpdateData
      */
-    suspend fun updateUserProfileData(data: ProfileUpdateData): Result<Unit>
+    suspend fun updateUserProfileData(data: ProfileUpdateData)
+
+    suspend fun getLoggedUser(): User
 
 }

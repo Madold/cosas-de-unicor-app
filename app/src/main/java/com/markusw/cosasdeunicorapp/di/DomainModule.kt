@@ -3,12 +3,14 @@ package com.markusw.cosasdeunicorapp.di
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.storage.FirebaseStorage
 import com.markusw.cosasdeunicorapp.core.data.FireStoreService
 import com.markusw.cosasdeunicorapp.core.data.FirebaseAuthService
 import com.markusw.cosasdeunicorapp.core.domain.AuthService
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
 import com.markusw.cosasdeunicorapp.home.data.repository.MessageFireStorePager
 import com.markusw.cosasdeunicorapp.home.data.repository.NewsFireStorePager
+import com.markusw.cosasdeunicorapp.home.domain.repository.RemoteStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,12 +39,14 @@ object DomainModule {
         fireStore: FirebaseFirestore,
         messagesFireStorePager: MessageFireStorePager,
         newsFireStorePager: NewsFireStorePager,
-        auth: FirebaseAuth
+        auth: FirebaseAuth,
+        remoteStorage: RemoteStorage
     ): RemoteDatabase = FireStoreService(
         fireStore,
         messagesFireStorePager,
         newsFireStorePager,
-        auth
+        auth,
+        remoteStorage
     )
 
 }

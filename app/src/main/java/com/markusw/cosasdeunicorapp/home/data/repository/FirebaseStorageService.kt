@@ -71,7 +71,8 @@ class FirebaseStorageService(
                 "${BuildConfig.APPLICATION_ID}.provider",
                 localFile
             )
-            val mimeType = getMimeTypeFromFileExtension(TextUtils.getFileExtensionFromName(fileName))
+            val mimeType =
+                getMimeTypeFromFileExtension(TextUtils.getFileExtensionFromName(fileName))
             openFile(documentUri, context, mimeType)
 
             Result.Success(Unit)
@@ -87,6 +88,24 @@ class FirebaseStorageService(
             Result.Error(UiText.DynamicString("Error desconocido"))
         }
 
+    }
+
+    override suspend fun uploadImage(image: Uri): Result<String> {
+        return try {
+            val imageUrl = storageRef
+                .child("images/${image.lastPathSegment}")
+                .putFile(image)
+                .await()
+                .storage
+                .downloadUrl
+                .await()
+                .toString()
+
+            return Result.Success(imageUrl)
+        } catch (e: Exception) {
+            Timber.e(e)
+            Result.Error(UiText.DynamicString(e.toString()))
+        }
     }
 
     /**

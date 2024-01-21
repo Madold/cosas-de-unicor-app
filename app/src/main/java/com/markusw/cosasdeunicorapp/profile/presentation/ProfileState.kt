@@ -11,10 +11,13 @@ data class ProfileState(
     val email: String = "",
     val emailError: UiText? = null,
     val profilePhoto: String? = null,
-    val passwordResetState: PasswordResetState = PasswordResetState.IDLE,
+    val passwordResetState: AsyncOperationState = AsyncOperationState.IDLE,
+    val profileSaveState: AsyncOperationState = AsyncOperationState.IDLE,
+    val profileUpdateError: UiText? = null,
+    val passwordUpdateError: UiText? = null,
 )
 
-enum class PasswordResetState {
+enum class AsyncOperationState {
     IDLE,
     LOADING,
     SUCCESS,

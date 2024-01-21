@@ -1,6 +1,5 @@
 package com.markusw.cosasdeunicorapp.core.data
 
-import android.net.Uri
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -10,6 +9,7 @@ import com.markusw.cosasdeunicorapp.core.EmailNotVerifiedException
 import com.markusw.cosasdeunicorapp.core.domain.AuthService
 import com.markusw.cosasdeunicorapp.core.domain.ProfileUpdateData
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
+import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.core.ext.toDomainModel
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import kotlinx.coroutines.tasks.await
@@ -58,22 +58,19 @@ class FirebaseAuthService(
         }
     }
 
-    override suspend fun updateUserProfileData(data: ProfileUpdateData): Result<Unit> {
+    override suspend fun updateUserProfileData(data: ProfileUpdateData) {
+        val (displayName, email) = data
+        auth.currentUser?.updateEmail(email!!)?.await()
+        auth.currentUser?.updateProfile(
+            userProfileChangeRequest {
+                this.displayName = displayName
+            }
+        )?.await()
+        auth.currentUser?.let { remoteDatabase.updateUserInfo(it.uid, data) }
+    }
 
-        val (displayName, email, profilePhotoUri) = data
-
-        return executeFirebaseOperation {
-            auth.currentUser?.updateProfile(
-                userProfileChangeRequest {
-                    displayName?.let { this.displayName = it }
-                    profilePhotoUri?.let { this.photoUri = Uri.parse(it) }
-                }
-            )?.await()
-
-            email?.let { auth.currentUser?.updateEmail(it)?.await() }
-            auth.currentUser?.reload()?.await()
-            auth.currentUser?.let { remoteDatabase.updateUserInfo(it.toDomainModel()) }
-        }
+    override suspend fun getLoggedUser(): User {
+        return remoteDatabase.getUser(auth.currentUser!!.uid)
     }
 
     private suspend fun sendEmailVerification(user: FirebaseUser?) {
@@ -101,12 +98,9 @@ class FirebaseAuthService(
         }
     }
 
-    override suspend fun sendPasswordResetByEmail(email: String): Result<Unit> {
-        return executeFirebaseOperation {
-            auth.sendPasswordResetEmail(email).await()
-        }
+    override suspend fun sendPasswordResetByEmail(email: String) {
+        auth.sendPasswordResetEmail(email).await()
     }
-
 
 
 }

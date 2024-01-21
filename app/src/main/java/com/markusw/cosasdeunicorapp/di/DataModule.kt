@@ -8,22 +8,23 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.markusw.cosasdeunicorapp.core.data.AndroidDataStore
 import com.markusw.cosasdeunicorapp.core.data.FireStoreService
+import com.markusw.cosasdeunicorapp.core.data.repository.AndroidAuthRepository
 import com.markusw.cosasdeunicorapp.core.domain.AuthService
 import com.markusw.cosasdeunicorapp.core.domain.LocalDataStore
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
+import com.markusw.cosasdeunicorapp.core.domain.repository.AuthRepository
 import com.markusw.cosasdeunicorapp.core.utils.Constants.PUSH_NOTIFICATION_API_BASE_URL
-import com.markusw.cosasdeunicorapp.home.data.remote.FirebasePushNotificationService
 import com.markusw.cosasdeunicorapp.home.data.remote.FirebaseCloudMessagingApi
+import com.markusw.cosasdeunicorapp.home.data.remote.FirebasePushNotificationService
 import com.markusw.cosasdeunicorapp.home.data.repository.AndroidChatRepository
 import com.markusw.cosasdeunicorapp.home.data.repository.AndroidNewsRepository
-import com.markusw.cosasdeunicorapp.home.data.repository.MessageFireStorePager
 import com.markusw.cosasdeunicorapp.home.data.repository.FirebaseStorageService
+import com.markusw.cosasdeunicorapp.home.data.repository.MessageFireStorePager
 import com.markusw.cosasdeunicorapp.home.data.repository.NewsFireStorePager
 import com.markusw.cosasdeunicorapp.home.domain.remote.PushNotificationService
 import com.markusw.cosasdeunicorapp.home.domain.repository.ChatRepository
 import com.markusw.cosasdeunicorapp.home.domain.repository.NewsRepository
 import com.markusw.cosasdeunicorapp.home.domain.repository.RemoteStorage
-import com.markusw.cosasdeunicorapp.home.domain.use_cases.GetLoggedUser
 import com.markusw.cosasdeunicorapp.profile.data.AndroidProfileRepository
 import com.markusw.cosasdeunicorapp.profile.domain.repository.ProfileRepository
 import dagger.Module
@@ -62,7 +63,8 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideFireStorePager(initialQuery: Query): MessageFireStorePager = MessageFireStorePager(initialQuery)
+    fun provideFireStorePager(initialQuery: Query): MessageFireStorePager =
+        MessageFireStorePager(initialQuery)
 
     @Provides
     @Singleton
@@ -121,7 +123,12 @@ object DataModule {
     @Singleton
     fun provideProfileRepository(
         authService: AuthService,
-        getLoggedUser: GetLoggedUser,
-    ): ProfileRepository = AndroidProfileRepository(authService, getLoggedUser)
+    ): ProfileRepository = AndroidProfileRepository(authService)
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(
+        authService: AuthService,
+    ): AuthRepository = AndroidAuthRepository(authService)
 
 }

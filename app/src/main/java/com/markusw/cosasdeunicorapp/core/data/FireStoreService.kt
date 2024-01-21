@@ -1,10 +1,12 @@
 package com.markusw.cosasdeunicorapp.core.data
 
+import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.domain.ProfileUpdateData
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
 import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.core.presentation.UiText
@@ -14,6 +16,7 @@ import com.markusw.cosasdeunicorapp.home.data.repository.MessageFireStorePager
 import com.markusw.cosasdeunicorapp.home.data.repository.NewsFireStorePager
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.home.domain.model.News
+import com.markusw.cosasdeunicorapp.home.domain.repository.RemoteStorage
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -25,6 +28,7 @@ class FireStoreService(
     private val messagesPager: MessageFireStorePager,
     private val newsPager: NewsFireStorePager,
     private val auth: FirebaseAuth,
+    private val remoteStorage: RemoteStorage
 ) : RemoteDatabase {
 
     companion object {
@@ -60,12 +64,20 @@ class FireStoreService(
 
     override suspend fun saveUserInDatabase(user: User): Result<Unit> {
         return try {
-            fireStore
+            val documentReference = fireStore
                 .collection(USERS_COLLECTION)
                 .document(user.uid)
+            val userExist = documentReference
+                .get()
+                .await()
+                .data != null
+
+            if (userExist) return Result.Success(Unit)
+
+            documentReference
                 .set(user)
                 .await()
-            Result.Success(Unit)
+            return Result.Success(Unit)
         } catch (e: Exception) {
             Result.Error(
                 UiText.StringResource(
@@ -195,7 +207,7 @@ class FireStoreService(
 
     override suspend fun getUsersCount(): Result<Int> {
         return try {
-             val usersCount =  fireStore
+            val usersCount = fireStore
                 .collection(USERS_COLLECTION)
                 .get()
                 .await()
@@ -213,13 +225,35 @@ class FireStoreService(
         }
     }
 
-    override suspend fun updateUserInfo(user: User): Result<Unit> {
+    override suspend fun updateUserInfo(id: String, data: ProfileUpdateData): Result<Unit> {
 
         return try {
+
+            val (displayName, email, profilePhotoUri) = data
+
+            val user = fireStore
+                .collection(USERS_COLLECTION)
+                .document(id)
+                .get()
+                .await()
+                .toObject(User::class.java)!!
+
+            val updatedUser = user.copy(
+                displayName = displayName ?: user.displayName,
+                email = email ?: user.email,
+                photoUrl = profilePhotoUri?.let {
+                    remoteStorage.uploadImage(
+                        Uri.parse(
+                            profilePhotoUri
+                        )
+                    ).data
+                } ?: user.photoUrl
+            )
+
             fireStore
                 .collection(USERS_COLLECTION)
-                .document(user.uid)
-                .set(user)
+                .document(id)
+                .set(updatedUser)
                 .await()
 
             Result.Success(Unit)
@@ -232,6 +266,7 @@ class FireStoreService(
         }
 
     }
+
 
     override suspend fun onUserInfoUpdate(): Flow<User> {
         return callbackFlow {
@@ -253,6 +288,15 @@ class FireStoreService(
                 snapshotListener.remove()
             }
         }.conflate()
+    }
+
+    override suspend fun getUser(id: String): User {
+        return fireStore
+            .collection(USERS_COLLECTION)
+            .document(id)
+            .get()
+            .await()
+            .toObject(User::class.java)!!
     }
 
 }

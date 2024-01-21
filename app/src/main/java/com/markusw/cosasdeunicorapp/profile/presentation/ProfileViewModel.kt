@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.auth.domain.use_cases.ValidateName
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
 import com.markusw.cosasdeunicorapp.core.domain.ProfileUpdateData
+import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidateEmail
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.profile.domain.repository.ProfileRepository
@@ -32,13 +33,29 @@ class ProfileViewModel @Inject constructor(
     val events = eventsChannel.receiveAsFlow()
 
     init {
+        loadInitialData()
+    }
+
+    private fun loadInitialData() {
         _uiState.update { state ->
-            val loggedUser = profileRepository.getLoggedUser()
             state.copy(
-                user = loggedUser,
-                name = loggedUser.displayName,
-                email = loggedUser.email,
+                isLoading = true,
             )
+        }
+        viewModelScope.launch {
+            val loggedUser = when (val result = profileRepository.getLoggedUser()) {
+                is Result.Error -> User()
+                is Result.Success -> result.data!!
+            }
+
+            _uiState.update { state ->
+                state.copy(
+                    user = loggedUser,
+                    name = loggedUser.displayName,
+                    email = loggedUser.email,
+                    isLoading = false
+                )
+            }
         }
     }
 
@@ -57,7 +74,6 @@ class ProfileViewModel @Inject constructor(
             }
 
             is ProfileScreenEvent.SaveChanges -> {
-
                 val nameValidationResult = validateName(uiState.value.name)
                 val emailValidationResult = validateEmail(uiState.value.email)
                 val isAnyError = listOf(
@@ -81,6 +97,7 @@ class ProfileViewModel @Inject constructor(
                         isLoading = true,
                         nameError = null,
                         emailError = null,
+                        profileSaveState = AsyncOperationState.LOADING
                     )
                 }
 
@@ -91,16 +108,23 @@ class ProfileViewModel @Inject constructor(
                         profilePhotoUri = uiState.value.profilePhoto
                     )
 
-                    when (profileRepository.updateProfile(updatedData)) {
+                    when (val result = profileRepository.updateProfile(updatedData)) {
                         is Result.Error -> {
                             _uiState.update { state ->
                                 state.copy(
-                                    isLoading = false,
+                                    profileSaveState = AsyncOperationState.ERROR,
+                                    profileUpdateError = result.message
                                 )
                             }
                         }
 
                         is Result.Success -> {
+                            _uiState.update { state ->
+                                state.copy(
+                                    profileSaveState = AsyncOperationState.SUCCESS
+                                )
+                            }
+                            delay(2500)
                             eventsChannel.send(ProfileViewModelEvent.ProfileUpdatedSuccess)
                         }
                     }
@@ -116,16 +140,17 @@ class ProfileViewModel @Inject constructor(
                 val loggedUserEmail = uiState.value.user.email
                 _uiState.update { state ->
                     state.copy(
-                        passwordResetState = PasswordResetState.LOADING
+                        passwordResetState = AsyncOperationState.LOADING
                     )
                 }
 
                 viewModelScope.launch(dispatchers.io) {
-                    when (profileRepository.sendPasswordResetByEmail(loggedUserEmail)) {
+                    when (val result = profileRepository.sendPasswordResetByEmail(loggedUserEmail)) {
                         is Result.Error -> {
                             _uiState.update { state ->
                                 state.copy(
-                                    passwordResetState = PasswordResetState.ERROR
+                                    passwordResetState = AsyncOperationState.ERROR,
+                                    passwordUpdateError = result.message
                                 )
                             }
                         }
@@ -133,13 +158,29 @@ class ProfileViewModel @Inject constructor(
                         is Result.Success -> {
                             _uiState.update { state ->
                                 state.copy(
-                                    passwordResetState = PasswordResetState.SUCCESS
+                                    passwordResetState = AsyncOperationState.SUCCESS
                                 )
                             }
                             delay(2000)
                             eventsChannel.send(ProfileViewModelEvent.PasswordResetSentSuccess)
                         }
                     }
+                }
+            }
+
+            is ProfileScreenEvent.DismissProfileUpdatedDialog -> {
+                _uiState.update { state ->
+                    state.copy(
+                        profileSaveState = AsyncOperationState.IDLE
+                    )
+                }
+            }
+
+            is ProfileScreenEvent.DismissPasswordResetDialog -> {
+                _uiState.update { state ->
+                    state.copy(
+                        passwordResetState = AsyncOperationState.IDLE
+                    )
                 }
             }
         }

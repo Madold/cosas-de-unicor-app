@@ -4,6 +4,10 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +24,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,17 +35,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.presentation.AppTopBar
+import com.markusw.cosasdeunicorapp.core.presentation.DoneAnimation
+import com.markusw.cosasdeunicorapp.core.presentation.ErrorAnimation
 
 @Composable
 fun EditProfileScreen(
@@ -54,6 +66,12 @@ fun EditProfileScreen(
             onEvent(ProfileScreenEvent.ChangeProfilePhoto(imageUri.toString()))
         }
     )
+    val areChanges = remember(state.name, state.email, state.profilePhoto) {
+        state.name != state.user.displayName ||
+                state.email != state.user.email ||
+                state.profilePhoto != null
+
+    }
 
     Scaffold(
         topBar = {
@@ -86,6 +104,7 @@ fun EditProfileScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Button(
+                    enabled = areChanges,
                     modifier = Modifier.fillMaxWidth(0.8f),
                     onClick = {
                         onEvent(ProfileScreenEvent.SaveChanges)
@@ -102,7 +121,6 @@ fun EditProfileScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -190,6 +208,70 @@ fun EditProfileScreen(
             }
 
         }
-    }
 
+        if (state.profileSaveState != AsyncOperationState.IDLE) {
+            Dialog(onDismissRequest = {}) {
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        AnimatedContent(
+                            targetState = state.profileSaveState,
+                            label = "",
+                            transitionSpec = {
+                                fadeIn() togetherWith fadeOut()
+                            }
+                        ) {
+                            when (it) {
+                                AsyncOperationState.LOADING -> {
+                                    CircularProgressIndicator()
+                                }
+
+                                AsyncOperationState.SUCCESS -> {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        DoneAnimation()
+                                        Text(text = "Cambios guardados exitosamente")
+                                    }
+                                }
+
+                                AsyncOperationState.ERROR -> {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Text(
+                                            text = "Error al guardar los cambios",
+                                            style = MaterialTheme.typography.titleLarge.copy(
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        )
+                                        ErrorAnimation()
+                                        Text(
+                                            text = state.profileUpdateError?.asString() ?: "",
+                                            textAlign = TextAlign.Center
+                                        )
+                                        Button(onClick = { onEvent(ProfileScreenEvent.DismissProfileUpdatedDialog) }) {
+                                            Text(text = "Aceptar")
+                                        }
+                                    }
+                                }
+
+                                else -> return@AnimatedContent
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

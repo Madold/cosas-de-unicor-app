@@ -8,6 +8,6 @@ interface ProfileRepository {
     suspend fun updateProfile(data: ProfileUpdateData): Result<Unit>
 
     suspend fun sendPasswordResetByEmail(email: String): Result<Unit>
-    fun getLoggedUser(): User
+    suspend fun getLoggedUser(): Result<User>
 }
 

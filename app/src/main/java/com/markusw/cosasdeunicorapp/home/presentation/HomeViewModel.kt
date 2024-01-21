@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
 import com.markusw.cosasdeunicorapp.core.domain.LocalDataStore
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
+import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.core.ext.prepend
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.core.utils.TimeUtils
@@ -26,7 +27,6 @@ import com.markusw.cosasdeunicorapp.home.domain.use_cases.SendMessageToGlobalCha
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.SendPushNotification
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -95,8 +95,6 @@ class HomeViewModel @Inject constructor(
             }
 
         }
-
-        _uiState.update { it.copy(currentUser = getLoggedUser()) }
 
         viewModelScope.launch(dispatchers.io) {
             localDataStore
@@ -299,6 +297,10 @@ class HomeViewModel @Inject constructor(
                 is Result.Error -> 0
                 is Result.Success -> result.data
             }
+            val loggedUser = when (getLoggedUser()) {
+                is Result.Error -> User()
+                is Result.Success -> getLoggedUser().data!!
+            }
 
             withContext(dispatchers.main) {
                 _uiState.update { state ->
@@ -307,7 +309,8 @@ class HomeViewModel @Inject constructor(
                         newsList = state.newsList + initialNews,
                         isFetchingPreviousGlobalMessages = false,
                         isFetchingPreviousNews = false,
-                        usersCount = usersCount ?: 0
+                        usersCount = usersCount ?: 0,
+                        currentUser = loggedUser
                     )
                 }
             }

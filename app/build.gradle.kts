@@ -85,6 +85,7 @@ dependencies {
     val paletteVersion = "1.0.0"
     val roomVersion = "2.5.0"
     val dataStoreVersion = "1.0.0"
+    val lottieVersion = "6.3.0"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.12.0")
@@ -162,6 +163,10 @@ dependencies {
 
     //DataStore
     implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
+
+    //Lottie
+    //Lottie compose
+    implementation("com.airbnb.android:lottie-compose:$lottieVersion")
 
 
     //Test dependencies
