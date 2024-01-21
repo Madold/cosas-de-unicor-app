@@ -11,7 +11,6 @@ import com.markusw.cosasdeunicorapp.core.domain.ProfileUpdateData
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
 import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.core.ext.toDomainModel
-import com.markusw.cosasdeunicorapp.core.utils.Result
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
@@ -30,42 +29,43 @@ class FirebaseAuthService(
     private val auth: FirebaseAuth,
     private val remoteDatabase: RemoteDatabase,
     private val messaging: FirebaseMessaging,
-) : FirebaseService(), AuthService {
+) : AuthService {
 
-    override suspend fun authenticate(email: String, password: String): Result<Unit> {
-        return executeFirebaseOperation {
-            auth.signInWithEmailAndPassword(email, password).await()
-            val loggedUser = auth.currentUser!!
-            loggedUser.let {
-                if (!it.isEmailVerified) {
-                    auth.signOut()
-                    throw EmailNotVerifiedException()
-                }
+    override suspend fun authenticate(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password).await()
+        val loggedUser = auth.currentUser!!
+        loggedUser.let {
+            if (!it.isEmailVerified) {
+                auth.signOut()
+                throw EmailNotVerifiedException()
             }
-            messaging.subscribeToTopic("/topics/${loggedUser.uid}")
-            messaging.subscribeToTopic("/topics/news")
         }
+        messaging.subscribeToTopic("/topics/${loggedUser.uid}")
+        messaging.subscribeToTopic("/topics/news")
     }
 
-    override suspend fun register(name: String, email: String, password: String): Result<Unit> {
-        return executeFirebaseOperation {
-            auth.createUserWithEmailAndPassword(email, password).await()
-            val loggedUser = auth.currentUser!!
-            updateUserProfileData(ProfileUpdateData(displayName = name))
-            remoteDatabase.saveUserInDatabase(loggedUser.toDomainModel())
-            sendEmailVerification(loggedUser)
-            auth.signOut()
-        }
+    override suspend fun register(name: String, email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password).await()
+        val loggedUser = auth.currentUser!!
+        updateUserProfileData(ProfileUpdateData(displayName = name))
+        remoteDatabase.saveUserInDatabase(loggedUser.toDomainModel())
+        sendEmailVerification(loggedUser)
+        auth.signOut()
     }
 
     override suspend fun updateUserProfileData(data: ProfileUpdateData) {
         val (displayName, email) = data
-        auth.currentUser?.updateEmail(email!!)?.await()
-        auth.currentUser?.updateProfile(
-            userProfileChangeRequest {
-                this.displayName = displayName
-            }
-        )?.await()
+
+        email?.let {
+            auth.currentUser?.updateEmail(it)?.await()
+        }
+        displayName?.let {
+            auth.currentUser?.updateProfile(
+                userProfileChangeRequest {
+                    this.displayName = it
+                }
+            )?.await()
+        }
         auth.currentUser?.let { remoteDatabase.updateUserInfo(it.uid, data) }
     }
 
@@ -77,30 +77,25 @@ class FirebaseAuthService(
         user?.sendEmailVerification()?.await()
     }
 
-    override suspend fun logout(): Result<Unit> {
-        return executeFirebaseOperation {
-            Timber.d("Started logout")
-            val loggedUser = auth.currentUser!!
-            messaging.unsubscribeFromTopic("/topics/${loggedUser.uid}")
-            messaging.unsubscribeFromTopic("/topics/news")
-            auth.signOut()
-            Timber.d("finished logout")
-        }
+    override suspend fun logout() {
+        Timber.d("Started logout")
+        val loggedUser = auth.currentUser!!
+        messaging.unsubscribeFromTopic("/topics/${loggedUser.uid}")
+        messaging.unsubscribeFromTopic("/topics/news")
+        auth.signOut()
+        Timber.d("finished logout")
     }
 
-    override suspend fun authenticateWithCredential(credential: AuthCredential): Result<Unit> {
-        return executeFirebaseOperation {
-            auth.signInWithCredential(credential).await()
-            val loggedUser = auth.currentUser!!
-            remoteDatabase.saveUserInDatabase(auth.currentUser!!.toDomainModel())
-            messaging.subscribeToTopic("/topics/${loggedUser.uid}")
-            messaging.subscribeToTopic("/topics/news")
-        }
+    override suspend fun authenticateWithCredential(credential: AuthCredential) {
+        auth.signInWithCredential(credential).await()
+        val loggedUser = auth.currentUser!!
+        remoteDatabase.saveUserInDatabase(auth.currentUser!!.toDomainModel())
+        messaging.subscribeToTopic("/topics/${loggedUser.uid}")
+        messaging.subscribeToTopic("/topics/news")
     }
 
     override suspend fun sendPasswordResetByEmail(email: String) {
         auth.sendPasswordResetEmail(email).await()
     }
-
 
 }

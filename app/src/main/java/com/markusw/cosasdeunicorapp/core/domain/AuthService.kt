@@ -16,7 +16,7 @@ interface AuthService {
      * @return a Result object
      * @see Result
      */
-    suspend fun authenticate(email: String, password: String): Result<Unit>
+    suspend fun authenticate(email: String, password: String)
     /**
      * Registers a user with the given name, email and password
      * @param name the name of the user
@@ -25,20 +25,20 @@ interface AuthService {
      * @return a Result object
      * @see Result
      */
-    suspend fun register(name: String, email: String, password: String): Result<Unit>
+    suspend fun register(name: String, email: String, password: String)
     /**
      * Logs out the user
      * @return a Result object
      * @see Result
      */
-    suspend fun logout(): Result<Unit>
+    suspend fun logout()
     /**
      * Authenticates the user with the given credential
      * @param credential the credential to authenticate with
      * @return a Result object
      * @see Result
      */
-    suspend fun authenticateWithCredential(credential: AuthCredential): Result<Unit>
+    suspend fun authenticateWithCredential(credential: AuthCredential)
     /**
      * Sends a password reset email to the given email
      * @param email the email to send the password reset email to
