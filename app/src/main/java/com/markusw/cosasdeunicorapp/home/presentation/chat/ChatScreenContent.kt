@@ -206,7 +206,6 @@ fun ChatScreenContent(
         Column(
             modifier = Modifier.padding(it)
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
             ChatList(
                 state = state,
                 scrollState = scrollState,
@@ -215,7 +214,8 @@ fun ChatScreenContent(
                 },
                 onRequestPreviousMessages = {
                     onEvent(HomeUiEvent.FetchPreviousGlobalMessages)
-                }
+                },
+                modifier = Modifier.padding(top = 8.dp)
             )
         }
     }

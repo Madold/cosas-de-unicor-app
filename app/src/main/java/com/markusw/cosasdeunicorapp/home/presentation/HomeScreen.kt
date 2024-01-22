@@ -106,7 +106,8 @@ private fun HomeHost(
             HomeScreenContent(
                 state = uiState,
                 onEvent = viewModel::onEvent,
-                mainNavController = mainNavController
+                mainNavController = mainNavController,
+                bottomBarNavController = navController
             )
         }
 
@@ -179,7 +180,9 @@ private fun HomeHost(
                             Manifest.permission.READ_EXTERNAL_STORAGE -> ReadExternalStoragePermission()
                             else -> return@forEach
                         },
-                        isPermanentlyDeclined = !((context as ContextWrapper).baseContext as Activity).shouldShowRequestPermissionRationale(permission).not(),
+                        isPermanentlyDeclined = !((context as ContextWrapper).baseContext as Activity).shouldShowRequestPermissionRationale(
+                            permission
+                        ).not(),
                         onDismiss = viewModel::dismissDialog,
                         onDone = {
                             viewModel.dismissDialog()
