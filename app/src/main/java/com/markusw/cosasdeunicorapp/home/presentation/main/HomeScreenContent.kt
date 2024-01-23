@@ -216,7 +216,8 @@ fun HomeScreenContent(
                                                 onNewsLiked = { },
                                                 modifier = Modifier
                                                     .width(290.dp)
-                                                    .weight(1f)
+                                                    .weight(1f),
+                                                likeButtonVisible = false
                                             )
                                         }
                                     }

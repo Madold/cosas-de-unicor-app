@@ -58,6 +58,7 @@ fun NewsCard(
     news: News,
     onNewsLiked: (News) -> Unit = {},
     loggedUser: User = User(),
+    likeButtonVisible: Boolean = true
 
 ) {
 
@@ -111,11 +112,13 @@ fun NewsCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    AnimatedLikeHeart(
-                        isLiked = isLiked,
-                        onToggleLike = { onNewsLiked(news) }
-                    )
-                    Text(text = news.likedBy.size.toString())
+                    if (likeButtonVisible) {
+                        AnimatedLikeHeart(
+                            isLiked = isLiked,
+                            onToggleLike = { onNewsLiked(news) }
+                        )
+                        Text(text = news.likedBy.size.toString())
+                    }
                 }
             }
         }
