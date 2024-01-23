@@ -17,4 +17,5 @@ data class HomeState(
     val usersCount: Int = 0,
     val localSettings: LocalSettings = LocalSettings(),
     val isClosingSession: Boolean = false,
+    val isLoading: Boolean = false,
 )

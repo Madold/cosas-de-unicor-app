@@ -29,6 +29,7 @@ import coil.request.ImageRequest
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.core.presentation.AppTopBar
+import com.markusw.cosasdeunicorapp.core.presentation.ProfileAvatar
 import com.markusw.cosasdeunicorapp.core.presentation.Screens
 
 @Composable
@@ -70,16 +71,10 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            AsyncImage(
-                 model = ImageRequest.Builder(LocalContext.current)
-                     .data(state.user.photoUrl)
-                     .crossfade(true)
-                     .build(),
-                 contentDescription = null,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(100.dp)
-             )
+            ProfileAvatar(
+                imageUrl = state.user.photoUrl,
+                size = 200.dp
+            )
 
             Text(
                 text = state.user.displayName,

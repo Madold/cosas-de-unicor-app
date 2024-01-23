@@ -32,6 +32,7 @@ import com.markusw.cosasdeunicorapp.core.utils.TextUtils
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.home.domain.model.MessageContent
 import com.markusw.cosasdeunicorapp.core.domain.model.User
+import com.markusw.cosasdeunicorapp.core.presentation.ProfileAvatar
 
 @Composable
 fun ChatItem(
@@ -94,7 +95,10 @@ fun ChatItem(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     if (!isFromCurrentUser) {
-                        Avatar(photoUrl = message.sender.photoUrl)
+                        ProfileAvatar(
+                            imageUrl = message.sender.photoUrl,
+                            size = 32.dp
+                        )
                     }
                     Column(
                         horizontalAlignment = horizontalAlignment

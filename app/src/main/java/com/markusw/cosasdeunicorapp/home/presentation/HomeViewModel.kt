@@ -286,7 +286,8 @@ class HomeViewModel @Inject constructor(
         _uiState.update { state ->
             state.copy(
                 isFetchingPreviousNews = true,
-                isFetchingPreviousGlobalMessages = true
+                isFetchingPreviousGlobalMessages = true,
+                isLoading = true
             )
         }
 
@@ -310,7 +311,8 @@ class HomeViewModel @Inject constructor(
                         isFetchingPreviousGlobalMessages = false,
                         isFetchingPreviousNews = false,
                         usersCount = usersCount ?: 0,
-                        currentUser = loggedUser
+                        currentUser = loggedUser,
+                        isLoading = false
                     )
                 }
             }

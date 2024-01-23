@@ -57,12 +57,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.ext.shimmerEffect
+import com.markusw.cosasdeunicorapp.core.presentation.ProfileAvatar
 import com.markusw.cosasdeunicorapp.core.presentation.Screens
 import com.markusw.cosasdeunicorapp.core.utils.TextUtils
 import com.markusw.cosasdeunicorapp.core.utils.TextUtils.DOCX
@@ -129,15 +132,9 @@ fun HomeScreenContent(
                         },
                         actions = {
                             IconButton(onClick = { isUserInfoDialogVisible = true }) {
-                                AsyncImage(
-                                    model = ImageRequest.Builder(LocalContext.current)
-                                        .data(state.currentUser.photoUrl)
-                                        .crossfade(true)
-                                        .build(),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(32.dp)
-                                        .clip(CircleShape)
+                                ProfileAvatar(
+                                    imageUrl = state.currentUser.photoUrl,
+                                    size = 32.dp
                                 )
                             }
                         }
@@ -152,105 +149,116 @@ fun HomeScreenContent(
                             .padding(horizontal = 16.dp)
                     ) {
 
-                        Section(
-                            title = {
-                                Text(
-                                    text = "Documentos populares",
-                                    style = MaterialTheme.typography.titleLarge.copy(
-                                        fontWeight = FontWeight.Bold
+                        if (state.isLoading) {
+                            LoadingLayout()
+                        } else {
+                            Section(
+                                title = {
+                                    Text(
+                                        text = "Documentos populares",
+                                        style = MaterialTheme.typography.titleLarge.copy(
+                                            fontWeight = FontWeight.Bold
+                                        )
                                     )
-                                )
-                            },
-                            trailingIcon = {
-                                TextButton(onClick = { bottomBarNavController.navigate(HomeScreens.Documents.route) }) {
-                                    Text(text = "Ver todo")
-                                }
-                            },
-                            content = {
-                                Row {
-                                    DocumentCard(
-                                        document = DocumentReference(
-                                            name = "Solicitud de doble programa",
-                                            documentName = "solicitud_doble_programa.docx"
-                                        ),
-                                        onClick = {},
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                    DocumentCard(
-                                        document = DocumentReference(
-                                            name = "Simulador de ingreso a la universidad",
-                                            documentName = "simulador_promedio_ponderado_programa.xlsx"
-                                        ),
-                                        onClick = {},
-                                        modifier = Modifier.weight(1f)
-                                    )
-                                }
-                            }
-                        )
-
-                        Section(
-                            title = {
-                                Text(
-                                    text = "¿Qué esta pasando?",
-                                    style = MaterialTheme.typography.titleLarge.copy(
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                )
-                            },
-                            trailingIcon = {
-                                TextButton(onClick = {
-                                    bottomBarNavController.navigate(HomeScreens.News.route)
-                                }) {
-                                    Text(text = "Ver todo")
-                                }
-                            },
-                            content = {
-                                LazyRow {
-                                    items(state.newsList.take(3)) { news ->
-                                        NewsCard(
-                                            news = news,
-                                            onNewsLiked = { },
-                                            modifier = Modifier
-                                                .width(290.dp)
-                                                .weight(1f)
+                                },
+                                trailingIcon = {
+                                    TextButton(onClick = {
+                                        bottomBarNavController.navigate(
+                                            HomeScreens.Documents.route
+                                        )
+                                    }) {
+                                        Text(text = "Ver todo")
+                                    }
+                                },
+                                content = {
+                                    Row {
+                                        DocumentCard(
+                                            document = DocumentReference(
+                                                name = "Solicitud de doble programa",
+                                                documentName = "solicitud_doble_programa.docx"
+                                            ),
+                                            onClick = {},
+                                            modifier = Modifier.weight(1f),
+                                        )
+                                        DocumentCard(
+                                            document = DocumentReference(
+                                                name = "Simulador de ingreso a la universidad",
+                                                documentName = "simulador_promedio_ponderado_programa.xlsx"
+                                            ),
+                                            onClick = {},
+                                            modifier = Modifier.weight(1f)
                                         )
                                     }
                                 }
-                            })
-
-                        Section(
-                            title = {
-                                Text(
-                                    text = "Mantente comunicado",
-                                    style = MaterialTheme.typography.titleLarge.copy(
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                )
-                            },
-                            trailingIcon = {
-                                TextButton(onClick = {
-                                    bottomBarNavController.navigate(HomeScreens.Chat.route)
-                                }) {
-                                    Text(text = "Ir al chat general", textAlign = TextAlign.Center)
-                                }
-                            },
-                            content = {
-
-                                if (state.globalChatList.isNotEmpty()) {
-                                    val lastMessage = state.globalChatList.first()
-
-                                    ChatItem(message = lastMessage, swipeEnabled = false)
-                                }
-
-                            })
-
-                        if (isUserInfoDialogVisible) {
-                            UserInfoDialog(
-                                state = state,
-                                onEvent = onEvent,
-                                onDismiss = { isUserInfoDialogVisible = false },
-                                mainNavController = mainNavController
                             )
+
+                            Section(
+                                title = {
+                                    Text(
+                                        text = "¿Qué esta pasando?",
+                                        style = MaterialTheme.typography.titleLarge.copy(
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                },
+                                trailingIcon = {
+                                    TextButton(onClick = {
+                                        bottomBarNavController.navigate(HomeScreens.News.route)
+                                    }) {
+                                        Text(text = "Ver todo")
+                                    }
+                                },
+                                content = {
+                                    LazyRow {
+                                        items(state.newsList.take(3)) { news ->
+                                            NewsCard(
+                                                news = news,
+                                                onNewsLiked = { },
+                                                modifier = Modifier
+                                                    .width(290.dp)
+                                                    .weight(1f)
+                                            )
+                                        }
+                                    }
+                                })
+
+                            Section(
+                                title = {
+                                    Text(
+                                        text = "Mantente comunicado",
+                                        style = MaterialTheme.typography.titleLarge.copy(
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                },
+                                trailingIcon = {
+                                    TextButton(onClick = {
+                                        bottomBarNavController.navigate(HomeScreens.Chat.route)
+                                    }) {
+                                        Text(
+                                            text = "Ir al chat general",
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
+                                },
+                                content = {
+
+                                    if (state.globalChatList.isNotEmpty()) {
+                                        val lastMessage = state.globalChatList.first()
+
+                                        ChatItem(message = lastMessage, swipeEnabled = false)
+                                    }
+
+                                })
+
+                            if (isUserInfoDialogVisible) {
+                                UserInfoDialog(
+                                    state = state,
+                                    onEvent = onEvent,
+                                    onDismiss = { isUserInfoDialogVisible = false },
+                                    mainNavController = mainNavController
+                                )
+                            }
                         }
 
                     }
@@ -288,7 +296,7 @@ private fun Section(
 private fun DocumentCard(
     document: DocumentReference,
     modifier: Modifier = Modifier,
-    onClick: (DocumentReference) -> Unit
+    onClick: (DocumentReference) -> Unit,
 ) {
 
     val documentCover = when (TextUtils.getFileExtensionFromName(document.documentName)) {
@@ -320,6 +328,8 @@ private fun DocumentCard(
             textAlign = TextAlign.Center,
         )
     }
+
+
 }
 
 @Composable
@@ -353,15 +363,9 @@ private fun UserInfoDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(user.photoUrl)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(70.dp)
-                        .clip(CircleShape),
+                ProfileAvatar(
+                    imageUrl = user.photoUrl,
+                    size = 70.dp
                 )
 
                 Text(
@@ -456,4 +460,159 @@ private fun UserInfoDialogAction(
             contentDescription = null
         )
     }
+}
+
+
+@Composable
+private fun LoadingLayout() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .height(24.dp)
+                    .shimmerEffect()
+            )
+
+            Box(
+                modifier = Modifier
+                    .width(50.dp)
+                    .height(24.dp)
+                    .shimmerEffect()
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(215.dp)
+                    .shimmerEffect()
+            )
+
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(215.dp)
+                    .shimmerEffect()
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .height(24.dp)
+                    .shimmerEffect()
+            )
+
+            Box(
+                modifier = Modifier
+                    .width(50.dp)
+                    .height(24.dp)
+                    .shimmerEffect()
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            LoadingNewsCard()
+            LoadingNewsCard()
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .height(24.dp)
+                    .shimmerEffect()
+            )
+
+            Box(
+                modifier = Modifier
+                    .width(50.dp)
+                    .height(24.dp)
+                    .shimmerEffect()
+            )
+        }
+
+    }
+}
+
+@Composable
+private fun LoadingNewsCard() {
+    Column(
+        modifier = Modifier.width(260.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(215.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .shimmerEffect()
+
+        )
+        Box(
+            modifier = Modifier
+                .height(20.dp)
+                .fillMaxWidth()
+                .shimmerEffect()
+        )
+        Box(
+            modifier = Modifier
+                .height(20.dp)
+                .fillMaxWidth()
+                .shimmerEffect()
+        )
+        Box(
+            modifier = Modifier
+                .height(20.dp)
+                .fillMaxWidth()
+                .shimmerEffect()
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .height(24.dp)
+                    .shimmerEffect()
+            )
+
+            Box(
+                modifier = Modifier
+                    .width(50.dp)
+                    .height(24.dp)
+                    .shimmerEffect()
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoadingLayoutPreview() {
+    LoadingLayout()
 }

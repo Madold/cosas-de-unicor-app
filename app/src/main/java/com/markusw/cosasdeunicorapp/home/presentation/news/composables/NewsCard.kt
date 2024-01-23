@@ -20,7 +20,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -59,11 +58,11 @@ fun NewsCard(
     news: News,
     onNewsLiked: (News) -> Unit = {},
     loggedUser: User = User(),
+
 ) {
 
     var isNewsDetailsDialogVisible by rememberSaveable { mutableStateOf(false) }
     val isLiked = news.likedBy.contains(loggedUser)
-    val heartIcon = if (isLiked) R.drawable.ic_heart else R.drawable.ic_heart_outline
     val formattedTimestamp = remember {
         TextUtils.formatDate(news.timestamp)
     }
@@ -131,6 +130,7 @@ fun NewsCard(
         )
     }
 
+
 }
 
 @Composable
@@ -172,21 +172,20 @@ private fun NewsDetailsDialog(
                     Box(
                         modifier = Modifier
                             .background(
-                            brush = Brush.verticalGradient(
-                                0.0f to Color.Transparent,
-                                500.0f to MaterialTheme.colorScheme.surface,
-                                startY = 0.0f,
-                                endY = Float.POSITIVE_INFINITY
+                                brush = Brush.verticalGradient(
+                                    0.0f to Color.Transparent,
+                                    500.0f to MaterialTheme.colorScheme.surface,
+                                    startY = 0.0f,
+                                    endY = Float.POSITIVE_INFINITY
+                                )
                             )
-                        )
                     )
                     SubcomposeAsyncImage(
                         model = ImageRequest
                             .Builder(LocalContext.current)
                             .data(news.coverUrl)
                             .crossfade(true)
-                            .build()
-                        ,
+                            .build(),
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -201,12 +200,12 @@ private fun NewsDetailsDialog(
                                         )
                                     )
                                 }
-                            }
-                        ,
+                            },
                         contentScale = ContentScale.FillWidth,
                         onSuccess = { painterResult ->
                             val drawable = painterResult.result.drawable
-                            val dominantColorFromImage = calculateDominantColor(drawable, defaultDominantColorValue)
+                            val dominantColorFromImage =
+                                calculateDominantColor(drawable, defaultDominantColorValue)
                             dominantColor = dominantColorFromImage
                         }
                     )
