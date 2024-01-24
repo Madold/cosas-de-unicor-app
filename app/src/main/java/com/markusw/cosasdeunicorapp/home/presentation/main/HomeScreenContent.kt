@@ -209,14 +209,11 @@ fun HomeScreenContent(
                                     }
                                 },
                                 content = {
-                                    LazyRow {
-                                        items(state.newsList.take(3)) { news ->
+                                    Column {
+                                        state.newsList.take(2).forEach { news ->
                                             NewsCard(
                                                 news = news,
                                                 onNewsLiked = { },
-                                                modifier = Modifier
-                                                    .width(290.dp)
-                                                    .weight(1f),
                                                 likeButtonVisible = false
                                             )
                                         }
@@ -527,9 +524,9 @@ private fun LoadingLayout() {
             )
         }
 
-        Row(
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             LoadingNewsCard()
             LoadingNewsCard()
@@ -562,7 +559,7 @@ private fun LoadingLayout() {
 @Composable
 private fun LoadingNewsCard() {
     Column(
-        modifier = Modifier.width(260.dp),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Box(
@@ -591,7 +588,7 @@ private fun LoadingNewsCard() {
                 .fillMaxWidth()
                 .shimmerEffect()
         )
-        Row(
+        /*Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
@@ -608,7 +605,7 @@ private fun LoadingNewsCard() {
                     .height(24.dp)
                     .shimmerEffect()
             )
-        }
+        }*/
     }
 }
 
