@@ -180,7 +180,7 @@ private fun HomeHost(
                             Manifest.permission.READ_EXTERNAL_STORAGE -> ReadExternalStoragePermission()
                             else -> return@forEach
                         },
-                        isPermanentlyDeclined = !((context as ContextWrapper).baseContext as Activity).shouldShowRequestPermissionRationale(
+                        isPermanentlyDeclined = ((context as ContextWrapper).baseContext as Activity).shouldShowRequestPermissionRationale(
                             permission
                         ).not(),
                         onDismiss = viewModel::dismissDialog,
