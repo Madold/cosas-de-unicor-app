@@ -2,12 +2,11 @@ package com.markusw.cosasdeunicorapp.home.presentation.docs
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.Text
+import androidx.compose.material3.NavigationDrawerItemColors
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.markusw.cosasdeunicorapp.core.utils.TextUtils
 
 @Composable
 fun AccordionItem(
@@ -15,6 +14,7 @@ fun AccordionItem(
     onItemClick: () -> Unit,
     modifier: Modifier = Modifier,
     icon: @Composable () -> Unit,
+    colors: NavigationDrawerItemColors = NavigationDrawerItemDefaults.colors(),
 ) {
 
     NavigationDrawerItem(
@@ -23,7 +23,8 @@ fun AccordionItem(
         onClick = onItemClick,
         modifier = modifier,
         icon = icon,
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
+        colors = colors,
     )
 
 

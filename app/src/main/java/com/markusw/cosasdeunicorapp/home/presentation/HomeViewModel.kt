@@ -280,6 +280,27 @@ class HomeViewModel @Inject constructor(
                     )
                 }
             }
+
+            is HomeUiEvent.ChangeDocumentName -> {
+                _uiState.update { it.copy(documentName = event.documentName) }
+            }
+
+            is HomeUiEvent.ChangeSearchBarActive -> {
+                _uiState.update { it.copy(isDocumentSearchBarActive = event.isActive) }
+            }
+
+            is HomeUiEvent.SearchDocument -> {
+                val searchedDocuments = uiState
+                    .value
+                    .documentsList
+                    .filter { it.name.contains(event.query, ignoreCase = true) }
+
+                _uiState.update {
+                    it.copy(
+                        searchedDocumentsList = searchedDocuments
+                    )
+                }
+            }
         }
     }
 

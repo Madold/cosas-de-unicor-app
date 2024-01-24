@@ -15,4 +15,7 @@ sealed interface HomeUiEvent {
     data class LikeNews(val news: News): HomeUiEvent
     data object ToggleGeneralChatNotifications: HomeUiEvent
     data object ToggleNewsNotifications: HomeUiEvent
+    data class ChangeDocumentName(val documentName: String): HomeUiEvent
+    data class ChangeSearchBarActive(val isActive: Boolean): HomeUiEvent
+    data class SearchDocument(val query: String): HomeUiEvent
 }

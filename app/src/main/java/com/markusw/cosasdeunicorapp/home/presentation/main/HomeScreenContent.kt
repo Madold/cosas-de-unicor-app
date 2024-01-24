@@ -177,7 +177,8 @@ fun HomeScreenContent(
                                         DocumentCard(
                                             document = DocumentReference(
                                                 name = "Solicitud de doble programa",
-                                                documentName = "solicitud_doble_programa.docx"
+                                                documentName = "solicitud_doble_programa.docx",
+                                                category = "Registro y admisiones"
                                             ),
                                             onClick = {},
                                             modifier = Modifier.weight(1f),
@@ -185,7 +186,8 @@ fun HomeScreenContent(
                                         DocumentCard(
                                             document = DocumentReference(
                                                 name = "Simulador de ingreso a la universidad",
-                                                documentName = "simulador_promedio_ponderado_programa.xlsx"
+                                                documentName = "simulador_promedio_ponderado_programa.xlsx",
+                                                category = "Registro y admisiones"
                                             ),
                                             onClick = {},
                                             modifier = Modifier.weight(1f)

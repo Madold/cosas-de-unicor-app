@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,6 +32,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
@@ -37,9 +40,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -81,13 +82,9 @@ fun DocsScreenContent(
     )
 ) {
 
-    val documentSections = listOf(
-        DocumentSection.ConsejoAcademico,
-        DocumentSection.Admisiones
-    )
+
     val scrollState = rememberScrollState()
     val context = LocalContext.current
-    var isSearchBarExpanded by remember { mutableStateOf(false) }
 
     fun handleOnDownloadDocument(documentName: String) {
 
@@ -141,7 +138,7 @@ fun DocsScreenContent(
                         )
                     },
                     actions = {
-                        IconButton(onClick = { isSearchBarExpanded = true }) {
+                        IconButton(onClick = { onEvent(HomeUiEvent.ChangeSearchBarActive(true)) }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_search),
                                 contentDescription = null,
@@ -151,22 +148,27 @@ fun DocsScreenContent(
                     }
                 )
                 SearchBar(
-                    query = "",
-                    onQueryChange = {},
-                    onSearch = {},
-                    active = false,
-                    onActiveChange = {
-                        isSearchBarExpanded = it
+                    query = state.documentName,
+                    onQueryChange = {
+                        onEvent(HomeUiEvent.ChangeDocumentName(it))
+                        onEvent(HomeUiEvent.SearchDocument(it))
                     },
+                    onSearch = { onEvent(HomeUiEvent.SearchDocument(it)) },
+                    active = state.isDocumentSearchBarActive,
+                    onActiveChange = { onEvent(HomeUiEvent.ChangeSearchBarActive(it)) },
                     modifier = Modifier.run {
-                        if (isSearchBarExpanded) {
+                        if (state.isDocumentSearchBarActive) {
                             this.fillMaxWidth()
                         } else {
                             this.width(0.dp)
                         }
                     },
                     colors = SearchBarDefaults.colors(
-                        containerColor = home_bottom_bar_background
+                        containerColor = home_bottom_bar_background,
+                        inputFieldColors = SearchBarDefaults.inputFieldColors(
+                            focusedTextColor = Color.White,
+                            unfocusedTextColor = Color.White
+                        )
                     ),
                     leadingIcon = {
                         Icon(
@@ -176,14 +178,61 @@ fun DocsScreenContent(
                         )
                     },
                     trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = null,
-                            tint = Color.White
-                        )
+                        IconButton(onClick = {
+                            onEvent(HomeUiEvent.ChangeDocumentName(""))
+                            onEvent(HomeUiEvent.ChangeSearchBarActive(false))
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        }
                     }
                 ) {
+                    LazyColumn {
+                        items(state.searchedDocumentsList) { document ->
+                            val documentCover = remember {
+                                when (TextUtils.getFileExtensionFromName(
+                                    document.documentName
+                                )) {
+                                    PDF -> R.drawable.pdf_icon
+                                    XLSX -> R.drawable.excel_icon
+                                    DOCX -> R.drawable.word_icon
+                                    else -> R.drawable.file_icon
+                                }
+                            }
 
+                            AccordionItem(
+                                label = {
+                                    Text(text = document.name)
+                                },
+                                onItemClick = {
+                                    handleOnDownloadDocument(
+                                        document.documentName
+                                    )
+                                },
+                                icon = {
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(CircleShape)
+                                            .background(Color.White)
+                                            .padding(5.dp)
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = documentCover),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                    }
+                                },
+                                colors = NavigationDrawerItemDefaults.colors(
+                                    unselectedContainerColor = Color.Transparent,
+                                    unselectedTextColor = Color.White
+                                )
+                            )
+                        }
+                    }
                 }
             }
         },
@@ -197,52 +246,68 @@ fun DocsScreenContent(
                         .verticalScroll(scrollState)
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
-                    documentSections.forEach { section ->
+                    state.documentCategories.forEach { category ->
+
+                        val categoryIcon = when (category) {
+                            "Consejo Académico" -> R.drawable.ic_academic
+                            "Registro y admisiones" -> R.drawable.ic_registration
+                            else -> R.drawable.ic_documents
+                        }
+
                         Accordion(
                             modifier = Modifier.fillMaxWidth(),
                             label = {
                                 Text(
-                                    text = section.label,
+                                    text = category,
                                     style = MaterialTheme.typography.titleMedium
                                 )
                             },
                             content = {
-                                section.documents.forEach { documentReference ->
+                                state
+                                    .documentsList
+                                    .filter { it.category == category }
+                                    .forEach { documentReference ->
 
-                                    val documentCover = remember {
-                                        when (TextUtils.getFileExtensionFromName(documentReference.documentName)) {
-                                            PDF -> R.drawable.pdf_icon
-                                            XLSX -> R.drawable.excel_icon
-                                            DOCX -> R.drawable.word_icon
-                                            else -> R.drawable.file_icon
-                                        }
-                                    }
-
-                                    AccordionItem(
-                                        label = {
-                                            Text(text = documentReference.name)
-                                        },
-                                        onItemClick = { handleOnDownloadDocument(documentReference.documentName) },
-                                        icon = {
-                                            Box(
-                                                modifier = Modifier
-                                                    .clip(CircleShape)
-                                                    .background(Color.White)
-                                                    .padding(5.dp)
-                                            ) {
-                                                Image(
-                                                    painter = painterResource(id = documentCover),
-                                                    contentDescription = null,
-                                                    modifier = Modifier.size(24.dp)
-                                                )
+                                        val documentCover = remember {
+                                            when (TextUtils.getFileExtensionFromName(
+                                                documentReference.documentName
+                                            )) {
+                                                PDF -> R.drawable.pdf_icon
+                                                XLSX -> R.drawable.excel_icon
+                                                DOCX -> R.drawable.word_icon
+                                                else -> R.drawable.file_icon
                                             }
                                         }
-                                    )
-                                }
+
+                                        AccordionItem(
+                                            label = {
+                                                Text(text = documentReference.name)
+                                            },
+                                            onItemClick = {
+                                                handleOnDownloadDocument(
+                                                    documentReference.documentName
+                                                )
+                                            },
+                                            icon = {
+                                                Box(
+                                                    modifier = Modifier
+                                                        .clip(CircleShape)
+                                                        .background(Color.White)
+                                                        .padding(5.dp)
+                                                ) {
+                                                    Image(
+                                                        painter = painterResource(id = documentCover),
+                                                        contentDescription = null,
+                                                        modifier = Modifier.size(24.dp)
+                                                    )
+                                                }
+                                            }
+                                        )
+                                    }
                             },
                             trailingIcon = {
                                 Icon(
-                                    painter = painterResource(id = section.icon),
+                                    painter = painterResource(id = categoryIcon),
                                     contentDescription = null
                                 )
                             }
