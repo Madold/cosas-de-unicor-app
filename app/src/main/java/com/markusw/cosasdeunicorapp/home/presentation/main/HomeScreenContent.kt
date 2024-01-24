@@ -32,6 +32,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,7 +40,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -80,6 +85,7 @@ import com.markusw.cosasdeunicorapp.home.presentation.docs.DocumentReference
 import com.markusw.cosasdeunicorapp.home.presentation.news.composables.NewsCard
 import com.markusw.cosasdeunicorapp.ui.theme.home_bottom_bar_background
 import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 
 @Composable
 fun HomeScreenContent(
@@ -98,9 +104,38 @@ fun HomeScreenContent(
         drawerContent = {
             ModalDrawerSheet(
                 content = {
-                    Text(text = "Drawer content")
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            text = "Inicio",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            ),
+                        )
+                        Divider(
+                            modifier = Modifier.fillMaxWidth(0.8f)
+                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Switch(
+                                checked = state.localSettings.isDarkModeEnabled,
+                                onCheckedChange = {
+                                               onEvent(HomeUiEvent.ChangeDarkMode(it))
+                                },
+                            )
+                            Text(
+                                text = "Modo oscuro",
+                                color = Color.White
+                            )
+                        }
+                    }
                 },
-                drawerContentColor = home_bottom_bar_background
+                drawerContainerColor = home_bottom_bar_background,
+                drawerContentColor = Color.White,
             )
         },
         content = {

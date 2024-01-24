@@ -71,6 +71,7 @@ class HomeViewModel @Inject constructor(
     companion object {
         const val GENERAL_CHAT_NOTIFICATIONS_KEY = "isGeneralChatNotificationsEnabled"
         const val NEWS_NOTIFICATIONS_KEY = "isNewsNotificationsEnabled"
+        const val DARK_MODE_KEY = "isDarkModeEnabled"
     }
 
     init {
@@ -106,6 +107,21 @@ class HomeViewModel @Inject constructor(
                             localSettings = state.localSettings.copy(
                                 isGeneralChatNotificationsEnabled = isGeneralChatNotificationsEnabled?.toBoolean()
                                     ?: true
+                            )
+                        )
+                    }
+                }
+        }
+
+        viewModelScope.launch(dispatchers.io) {
+            localDataStore
+                .get(DARK_MODE_KEY)
+                .collectLatest { isDarkModeEnabled ->
+                    _uiState.update { state ->
+                        state.copy(
+                            localSettings = state.localSettings.copy(
+                                isDarkModeEnabled = isDarkModeEnabled?.toBoolean()
+                                    ?: false
                             )
                         )
                     }
@@ -298,6 +314,15 @@ class HomeViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         searchedDocumentsList = searchedDocuments
+                    )
+                }
+            }
+
+            is HomeUiEvent.ChangeDarkMode -> {
+                viewModelScope.launch(dispatchers.io) {
+                    localDataStore.save(
+                        DARK_MODE_KEY,
+                        event.isDarkMode.toString()
                     )
                 }
             }

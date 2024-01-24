@@ -18,4 +18,5 @@ sealed interface HomeUiEvent {
     data class ChangeDocumentName(val documentName: String): HomeUiEvent
     data class ChangeSearchBarActive(val isActive: Boolean): HomeUiEvent
     data class SearchDocument(val query: String): HomeUiEvent
+    data class ChangeDarkMode(val isDarkMode: Boolean): HomeUiEvent
 }

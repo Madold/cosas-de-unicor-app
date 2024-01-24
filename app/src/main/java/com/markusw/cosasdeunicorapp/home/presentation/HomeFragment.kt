@@ -58,8 +58,11 @@ class HomeFragment : Fragment() {
             setContent {
 
                 val mainNavController = rememberNavController()
+                val homeState by viewModel.uiState.collectAsStateWithLifecycle()
 
-                CosasDeUnicorAppTheme {
+                CosasDeUnicorAppTheme(
+                    darkTheme = homeState.localSettings.isDarkModeEnabled
+                ) {
                     Surface(
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
