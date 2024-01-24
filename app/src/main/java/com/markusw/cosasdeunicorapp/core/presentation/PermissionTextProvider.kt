@@ -11,4 +11,11 @@ interface PermissionTextProvider {
      * @see UiText
      */
     fun getDescription(isPermanentlyDeclined: Boolean): UiText
+
+    /**
+     * Returns the illustration resource for the permission request dialog.
+     * @return the title for the permission request dialog.
+     * @see UiText
+     */
+    fun getIllustration(): Int
 }

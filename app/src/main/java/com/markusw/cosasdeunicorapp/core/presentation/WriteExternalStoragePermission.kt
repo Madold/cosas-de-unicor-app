@@ -11,4 +11,8 @@ class WriteExternalStoragePermission: PermissionTextProvider {
         return UiText.StringResource(R.string.write_external_storage_permission_rationale)
     }
 
+    override fun getIllustration(): Int {
+        return R.drawable.write_storage_ilustration
+    }
+
 }

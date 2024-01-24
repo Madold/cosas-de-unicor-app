@@ -12,4 +12,8 @@ class ReadExternalStoragePermission: PermissionTextProvider {
 
     }
 
+    override fun getIllustration(): Int {
+        return R.drawable.device_storage_ilustration
+    }
+
 }

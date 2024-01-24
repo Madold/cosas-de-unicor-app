@@ -18,17 +18,26 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,7 +58,9 @@ import com.markusw.cosasdeunicorapp.core.utils.TextUtils.XLSX
 import com.markusw.cosasdeunicorapp.home.presentation.HomeState
 import com.markusw.cosasdeunicorapp.home.presentation.HomeUiEvent
 import com.markusw.cosasdeunicorapp.home.presentation.permissionsToRequest
+import com.markusw.cosasdeunicorapp.ui.theme.home_bottom_bar_background
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DocsScreenContent(
     state: HomeState,
@@ -66,6 +77,7 @@ fun DocsScreenContent(
     )
     val scrollState = rememberScrollState()
     val context = LocalContext.current
+    var isSearchBarExpanded by remember { mutableStateOf(false) }
 
     fun handleOnDownloadDocument(documentName: String) {
 
@@ -107,26 +119,63 @@ fun DocsScreenContent(
 
     Scaffold(
         topBar = {
-            AppTopBar(
-                title = {
-                    Text(
-                        text = "Formatos",
-                        color = Color.White,
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontWeight = FontWeight.Bold
+            Box {
+                AppTopBar(
+                    title = {
+                        Text(
+                            text = "Formatos",
+                            color = Color.White,
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold
+                            )
                         )
-                    )
-                },
-                actions = {
-                    IconButton(onClick = { }) {
+                    },
+                    actions = {
+                        IconButton(onClick = { isSearchBarExpanded = true }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_search),
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        }
+                    }
+                )
+                SearchBar(
+                    query = "",
+                    onQueryChange = {},
+                    onSearch = {},
+                    active = false,
+                    onActiveChange = {
+                        isSearchBarExpanded = it
+                    },
+                    modifier = Modifier.run {
+                        if (isSearchBarExpanded) {
+                            this.fillMaxWidth()
+                        } else {
+                            this.width(0.dp)
+                        }
+                    },
+                    colors = SearchBarDefaults.colors(
+                        containerColor = home_bottom_bar_background
+                    ),
+                    leadingIcon = {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_search),
                             contentDescription = null,
                             tint = Color.White
                         )
+                    },
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
                     }
+                ) {
+
                 }
-            )
+            }
         },
         content = { padding ->
             Box(
