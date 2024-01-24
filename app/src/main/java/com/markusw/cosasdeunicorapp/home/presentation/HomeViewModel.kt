@@ -27,6 +27,7 @@ import com.markusw.cosasdeunicorapp.home.domain.use_cases.SendMessageToGlobalCha
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.SendPushNotification
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -141,7 +142,6 @@ class HomeViewModel @Inject constructor(
                 viewModelScope.launch(dispatchers.io) {
                     val authResult = logout()
                     handleLogoutResult(authResult)
-                    Timber.d("After logout handled")
                     _uiState.update {
                         it.copy(isClosingSession = false)
                     }
@@ -186,6 +186,7 @@ class HomeViewModel @Inject constructor(
 
                     _uiState.update { it.copy(isDownloadingDocument = true) }
 
+                    delay(2500)
                     when (downloadDocument(event.fileName)) {
                         is Result.Error -> {
 

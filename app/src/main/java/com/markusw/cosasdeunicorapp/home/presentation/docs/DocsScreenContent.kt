@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -32,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,7 +47,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.isPermissionGranted
 import com.markusw.cosasdeunicorapp.core.ext.showInterstitialAd
@@ -58,6 +67,7 @@ import com.markusw.cosasdeunicorapp.core.utils.TextUtils.XLSX
 import com.markusw.cosasdeunicorapp.home.presentation.HomeState
 import com.markusw.cosasdeunicorapp.home.presentation.HomeUiEvent
 import com.markusw.cosasdeunicorapp.home.presentation.permissionsToRequest
+import com.markusw.cosasdeunicorapp.ui.theme.CosasDeUnicorAppTheme
 import com.markusw.cosasdeunicorapp.ui.theme.home_bottom_bar_background
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -262,6 +272,11 @@ fun DocsScreenContent(
                 }
 
             }
+
+            if (state.isDownloadingDocument) {
+                DownloadProgressDialog()
+            }
+
         },
         bottomBar = {
             Box(
@@ -274,4 +289,50 @@ fun DocsScreenContent(
     )
 
 
+}
+
+@Composable
+fun DownloadProgressDialog() {
+
+    Dialog(onDismissRequest = {}) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                DownloadDocumentAnimation()
+                Text(text = "Descargando documento...")
+            }
+        }
+    }
+
+}
+
+@Composable
+fun DownloadDocumentAnimation(
+    modifier: Modifier = Modifier
+) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.download_animation))
+    val progress by animateLottieCompositionAsState(
+        composition,
+        iterations = LottieConstants.IterateForever
+    )
+
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+        modifier = modifier
+    )
+}
+
+@Preview
+@Composable
+fun DownloadProgressDialogPreview() {
+    CosasDeUnicorAppTheme {
+        DownloadProgressDialog()
+    }
 }
