@@ -41,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -105,14 +106,14 @@ fun ChatScreenContent(
                     ) {
                         Text(
                             text = stringResource(id = R.string.global_chat),
-                            color = MaterialTheme.colorScheme.surface,
+                            color = Color.White,
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontWeight = FontWeight.Bold
                             )
                         )
                         Text(
                             text = usersCountText,
-                            color = MaterialTheme.colorScheme.surface,
+                            color = Color.White,
                             style = MaterialTheme.typography.titleMedium
                         )
                     }
@@ -133,7 +134,7 @@ fun ChatScreenContent(
                         Icon(
                             imageVector = Icons.Default.MoreVert,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.surface,
+                            tint = Color.White,
                         )
                     }
 
@@ -151,11 +152,11 @@ fun ChatScreenContent(
                                     Icon(
                                         painter = painterResource(id = if(isGeneralChatNotificationsEnabled) R.drawable.ic_silenced_bell else R.drawable.ic_bell),
                                         contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.surface,
+                                        tint = Color.White,
                                     )
                                     Text(
                                         notificationsText,
-                                        color = MaterialTheme.colorScheme.surface
+                                        color = Color.White
                                     )
                                 }
                             },

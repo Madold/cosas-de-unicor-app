@@ -111,7 +111,7 @@ fun DocsScreenContent(
                 title = {
                     Text(
                         text = "Formatos",
-                        color = MaterialTheme.colorScheme.surface,
+                        color = Color.White,
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold
                         )
@@ -122,7 +122,7 @@ fun DocsScreenContent(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_search),
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.surface
+                            tint = Color.White
                         )
                     }
                 }

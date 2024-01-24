@@ -34,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -89,7 +90,7 @@ fun NewsScreenContent(
                 title = {
                     Text(
                         text = "Canal de Noticias",
-                        color = MaterialTheme.colorScheme.surface,
+                        color = Color.White,
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold
                         )
@@ -103,7 +104,7 @@ fun NewsScreenContent(
                         Icon(
                             imageVector = Icons.Default.MoreVert,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.surface,
+                            tint = Color.White,
                         )
                     }
                     DropdownMenu(
@@ -120,11 +121,11 @@ fun NewsScreenContent(
                                     Icon(
                                         painter = painterResource(id = if(isNewsNotificationsEnabled) R.drawable.ic_silenced_bell else R.drawable.ic_bell),
                                         contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.surface,
+                                        tint = Color.White,
                                     )
                                     Text(
                                         notificationsText,
-                                        color = MaterialTheme.colorScheme.surface
+                                        color = Color.White
                                     )
                                 }
                             },

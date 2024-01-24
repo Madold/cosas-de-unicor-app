@@ -53,6 +53,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -98,7 +99,8 @@ fun HomeScreenContent(
             ModalDrawerSheet(
                 content = {
                     Text(text = "Drawer content")
-                }
+                },
+                drawerContentColor = home_bottom_bar_background
             )
         },
         content = {
@@ -111,7 +113,7 @@ fun HomeScreenContent(
                         title = {
                             Text(
                                 text = "Inicio",
-                                color = MaterialTheme.colorScheme.surface,
+                                color = Color.White,
                                 style = MaterialTheme.typography.titleLarge.copy(
                                     fontWeight = FontWeight.Bold
                                 )
@@ -126,7 +128,7 @@ fun HomeScreenContent(
                                 Icon(
                                     imageVector = Icons.Default.Menu,
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.surface
+                                    tint = Color.White
                                 )
                             }
                         },
