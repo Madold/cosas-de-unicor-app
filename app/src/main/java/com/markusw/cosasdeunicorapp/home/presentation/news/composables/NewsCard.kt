@@ -48,6 +48,7 @@ import coil.request.ImageRequest
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.core.ext.invert
+import com.markusw.cosasdeunicorapp.core.ext.shimmerEffect
 import com.markusw.cosasdeunicorapp.core.presentation.utils.calculateDominantColor
 import com.markusw.cosasdeunicorapp.core.utils.TextUtils
 import com.markusw.cosasdeunicorapp.home.domain.model.News
@@ -79,12 +80,24 @@ fun NewsCard(
                 .padding(8.dp)
         ) {
             SubcomposeAsyncImage(
-                model = news.coverUrl,
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(news.coverUrl)
+                    .crossfade(true)
+                    .build(),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(20.dp)),
-                contentScale = ContentScale.FillWidth
+                contentScale = ContentScale.FillWidth,
+                loading = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .clip(RoundedCornerShape(20.dp))
+                            .shimmerEffect()
+                    )
+                }
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
