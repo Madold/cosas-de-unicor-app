@@ -61,7 +61,8 @@ class HomeFragment : Fragment() {
                 val homeState by viewModel.uiState.collectAsStateWithLifecycle()
 
                 CosasDeUnicorAppTheme(
-                    darkTheme = homeState.localSettings.isDarkModeEnabled
+                    darkTheme = homeState.localSettings.isDarkModeEnabled,
+                    dynamicColor = false
                 ) {
                     Surface(
                         modifier = Modifier.fillMaxSize(),

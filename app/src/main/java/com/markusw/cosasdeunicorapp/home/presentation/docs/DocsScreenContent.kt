@@ -61,6 +61,7 @@ import com.markusw.cosasdeunicorapp.core.ext.isPermissionGranted
 import com.markusw.cosasdeunicorapp.core.ext.showInterstitialAd
 import com.markusw.cosasdeunicorapp.core.presentation.AdmobBanner
 import com.markusw.cosasdeunicorapp.core.presentation.AppTopBar
+import com.markusw.cosasdeunicorapp.core.utils.AdUtils
 import com.markusw.cosasdeunicorapp.core.utils.TextUtils
 import com.markusw.cosasdeunicorapp.core.utils.TextUtils.DOCX
 import com.markusw.cosasdeunicorapp.core.utils.TextUtils.PDF
@@ -82,16 +83,18 @@ fun DocsScreenContent(
     )
 ) {
 
-
     val scrollState = rememberScrollState()
     val context = LocalContext.current
 
     fun handleOnDownloadDocument(documentName: String) {
-
+        /**
+         * If the device is running Android 10 or lower, we need to request the storage permissions
+         * In android 11 or higher, the storage permissions are granted automatically when the app is installed
+         */
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
 
             val arePermissionsGranted =
-                context.isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE) || context.isPermissionGranted(
+                context.isPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE) && context.isPermissionGranted(
                     Manifest.permission.READ_EXTERNAL_STORAGE
                 )
 
@@ -100,26 +103,27 @@ fun DocsScreenContent(
                 return
             }
 
-            context.showInterstitialAd(
-                onAdDismissed = {
-                    onEvent(
-                        HomeUiEvent.DownloadDocument(
-                            documentName
-                        )
-                    )
-                }
-            )
+            if (AdUtils.shouldShowInterstitialAd()) {
+                context.showInterstitialAd(
+                    onAdDismissed = {
+                        onEvent(HomeUiEvent.DownloadDocument(documentName))
+                    }
+                )
+                return
+            }
 
+            onEvent(HomeUiEvent.DownloadDocument(documentName))
         } else {
-            context.showInterstitialAd(
-                onAdDismissed = {
-                    onEvent(
-                        HomeUiEvent.DownloadDocument(
-                            documentName
-                        )
-                    )
-                }
-            )
+            if (AdUtils.shouldShowInterstitialAd()) {
+                context.showInterstitialAd(
+                    onAdDismissed = {
+                        onEvent(HomeUiEvent.DownloadDocument(documentName))
+                    }
+                )
+                return
+            }
+
+            onEvent(HomeUiEvent.DownloadDocument(documentName))
         }
 
     }
@@ -192,16 +196,15 @@ fun DocsScreenContent(
                 ) {
                     LazyColumn {
                         items(state.searchedDocumentsList) { document ->
-                            val documentCover = remember {
-                                when (TextUtils.getFileExtensionFromName(
-                                    document.documentName
-                                )) {
-                                    PDF -> R.drawable.pdf_icon
-                                    XLSX -> R.drawable.excel_icon
-                                    DOCX -> R.drawable.word_icon
-                                    else -> R.drawable.file_icon
-                                }
+                            val documentCover = when (TextUtils.getFileExtensionFromName(
+                                document.documentName
+                            )) {
+                                PDF -> R.drawable.pdf_icon
+                                XLSX -> R.drawable.excel_icon
+                                DOCX -> R.drawable.word_icon
+                                else -> R.drawable.file_icon
                             }
+
 
                             AccordionItem(
                                 label = {
