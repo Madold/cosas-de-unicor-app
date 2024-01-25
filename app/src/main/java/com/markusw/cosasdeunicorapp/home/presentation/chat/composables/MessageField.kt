@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -79,33 +80,33 @@ fun MessageField(
                     .background(message_field_color)
             ) {
                 Row {
-
-                    Box(
-                        modifier = Modifier
-                            .background(Color.Red)
-                            .padding(8.dp)
-                    )
-
                     Column(
                         modifier = Modifier
                             .weight(1f)
                             .padding(8.dp)
                     ) {
                         Text(text = buildAnnotatedString {
-                            append("Respondiendo a ")
                             withStyle(
                                 style = SpanStyle(
-                                    fontWeight = FontWeight.Bold
+                                    color = Color.Black
+                                )
+                            ) {
+                                append("Respondiendo a ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black
                                 )
                             ) {
                                 append(messageToReply?.sender?.displayName ?: "")
                             }
 
                         })
-                        Text(text = messageToReply?.content?.text ?: "")
+                        Text(text = messageToReply?.content?.text ?: "", color = Color.Black)
                     }
                     IconButton(onClick = onDismissReply) {
-                        Icon(imageVector = Icons.Default.Clear, contentDescription = null)
+                        Icon(imageVector = Icons.Default.Clear, contentDescription = null, tint = Color.Black)
                     }
                 }
             }
@@ -129,13 +130,15 @@ fun MessageField(
                 )
             },
             placeholder = {
-                Text("Manda un mensaje...")
+                Text("Manda un mensaje...", color = Color.Black)
             },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Transparent,
                 disabledBorderColor = Color.Transparent,
-                containerColor = message_field_color
+                containerColor = message_field_color,
+                focusedTextColor = Color.Black,
+                cursorColor = md_theme_light_primary
             ),
             enabled = isEnabled
         )
@@ -146,7 +149,8 @@ fun MessageField(
 @Composable
 fun MessageFieldPreview() {
     CosasDeUnicorAppTheme(
-        dynamicColor = false
+        dynamicColor = false,
+        darkTheme = false
     ) {
         MessageField(
             value = "",
