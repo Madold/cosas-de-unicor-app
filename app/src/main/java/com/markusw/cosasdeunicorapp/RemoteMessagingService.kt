@@ -42,7 +42,7 @@ class RemoteMessagingService : FirebaseMessagingService() {
         val notification = NotificationCompat.Builder(this, PUSH_NOTIFICATION_CHANNEL_ID)
             .setContentTitle(notificationTitle)
             .setContentText(notificationBody)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_illuminati)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .build()
