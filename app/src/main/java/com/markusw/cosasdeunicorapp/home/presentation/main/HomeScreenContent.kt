@@ -19,10 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -40,11 +37,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -59,7 +53,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -67,8 +60,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.shimmerEffect
 import com.markusw.cosasdeunicorapp.core.presentation.ProfileAvatar
@@ -82,10 +73,10 @@ import com.markusw.cosasdeunicorapp.home.presentation.HomeState
 import com.markusw.cosasdeunicorapp.home.presentation.HomeUiEvent
 import com.markusw.cosasdeunicorapp.home.presentation.chat.composables.ChatItem
 import com.markusw.cosasdeunicorapp.home.presentation.docs.DocumentReference
+import com.markusw.cosasdeunicorapp.home.presentation.docs.composables.DownloadProgressDialog
 import com.markusw.cosasdeunicorapp.home.presentation.news.composables.NewsCard
 import com.markusw.cosasdeunicorapp.ui.theme.home_bottom_bar_background
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 
 @Composable
 fun HomeScreenContent(
@@ -124,7 +115,7 @@ fun HomeScreenContent(
                             Switch(
                                 checked = state.localSettings.isDarkModeEnabled,
                                 onCheckedChange = {
-                                               onEvent(HomeUiEvent.ChangeDarkMode(it))
+                                    onEvent(HomeUiEvent.ChangeDarkMode(it))
                                 },
                             )
                             Text(
@@ -215,7 +206,9 @@ fun HomeScreenContent(
                                                 documentName = "solicitud_doble_programa.docx",
                                                 category = "Registro y admisiones"
                                             ),
-                                            onClick = {},
+                                            onClick = {
+                                                onEvent(HomeUiEvent.DownloadDocument(it.documentName))
+                                            },
                                             modifier = Modifier.weight(1f),
                                         )
                                         DocumentCard(
@@ -224,7 +217,9 @@ fun HomeScreenContent(
                                                 documentName = "simulador_promedio_ponderado_programa.xlsx",
                                                 category = "Registro y admisiones"
                                             ),
-                                            onClick = {},
+                                            onClick = {
+                                                onEvent(HomeUiEvent.DownloadDocument(it.documentName))
+                                            },
                                             modifier = Modifier.weight(1f)
                                         )
                                     }
@@ -296,6 +291,11 @@ fun HomeScreenContent(
                                     mainNavController = mainNavController
                                 )
                             }
+
+                            if (state.isDownloadingDocument) {
+                                DownloadProgressDialog()
+                            }
+
                         }
 
                     }
