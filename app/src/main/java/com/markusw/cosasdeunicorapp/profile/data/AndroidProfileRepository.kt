@@ -4,14 +4,17 @@ import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.markusw.cosasdeunicorapp.core.domain.AuthService
 import com.markusw.cosasdeunicorapp.core.domain.ProfileUpdateData
+import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
 import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.profile.domain.repository.ProfileRepository
+import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 
 class AndroidProfileRepository(
     private val authService: AuthService,
+    private val remoteDatabase: RemoteDatabase
 ) : ProfileRepository {
     override suspend fun updateProfile(data: ProfileUpdateData): Result<Unit> {
         return try {
@@ -38,11 +41,13 @@ class AndroidProfileRepository(
         }
     }
 
-    override suspend fun getLoggedUser(): Result<User> {
+    override suspend fun onUserInfoUpdate(): Result<Flow<User>> {
         return try {
-            Result.Success(authService.getLoggedUser())
+            Result.Success(remoteDatabase.onUserInfoUpdate())
         } catch (e: Exception) {
             Result.Error(UiText.DynamicString(e.toString()))
         }
     }
+
+
 }

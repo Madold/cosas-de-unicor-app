@@ -123,7 +123,8 @@ object DataModule {
     @Singleton
     fun provideProfileRepository(
         authService: AuthService,
-    ): ProfileRepository = AndroidProfileRepository(authService)
+        remoteDatabase: RemoteDatabase
+    ): ProfileRepository = AndroidProfileRepository(authService, remoteDatabase)
 
     @Provides
     @Singleton

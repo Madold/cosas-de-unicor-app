@@ -14,6 +14,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,31 +34,37 @@ class ProfileViewModel @Inject constructor(
     val events = eventsChannel.receiveAsFlow()
 
     init {
-        loadInitialData()
+        viewModelScope.launch(dispatchers.io) {
+            when (val result = profileRepository.onUserInfoUpdate()) {
+                is Result.Error -> {
+                    _uiState.update { state ->
+                        state.copy(
+                            profileUpdateError = result.message,
+                            user = User(
+                                displayName = "Error",
+                                email = "Error",
+                                photoUrl = "Error"
+                            )
+                        )
+                    }
+                }
+
+                is Result.Success -> {
+                    result.data?.collectLatest { latestUserInfo ->
+                        _uiState.update { state ->
+                            state.copy(
+                                user = latestUserInfo,
+                                name = latestUserInfo.displayName,
+                                email = latestUserInfo.email,
+                                profilePhoto = latestUserInfo.photoUrl
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    private fun loadInitialData() {
-        _uiState.update { state ->
-            state.copy(
-                isLoading = true,
-            )
-        }
-        viewModelScope.launch {
-            val loggedUser = when (val result = profileRepository.getLoggedUser()) {
-                is Result.Error -> User()
-                is Result.Success -> result.data!!
-            }
-
-            _uiState.update { state ->
-                state.copy(
-                    user = loggedUser,
-                    name = loggedUser.displayName,
-                    email = loggedUser.email,
-                    isLoading = false
-                )
-            }
-        }
-    }
 
     fun onEvent(event: ProfileScreenEvent) {
         when (event) {
@@ -145,7 +152,8 @@ class ProfileViewModel @Inject constructor(
                 }
 
                 viewModelScope.launch(dispatchers.io) {
-                    when (val result = profileRepository.sendPasswordResetByEmail(loggedUserEmail)) {
+                    when (val result =
+                        profileRepository.sendPasswordResetByEmail(loggedUserEmail)) {
                         is Result.Error -> {
                             _uiState.update { state ->
                                 state.copy(

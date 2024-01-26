@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
 import com.markusw.cosasdeunicorapp.core.domain.LocalDataStore
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
-import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.core.ext.prepend
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.core.utils.TimeUtils
@@ -15,7 +14,6 @@ import com.markusw.cosasdeunicorapp.home.domain.model.MessageContent
 import com.markusw.cosasdeunicorapp.home.domain.remote.PushNotificationService
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.AddUserToLikedByList
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.DownloadDocument
-import com.markusw.cosasdeunicorapp.home.domain.use_cases.GetLoggedUser
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.GetUsersCount
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.LoadPreviousMessages
 import com.markusw.cosasdeunicorapp.home.domain.use_cases.LoadPreviousNews
@@ -44,7 +42,6 @@ class HomeViewModel @Inject constructor(
     private val observeNewMessages: ObserveNewMessages,
     private val loadPreviousMessages: LoadPreviousMessages,
     private val sendMessageToGlobalChat: SendMessageToGlobalChat,
-    private val getLoggedUser: GetLoggedUser,
     private val logout: Logout,
     private val downloadDocument: DownloadDocument,
     private val sendPushNotification: SendPushNotification,
@@ -345,10 +342,6 @@ class HomeViewModel @Inject constructor(
                 is Result.Error -> 0
                 is Result.Success -> result.data
             }
-            val loggedUser = when (getLoggedUser()) {
-                is Result.Error -> User()
-                is Result.Success -> getLoggedUser().data!!
-            }
 
             withContext(dispatchers.main) {
                 _uiState.update { state ->
@@ -358,7 +351,6 @@ class HomeViewModel @Inject constructor(
                         isFetchingPreviousGlobalMessages = false,
                         isFetchingPreviousNews = false,
                         usersCount = usersCount ?: 0,
-                        currentUser = loggedUser,
                         isLoading = false
                     )
                 }
