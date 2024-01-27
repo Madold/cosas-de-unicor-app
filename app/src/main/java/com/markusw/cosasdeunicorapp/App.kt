@@ -7,6 +7,7 @@ import android.content.Context
 import android.graphics.Color
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.markusw.cosasdeunicorapp.core.utils.Constants.PUSH_NOTIFICATION_CHANNEL_DESCRIPTION
 import com.markusw.cosasdeunicorapp.core.utils.Constants.PUSH_NOTIFICATION_CHANNEL_ID
@@ -63,7 +64,7 @@ class App : Application() {
 
     private fun disableFirebaseDataCollection() {
         Firebase.analytics.setAnalyticsCollectionEnabled(false)
-
+        Firebase.crashlytics.setCrashlyticsCollectionEnabled(false)
     }
 
     private fun setupTimber() {
