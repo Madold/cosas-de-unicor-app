@@ -63,6 +63,7 @@ class App : Application() {
 
     private fun disableFirebaseDataCollection() {
         Firebase.analytics.setAnalyticsCollectionEnabled(false)
+
     }
 
     private fun setupTimber() {

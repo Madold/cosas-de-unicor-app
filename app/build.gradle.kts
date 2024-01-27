@@ -154,6 +154,9 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
+    //Firebase crashlytics
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
+
     //Palette
     implementation("androidx.palette:palette:$paletteVersion")
 
