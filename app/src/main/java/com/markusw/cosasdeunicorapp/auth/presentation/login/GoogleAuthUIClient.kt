@@ -11,6 +11,8 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.UnsupportedApiCallException
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.core.presentation.UiText
@@ -37,7 +39,6 @@ class GoogleAuthUIClient(
         } catch (e: UnsupportedApiCallException) {
             Result.Error(UiText.StringResource(R.string.unsuportedApiException))
         } catch (e: Exception) {
-            Timber.e(e)
             if (e is CancellationException) throw e
             Result.Error(
                 UiText.StringResource(
@@ -80,6 +81,7 @@ class GoogleAuthUIClient(
 
             else -> {
                 Timber.d("Unknown error code: $code: ${exception.message}")
+                Firebase.crashlytics.recordException(exception)
                 Result.Error(
                     UiText.StringResource(
                         R.string.unknownException,

@@ -113,7 +113,7 @@ dependencies {
     implementation("com.google.android.flexbox:flexbox:$flexboxVersion")
 
     //Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     //Analytics
     implementation("com.google.firebase:firebase-analytics-ktx")
     //Auth

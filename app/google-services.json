@@ -14,7 +14,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "723240159464-lfub1dtc5812msftabnj4imthv39taqe.apps.googleusercontent.com",
+          "client_id": "723240159464-7oftj7ugolcoo8hpht13u8660u8087kn.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.markusw.cosasdeunicorapp",
@@ -22,20 +22,20 @@
           }
         },
         {
-          "client_id": "723240159464-g51j81c64had6tsshq6fnb2r2mj94brf.apps.googleusercontent.com",
+          "client_id": "723240159464-pm9053eo3fcdkdrmhe9fmpobl23b9scs.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBvf08-6kAm1XrUrZ4dQIPRO_p6g6EswHg"
+          "current_key": "AIzaSyBmZJHBC-Zbh5UO5xzZaVKWw5JuQuNs1sU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "723240159464-0gj18f2qr6r3b7d6d7oc4a9u2v023qem.apps.googleusercontent.com",
+              "client_id": "723240159464-pm9053eo3fcdkdrmhe9fmpobl23b9scs.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
