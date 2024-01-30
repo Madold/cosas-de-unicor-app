@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "723240159464-7oftj7ugolcoo8hpht13u8660u8087kn.apps.googleusercontent.com",
+          "client_id": "723240159464-2f9ende2svt0lk0tmlk0iiqv360phbcq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.markusw.cosasdeunicorapp",
+            "certificate_hash": "115e04181c0c6582b950dd25b3322057b222dadf"
+          }
+        },
+        {
+          "client_id": "723240159464-fd7giucap2leu9ouc3640lo5e3t9jf1i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.markusw.cosasdeunicorapp",

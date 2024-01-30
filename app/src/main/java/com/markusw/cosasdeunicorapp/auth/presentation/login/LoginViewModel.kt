@@ -91,6 +91,7 @@ class LoginViewModel @Inject constructor(
             when (val authResult = loginWithCredential(googleCredential)) {
                 is Result.Error -> {
                     authenticationEventChannel.send(AuthenticationEvent.AuthFailed(reason = authResult.message!!))
+                    onGoogleSignInFinished()
                 }
                 is Result.Success -> {
                     authenticationEventChannel.send(AuthenticationEvent.AuthSuccessful)
@@ -106,10 +107,6 @@ class LoginViewModel @Inject constructor(
                 passwordError = null
             )
         }
-    }
-
-    fun onGoogleSignInCanceled() {
-        _uiState.update { it.copy(isLoading = false) }
     }
 
     override fun onCleared() {
