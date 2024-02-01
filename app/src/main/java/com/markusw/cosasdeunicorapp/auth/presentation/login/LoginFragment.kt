@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.showDialog
@@ -24,6 +25,7 @@ import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -37,13 +39,16 @@ class LoginFragment : Fragment() {
     private val googleSignInLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val account = GoogleSignIn.getSignedInAccountFromIntent(result.data).result
-            val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
-            viewModel.onGoogleSignInResult(credential)
-            return@registerForActivityResult
-        }
-        viewModel.onGoogleSignInFinished()
+            try {
+                val account = GoogleSignIn.getSignedInAccountFromIntent(result.data).result
+                val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
+                viewModel.onGoogleSignInResult(credential)
+            } catch (e: Exception) {
+                Firebase.crashlytics.recordException(e)
+            } finally {
+                viewModel.onGoogleSignInFinished()
+            }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
