@@ -1,5 +1,6 @@
 package com.markusw.cosasdeunicorapp.core.data.repository
 
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.AuthCredential
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.EmailNotVerifiedException
@@ -49,6 +50,8 @@ class AndroidAuthRepository(
         return try {
             authService.authenticateWithCredential(credential)
             Result.Success(Unit)
+        } catch(e: FirebaseNetworkException) {
+            Result.Error(UiText.DynamicString("Error de conexión. Verifica tu conexión a internet e intenta de nuevo."))
         } catch (e: Exception) {
             Result.Error(UiText.DynamicString(e.toString()))
         }

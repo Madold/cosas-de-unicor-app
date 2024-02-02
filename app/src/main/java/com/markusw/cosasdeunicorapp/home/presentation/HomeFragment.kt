@@ -21,7 +21,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.presentation.GoogleAuthClient
 import com.markusw.cosasdeunicorapp.core.presentation.Screens
 import com.markusw.cosasdeunicorapp.profile.presentation.ChangePasswordScreen
 import com.markusw.cosasdeunicorapp.profile.presentation.EditProfileScreen
@@ -32,6 +35,7 @@ import com.markusw.cosasdeunicorapp.ui.theme.CosasDeUnicorAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 
@@ -41,6 +45,7 @@ class HomeFragment : Fragment() {
     private val viewModel by viewModels<HomeViewModel>()
     private lateinit var composeView: ComposeView
     private val navController by lazy { findNavController() }
+    private val googleAuthClient by lazy { GoogleAuthClient(requireContext()) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -150,12 +155,21 @@ class HomeFragment : Fragment() {
         setupObservers()
     }
 
+    private fun getGoogleSignInOptions (): GoogleSignInOptions {
+        return GoogleSignInOptions
+            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+    }
+
     private fun setupObservers() {
         lifecycleScope.launch {
             viewModel.homeEvents.collect { homeEvent ->
                 when (homeEvent) {
                     is HomeEvents.LogoutSuccessful -> {
                         Timber.d("Logout successful")
+                        googleAuthClient.signOut()
                         navController.navigate(R.id.action_homeFragment_to_loginFragment)
                     }
                 }

@@ -7,22 +7,13 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:723240159464:android:7d2043320df2f09196a15d",
+        "mobilesdk_app_id": "1:723240159464:android:7782488296198dad96a15d",
         "android_client_info": {
           "package_name": "com.markusw.cosasdeunicorapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "723240159464-2f9ende2svt0lk0tmlk0iiqv360phbcq.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.markusw.cosasdeunicorapp",
-            "certificate_hash": "115e04181c0c6582b950dd25b3322057b222dadf"
-          }
-        },
-        {
-          "client_id": "723240159464-fd7giucap2leu9ouc3640lo5e3t9jf1i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.markusw.cosasdeunicorapp",
@@ -30,20 +21,36 @@
           }
         },
         {
-          "client_id": "723240159464-pm9053eo3fcdkdrmhe9fmpobl23b9scs.apps.googleusercontent.com",
+          "client_id": "723240159464-hbqc2sr40lvbr3vcvvbl7b5cari252mn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.markusw.cosasdeunicorapp",
+            "certificate_hash": "115e04181c0c6582b950dd25b3322057b222dadf"
+          }
+        },
+        {
+          "client_id": "723240159464-smr153okk374lhmi9udcg3a6jupdu3v0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.markusw.cosasdeunicorapp",
+            "certificate_hash": "3e74eeda768a2dad572c65f8e29bfc87dc134ebc"
+          }
+        },
+        {
+          "client_id": "723240159464-6odcko1chm4tejqpoievv9eblfua00oe.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBmZJHBC-Zbh5UO5xzZaVKWw5JuQuNs1sU"
+          "current_key": "AIzaSyDHkaUnoqlD5AgeteGQ1xA8_gY1naeTeNM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "723240159464-pm9053eo3fcdkdrmhe9fmpobl23b9scs.apps.googleusercontent.com",
+              "client_id": "723240159464-6odcko1chm4tejqpoievv9eblfua00oe.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
