@@ -15,7 +15,7 @@ android {
         applicationId = "com.markusw.cosasdeunicorapp"
         minSdk = 26
         targetSdk = 34
-        versionCode = 2
+        versionCode = 3
         versionName = "beta-1-mary"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
