@@ -33,6 +33,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.ext.pop
 import com.markusw.cosasdeunicorapp.core.presentation.AppTopBar
 import com.markusw.cosasdeunicorapp.core.presentation.DoneAnimation
 import com.markusw.cosasdeunicorapp.core.presentation.ErrorAnimation
@@ -60,7 +61,7 @@ fun ChangePasswordScreen(
 
                 },
                 navigationIcon = {
-                    IconButton(onClick = { mainNavController.popBackStack() }) {
+                    IconButton(onClick = { mainNavController.pop() }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_left),
                             contentDescription = null,

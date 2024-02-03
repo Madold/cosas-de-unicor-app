@@ -49,6 +49,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.ext.pop
 import com.markusw.cosasdeunicorapp.core.presentation.AppTopBar
 import com.markusw.cosasdeunicorapp.core.presentation.DoneAnimation
 import com.markusw.cosasdeunicorapp.core.presentation.ErrorAnimation
@@ -87,7 +88,7 @@ fun EditProfileScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { mainNavController.popBackStack() }) {
+                    IconButton(onClick = { mainNavController.pop() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = null,

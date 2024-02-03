@@ -29,6 +29,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.domain.model.User
+import com.markusw.cosasdeunicorapp.core.ext.pop
 import com.markusw.cosasdeunicorapp.core.presentation.AppTopBar
 import com.markusw.cosasdeunicorapp.core.presentation.ProfileAvatar
 import com.markusw.cosasdeunicorapp.core.presentation.Screens
@@ -52,7 +53,7 @@ fun ProfileScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { mainNavController.popBackStack() }) {
+                    IconButton(onClick = { mainNavController.pop() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = null,

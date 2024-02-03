@@ -24,6 +24,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.ext.pop
 import com.markusw.cosasdeunicorapp.core.presentation.GoogleAuthClient
 import com.markusw.cosasdeunicorapp.core.presentation.Screens
 import com.markusw.cosasdeunicorapp.profile.presentation.ChangePasswordScreen
@@ -108,7 +109,7 @@ class HomeFragment : Fragment() {
                                         when (event) {
                                             ProfileViewModelEvent.ProfileUpdatedError -> TODO()
                                             ProfileViewModelEvent.ProfileUpdatedSuccess -> {
-                                                mainNavController.popBackStack()
+                                                mainNavController.pop()
                                             }
 
                                             else -> return@collectLatest
@@ -132,7 +133,7 @@ class HomeFragment : Fragment() {
                                     viewModel.events.collectLatest { event ->
                                         when (event) {
                                             ProfileViewModelEvent.PasswordResetSentSuccess -> {
-                                                mainNavController.popBackStack()
+                                                mainNavController.pop()
                                             }
 
                                             else -> return@collectLatest
