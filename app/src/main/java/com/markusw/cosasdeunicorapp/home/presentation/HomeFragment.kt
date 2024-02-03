@@ -156,14 +156,6 @@ class HomeFragment : Fragment() {
         setupObservers()
     }
 
-    private fun getGoogleSignInOptions (): GoogleSignInOptions {
-        return GoogleSignInOptions
-            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-    }
-
     private fun setupObservers() {
         lifecycleScope.launch {
             viewModel.homeEvents.collect { homeEvent ->
