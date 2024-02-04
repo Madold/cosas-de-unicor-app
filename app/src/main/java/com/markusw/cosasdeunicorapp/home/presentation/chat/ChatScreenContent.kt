@@ -8,11 +8,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -65,6 +64,7 @@ fun ChatScreenContent(
     state: HomeState,
     onEvent: (HomeUiEvent) -> Unit,
     scrollState: LazyListState = rememberLazyListState(),
+    paddingValues: PaddingValues,
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -95,129 +95,133 @@ fun ChatScreenContent(
         }
     }
 
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.global_chat),
-                            color = Color.White,
-                            style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.Bold
+    Box(
+        modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding() + 8.dp)
+    ) {
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize(),
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.global_chat),
+                                color = Color.White,
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontWeight = FontWeight.Bold
+                                )
                             )
-                        )
-                        Text(
-                            text = usersCountText,
-                            color = Color.White,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = home_bottom_bar_background
-                ),
-                navigationIcon = {
-                    Image(
-                        painter = painterResource(id = R.drawable.app_icon),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(62.dp)
-                    )
-                },
-                actions = {
-                    IconButton(onClick = { isActionsMenuVisible = true }) {
-                        Icon(
-                            imageVector = Icons.Default.MoreVert,
+                            Text(
+                                text = usersCountText,
+                                color = Color.White,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = home_bottom_bar_background
+                    ),
+                    navigationIcon = {
+                        Image(
+                            painter = painterResource(id = R.drawable.app_icon),
                             contentDescription = null,
-                            tint = Color.White,
+                            modifier = Modifier
+                                .size(62.dp)
                         )
-                    }
+                    },
+                    actions = {
+                        IconButton(onClick = { isActionsMenuVisible = true }) {
+                            Icon(
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = null,
+                                tint = Color.White,
+                            )
+                        }
 
-                    DropdownMenu(
-                        expanded = isActionsMenuVisible,
-                        onDismissRequest = { isActionsMenuVisible = false },
-                        modifier = Modifier.background(home_bottom_bar_background)
-                    ) {
-                        DropdownMenuItem(
-                            text = {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        painter = painterResource(id = if(isGeneralChatNotificationsEnabled) R.drawable.ic_silenced_bell else R.drawable.ic_bell),
-                                        contentDescription = null,
-                                        tint = Color.White,
-                                    )
-                                    Text(
-                                        notificationsText,
-                                        color = Color.White
-                                    )
+                        DropdownMenu(
+                            expanded = isActionsMenuVisible,
+                            onDismissRequest = { isActionsMenuVisible = false },
+                            modifier = Modifier.background(home_bottom_bar_background)
+                        ) {
+                            DropdownMenuItem(
+                                text = {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = if (isGeneralChatNotificationsEnabled) R.drawable.ic_silenced_bell else R.drawable.ic_bell),
+                                            contentDescription = null,
+                                            tint = Color.White,
+                                        )
+                                        Text(
+                                            notificationsText,
+                                            color = Color.White
+                                        )
+                                    }
+                                },
+                                onClick = {
+                                    isActionsMenuVisible = false
+                                    onEvent(HomeUiEvent.ToggleGeneralChatNotifications)
                                 }
-                            },
-                            onClick = {
-                                isActionsMenuVisible = false
-                                onEvent(HomeUiEvent.ToggleGeneralChatNotifications)
-                            }
-                        )
-                    }
-                }
-            )
-        },
-        bottomBar = {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                MessageField(
-                    modifier = Modifier.fillMaxWidth(0.9f),
-                    value = state.message,
-                    onValueChange = {
-                        onEvent(HomeUiEvent.MessageChanged(it))
-                    },
-                    isSendIconEnabled = state.message.isNotBlank(),
-                    onSendIconClick = {
-                        onEvent(HomeUiEvent.SendMessageToGlobalChat)
-                        onEvent(HomeUiEvent.ClearReplyMessage)
-                    },
-                    messageToReply = state.repliedMessage,
-                    onDismissReply = {
-                        onEvent(HomeUiEvent.ClearReplyMessage)
+                            )
+                        }
                     }
                 )
+            },
+            bottomBar = {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    MessageField(
+                        modifier = Modifier.fillMaxWidth(0.9f),
+                        value = state.message,
+                        onValueChange = {
+                            onEvent(HomeUiEvent.MessageChanged(it))
+                        },
+                        isSendIconEnabled = state.message.isNotBlank(),
+                        onSendIconClick = {
+                            onEvent(HomeUiEvent.SendMessageToGlobalChat)
+                            onEvent(HomeUiEvent.ClearReplyMessage)
+                        },
+                        messageToReply = state.repliedMessage,
+                        onDismissReply = {
+                            onEvent(HomeUiEvent.ClearReplyMessage)
+                        }
+                    )
+                }
+            },
+            floatingActionButton = {
+                RoundedIconButton(
+                    icon = R.drawable.ic_arrow_down,
+                    onClick = {
+                        coroutineScope.launch {
+                            scrollState.animateScrollToItem(0)
+                        }
+                    },
+                    modifier = Modifier.offset(y = fabOffset),
+                )
             }
-        },
-        floatingActionButton = {
-            RoundedIconButton(
-                icon = R.drawable.ic_arrow_down,
-                onClick = {
-                    coroutineScope.launch {
-                        scrollState.animateScrollToItem(0)
-                    }
-                },
-                modifier = Modifier.offset(y = fabOffset),
-            )
-        }
-    ) {
-        Column(
-            modifier = Modifier.padding(it)
         ) {
-            ChatList(
-                state = state,
-                scrollState = scrollState,
-                onReplyToMessage = { message ->
-                    onEvent(HomeUiEvent.ReplyToMessage(message))
-                },
-                onRequestPreviousMessages = {
-                    onEvent(HomeUiEvent.FetchPreviousGlobalMessages)
-                },
-                modifier = Modifier.padding(top = 8.dp)
-            )
+            Column(
+                modifier = Modifier.padding(it)
+            ) {
+                ChatList(
+                    state = state,
+                    scrollState = scrollState,
+                    onReplyToMessage = { message ->
+                        onEvent(HomeUiEvent.ReplyToMessage(message))
+                    },
+                    onRequestPreviousMessages = {
+                        onEvent(HomeUiEvent.FetchPreviousGlobalMessages)
+                    },
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
         }
     }
 }
@@ -231,6 +235,7 @@ fun ChatScreenPreview() {
         state = HomeState(
             usersCount = 23
         ),
-        onEvent = {}
+        onEvent = {},
+        paddingValues = PaddingValues()
     )
 }

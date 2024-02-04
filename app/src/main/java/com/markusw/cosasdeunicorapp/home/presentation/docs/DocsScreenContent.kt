@@ -12,6 +12,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -70,7 +71,8 @@ fun DocsScreenContent(
     multiplePermissionLauncher: ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>> = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = {}
-    )
+    ),
+    paddingValues: PaddingValues
 ) {
 
     val scrollState = rememberScrollState()
@@ -118,233 +120,237 @@ fun DocsScreenContent(
 
     }
 
-    Scaffold(
-        topBar = {
-            Box {
-                AppTopBar(
-                    title = {
-                        Text(
-                            text = "Formatos",
-                            color = Color.White,
-                            style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.Bold
-                            )
-                        )
-                    },
-                    actions = {
-                        IconButton(onClick = { onEvent(HomeUiEvent.ChangeSearchBarActive(true)) }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_search),
-                                contentDescription = null,
-                                tint = Color.White
-                            )
-                        }
-                    }
-                )
-                SearchBar(
-                    query = state.documentName,
-                    onQueryChange = {
-                        onEvent(HomeUiEvent.ChangeDocumentName(it))
-                        onEvent(HomeUiEvent.SearchDocument(it))
-                    },
-                    onSearch = { onEvent(HomeUiEvent.SearchDocument(it)) },
-                    active = state.isDocumentSearchBarActive,
-                    onActiveChange = { onEvent(HomeUiEvent.ChangeSearchBarActive(it)) },
-                    modifier = Modifier.run {
-                        if (state.isDocumentSearchBarActive) {
-                            this.fillMaxWidth()
-                        } else {
-                            this.width(0.dp)
-                        }
-                    },
-                    colors = SearchBarDefaults.colors(
-                        containerColor = home_bottom_bar_background,
-                        inputFieldColors = SearchBarDefaults.inputFieldColors(
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White
-                        )
-                    ),
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_search),
-                            contentDescription = null,
-                            tint = Color.White
-                        )
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = {
-                            onEvent(HomeUiEvent.ChangeDocumentName(""))
-                            onEvent(HomeUiEvent.ChangeSearchBarActive(false))
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = null,
-                                tint = Color.White
-                            )
-                        }
-                    }
-                ) {
-                    LazyColumn {
-                        items(state.searchedDocumentsList) { document ->
-                            val documentCover = when (TextUtils.getFileExtensionFromName(
-                                document.documentName
-                            )) {
-                                PDF -> R.drawable.pdf_icon
-                                XLSX -> R.drawable.excel_icon
-                                DOCX -> R.drawable.word_icon
-                                else -> R.drawable.file_icon
-                            }
+   Box(
+       modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
+   ) {
+       Scaffold(
+           topBar = {
+               Box {
+                   AppTopBar(
+                       title = {
+                           Text(
+                               text = "Formatos",
+                               color = Color.White,
+                               style = MaterialTheme.typography.titleLarge.copy(
+                                   fontWeight = FontWeight.Bold
+                               )
+                           )
+                       },
+                       actions = {
+                           IconButton(onClick = { onEvent(HomeUiEvent.ChangeSearchBarActive(true)) }) {
+                               Icon(
+                                   painter = painterResource(id = R.drawable.ic_search),
+                                   contentDescription = null,
+                                   tint = Color.White
+                               )
+                           }
+                       }
+                   )
+                   SearchBar(
+                       query = state.documentName,
+                       onQueryChange = {
+                           onEvent(HomeUiEvent.ChangeDocumentName(it))
+                           onEvent(HomeUiEvent.SearchDocument(it))
+                       },
+                       onSearch = { onEvent(HomeUiEvent.SearchDocument(it)) },
+                       active = state.isDocumentSearchBarActive,
+                       onActiveChange = { onEvent(HomeUiEvent.ChangeSearchBarActive(it)) },
+                       modifier = Modifier.run {
+                           if (state.isDocumentSearchBarActive) {
+                               this.fillMaxWidth()
+                           } else {
+                               this.width(0.dp)
+                           }
+                       },
+                       colors = SearchBarDefaults.colors(
+                           containerColor = home_bottom_bar_background,
+                           inputFieldColors = SearchBarDefaults.inputFieldColors(
+                               focusedTextColor = Color.White,
+                               unfocusedTextColor = Color.White
+                           )
+                       ),
+                       leadingIcon = {
+                           Icon(
+                               painter = painterResource(id = R.drawable.ic_search),
+                               contentDescription = null,
+                               tint = Color.White
+                           )
+                       },
+                       trailingIcon = {
+                           IconButton(onClick = {
+                               onEvent(HomeUiEvent.ChangeDocumentName(""))
+                               onEvent(HomeUiEvent.ChangeSearchBarActive(false))
+                           }) {
+                               Icon(
+                                   imageVector = Icons.Default.Close,
+                                   contentDescription = null,
+                                   tint = Color.White
+                               )
+                           }
+                       }
+                   ) {
+                       LazyColumn {
+                           items(state.searchedDocumentsList) { document ->
+                               val documentCover = when (TextUtils.getFileExtensionFromName(
+                                   document.documentName
+                               )) {
+                                   PDF -> R.drawable.pdf_icon
+                                   XLSX -> R.drawable.excel_icon
+                                   DOCX -> R.drawable.word_icon
+                                   else -> R.drawable.file_icon
+                               }
 
 
-                            AccordionItem(
-                                label = {
-                                    Text(text = document.name)
-                                },
-                                onItemClick = {
-                                    handleOnDownloadDocument(
-                                        document.documentName
-                                    )
-                                },
-                                icon = {
-                                    Box(
-                                        modifier = Modifier
-                                            .clip(CircleShape)
-                                            .background(Color.White)
-                                            .padding(5.dp)
-                                    ) {
-                                        Image(
-                                            painter = painterResource(id = documentCover),
-                                            contentDescription = null,
-                                            modifier = Modifier.size(24.dp)
-                                        )
-                                    }
-                                },
-                                colors = NavigationDrawerItemDefaults.colors(
-                                    unselectedContainerColor = Color.Transparent,
-                                    unselectedTextColor = Color.White
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-        },
-        content = { padding ->
-            Box(
-                Modifier.padding(padding)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(scrollState)
-                ) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    state.documentCategories.forEach { category ->
+                               AccordionItem(
+                                   label = {
+                                       Text(text = document.name)
+                                   },
+                                   onItemClick = {
+                                       handleOnDownloadDocument(
+                                           document.documentName
+                                       )
+                                   },
+                                   icon = {
+                                       Box(
+                                           modifier = Modifier
+                                               .clip(CircleShape)
+                                               .background(Color.White)
+                                               .padding(5.dp)
+                                       ) {
+                                           Image(
+                                               painter = painterResource(id = documentCover),
+                                               contentDescription = null,
+                                               modifier = Modifier.size(24.dp)
+                                           )
+                                       }
+                                   },
+                                   colors = NavigationDrawerItemDefaults.colors(
+                                       unselectedContainerColor = Color.Transparent,
+                                       unselectedTextColor = Color.White
+                                   )
+                               )
+                           }
+                       }
+                   }
+               }
+           },
+           content = { padding ->
+               Box(
+                   Modifier.padding(padding)
+               ) {
+                   Column(
+                       modifier = Modifier
+                           .fillMaxSize()
+                           .verticalScroll(scrollState)
+                   ) {
+                       Spacer(modifier = Modifier.height(8.dp))
+                       state.documentCategories.forEach { category ->
 
-                        val categoryIcon = when (category) {
-                            "Consejo Académico" -> R.drawable.ic_academic
-                            "Registro y admisiones" -> R.drawable.ic_registration
-                            else -> R.drawable.ic_documents
-                        }
+                           val categoryIcon = when (category) {
+                               "Consejo Académico" -> R.drawable.ic_academic
+                               "Registro y admisiones" -> R.drawable.ic_registration
+                               else -> R.drawable.ic_documents
+                           }
 
-                        Accordion(
-                            modifier = Modifier.fillMaxWidth(),
-                            label = {
-                                Text(
-                                    text = category,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                            },
-                            content = {
-                                state
-                                    .documentsList
-                                    .filter { it.category == category }
-                                    .forEach { documentReference ->
+                           Accordion(
+                               modifier = Modifier.fillMaxWidth(),
+                               label = {
+                                   Text(
+                                       text = category,
+                                       style = MaterialTheme.typography.titleMedium
+                                   )
+                               },
+                               content = {
+                                   state
+                                       .documentsList
+                                       .filter { it.category == category }
+                                       .forEach { documentReference ->
 
-                                        val documentCover = remember {
-                                            when (TextUtils.getFileExtensionFromName(
-                                                documentReference.documentName
-                                            )) {
-                                                PDF -> R.drawable.pdf_icon
-                                                XLSX -> R.drawable.excel_icon
-                                                DOCX -> R.drawable.word_icon
-                                                else -> R.drawable.file_icon
-                                            }
-                                        }
+                                           val documentCover = remember {
+                                               when (TextUtils.getFileExtensionFromName(
+                                                   documentReference.documentName
+                                               )) {
+                                                   PDF -> R.drawable.pdf_icon
+                                                   XLSX -> R.drawable.excel_icon
+                                                   DOCX -> R.drawable.word_icon
+                                                   else -> R.drawable.file_icon
+                                               }
+                                           }
 
-                                        AccordionItem(
-                                            label = {
-                                                Text(text = documentReference.name)
-                                            },
-                                            onItemClick = {
-                                                handleOnDownloadDocument(
-                                                    documentReference.documentName
-                                                )
-                                            },
-                                            icon = {
-                                                Box(
-                                                    modifier = Modifier
-                                                        .clip(CircleShape)
-                                                        .background(Color.White)
-                                                        .padding(5.dp)
-                                                ) {
-                                                    Image(
-                                                        painter = painterResource(id = documentCover),
-                                                        contentDescription = null,
-                                                        modifier = Modifier.size(24.dp)
-                                                    )
-                                                }
-                                            }
-                                        )
-                                    }
-                            },
-                            trailingIcon = {
-                                Icon(
-                                    painter = painterResource(id = categoryIcon),
-                                    contentDescription = null
-                                )
-                            }
-                        )
-                    }
-                }
+                                           AccordionItem(
+                                               label = {
+                                                   Text(text = documentReference.name)
+                                               },
+                                               onItemClick = {
+                                                   handleOnDownloadDocument(
+                                                       documentReference.documentName
+                                                   )
+                                               },
+                                               icon = {
+                                                   Box(
+                                                       modifier = Modifier
+                                                           .clip(CircleShape)
+                                                           .background(Color.White)
+                                                           .padding(5.dp)
+                                                   ) {
+                                                       Image(
+                                                           painter = painterResource(id = documentCover),
+                                                           contentDescription = null,
+                                                           modifier = Modifier.size(24.dp)
+                                                       )
+                                                   }
+                                               }
+                                           )
+                                       }
+                               },
+                               trailingIcon = {
+                                   Icon(
+                                       painter = painterResource(id = categoryIcon),
+                                       contentDescription = null
+                                   )
+                               }
+                           )
+                       }
+                   }
 
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
+                   Column(
+                       modifier = Modifier.fillMaxSize(),
+                   ) {
 
-                    AnimatedVisibility(
-                        visible = state.isDownloadingDocument,
-                        enter = fadeIn(),
-                        exit = fadeOut()
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(color = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
+                       AnimatedVisibility(
+                           visible = state.isDownloadingDocument,
+                           enter = fadeIn(),
+                           exit = fadeOut()
+                       ) {
+                           Box(
+                               modifier = Modifier
+                                   .fillMaxSize()
+                                   .background(color = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f)),
+                               contentAlignment = Alignment.Center
+                           ) {
+                               CircularProgressIndicator()
+                           }
+                       }
 
-                }
+                   }
 
-            }
+               }
 
-            if (state.isDownloadingDocument) {
-                DownloadProgressDialog()
-            }
+               if (state.isDownloadingDocument) {
+                   DownloadProgressDialog()
+               }
 
-        },
-        bottomBar = {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                AdmobBanner()
-            }
-        }
-    )
+           },
+           bottomBar = {
+               Box(
+                   modifier = Modifier.fillMaxWidth(),
+                   contentAlignment = Alignment.Center
+               ) {
+                   AdmobBanner()
+               }
+           }
+       )
+   }
 
 
 }

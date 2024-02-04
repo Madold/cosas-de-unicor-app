@@ -11,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -86,6 +87,7 @@ fun HomeScreenContent(
     onEvent: (HomeUiEvent) -> Unit,
     mainNavController: NavController,
     bottomBarNavController: NavController,
+    paddingValues: PaddingValues = PaddingValues()
 ) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -179,7 +181,6 @@ fun HomeScreenContent(
                             .verticalScroll(rememberScrollState())
                             .padding(horizontal = 16.dp)
                     ) {
-
                         if (state.isLoading) {
                             LoadingLayout()
                         } else {
@@ -285,6 +286,8 @@ fun HomeScreenContent(
                                     }
 
                                 })
+
+                            Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
 
                             if (isUserInfoDialogVisible) {
                                 UserInfoDialog(

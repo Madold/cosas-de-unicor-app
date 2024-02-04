@@ -5,8 +5,12 @@ package com.markusw.cosasdeunicorapp.home.presentation.news
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
@@ -56,6 +60,7 @@ fun NewsScreenContent(
     state: HomeState,
     onEvent: (HomeUiEvent) -> Unit,
     scrollState: LazyListState = rememberLazyListState(),
+    paddingValues: PaddingValues = PaddingValues()
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -83,90 +88,95 @@ fun NewsScreenContent(
         }
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = "Canal de Noticias",
-                        color = Color.White,
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontWeight = FontWeight.Bold
+
+    Box(
+        modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
+    ) {
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(
+                            text = "Canal de Noticias",
+                            color = Color.White,
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold
+                            )
                         )
-                    )
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = home_bottom_bar_background
-                ),
-                actions = {
-                    IconButton(onClick = { isActionsMenuVisible = true }) {
-                        Icon(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = null,
-                            tint = Color.White,
-                        )
-                    }
-                    DropdownMenu(
-                        expanded = isActionsMenuVisible,
-                        onDismissRequest = { isActionsMenuVisible = false },
-                        modifier = Modifier.background(home_bottom_bar_background)
-                    ) {
-                        DropdownMenuItem(
-                            text = {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        painter = painterResource(id = if(isNewsNotificationsEnabled) R.drawable.ic_silenced_bell else R.drawable.ic_bell),
-                                        contentDescription = null,
-                                        tint = Color.White,
-                                    )
-                                    Text(
-                                        notificationsText,
-                                        color = Color.White
-                                    )
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = home_bottom_bar_background
+                    ),
+                    actions = {
+                        IconButton(onClick = { isActionsMenuVisible = true }) {
+                            Icon(
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = null,
+                                tint = Color.White,
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = isActionsMenuVisible,
+                            onDismissRequest = { isActionsMenuVisible = false },
+                            modifier = Modifier.background(home_bottom_bar_background)
+                        ) {
+                            DropdownMenuItem(
+                                text = {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(id = if (isNewsNotificationsEnabled) R.drawable.ic_silenced_bell else R.drawable.ic_bell),
+                                            contentDescription = null,
+                                            tint = Color.White,
+                                        )
+                                        Text(
+                                            notificationsText,
+                                            color = Color.White
+                                        )
+                                    }
+                                },
+                                onClick = {
+                                    isActionsMenuVisible = false
+                                    onEvent(HomeUiEvent.ToggleNewsNotifications)
                                 }
-                            },
-                            onClick = {
-                                isActionsMenuVisible = false
-                                onEvent(HomeUiEvent.ToggleNewsNotifications)
-                            }
-                        )
+                            )
+                        }
                     }
-                }
-            )
-        },
-        content = {
-            NewsList(
-                modifier = Modifier
-                    .padding(it),
-                state = state,
-                scrollState = scrollState,
-                onRequestPreviousNews = {
-                    onEvent(HomeUiEvent.FetchPreviousNews)
-                },
-                onNewsLiked = { likedNews ->
-                    onEvent(HomeUiEvent.LikeNews(likedNews))
-                },
-            )
-        },
-        floatingActionButton = {
-            RoundedIconButton(
-                icon = R.drawable.ic_arrow_down,
-                modifier = Modifier.offset(y = fabOffset),
-                onClick = {
-                    coroutineScope.launch {
-                        scrollState.animateScrollToItem(0)
-                    }
-                },
-                enabled = isScrollToEndFABVisible
-            )
-        },
-        bottomBar = {
-            AdmobBanner()
-        }
-    )
+                )
+            },
+            content = {
+                NewsList(
+                    modifier = Modifier
+                        .padding(it),
+                    state = state,
+                    scrollState = scrollState,
+                    onRequestPreviousNews = {
+                        onEvent(HomeUiEvent.FetchPreviousNews)
+                    },
+                    onNewsLiked = { likedNews ->
+                        onEvent(HomeUiEvent.LikeNews(likedNews))
+                    },
+                )
+            },
+            floatingActionButton = {
+                RoundedIconButton(
+                    icon = R.drawable.ic_arrow_down,
+                    modifier = Modifier.offset(y = fabOffset),
+                    onClick = {
+                        coroutineScope.launch {
+                            scrollState.animateScrollToItem(0)
+                        }
+                    },
+                    enabled = isScrollToEndFABVisible
+                )
+            },
+            bottomBar = {
+                AdmobBanner()
+            }
+        )
+    }
+
 
 }

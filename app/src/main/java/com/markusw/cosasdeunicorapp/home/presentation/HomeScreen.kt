@@ -7,6 +7,8 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -16,6 +18,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -98,7 +102,16 @@ private fun HomeHost(
     NavHost(
         modifier = modifier
             .fillMaxSize()
-            .padding(contentPadding),
+            .padding(
+                top = contentPadding.calculateTopPadding(),
+                bottom = 0.dp,
+                start = contentPadding.calculateStartPadding(
+                    LayoutDirection.Ltr
+                ),
+                end = contentPadding.calculateEndPadding(
+                    LayoutDirection.Ltr
+                )
+            ),
         navController = navController,
         startDestination = HomeScreens.Home.route
     ) {
@@ -107,7 +120,8 @@ private fun HomeHost(
                 state = uiState,
                 onEvent = viewModel::onEvent,
                 mainNavController = mainNavController,
-                bottomBarNavController = navController
+                bottomBarNavController = navController,
+                paddingValues = contentPadding
             )
         }
 
@@ -129,7 +143,8 @@ private fun HomeHost(
             ChatScreenContent(
                 state = uiState,
                 onEvent = viewModel::onEvent,
-                scrollState = scrollState
+                scrollState = scrollState,
+                paddingValues = contentPadding
             )
         }
 
@@ -146,7 +161,8 @@ private fun HomeHost(
             NewsScreenContent(
                 state = uiState,
                 onEvent = viewModel::onEvent,
-                scrollState = scrollState
+                scrollState = scrollState,
+                paddingValues = contentPadding
             )
         }
 
@@ -168,7 +184,8 @@ private fun HomeHost(
             DocsScreenContent(
                 onEvent = viewModel::onEvent,
                 multiplePermissionLauncher = permissionLauncher,
-                state = uiState
+                state = uiState,
+                paddingValues = contentPadding
             )
 
             viewModel.visiblePermissionDialogQueue
