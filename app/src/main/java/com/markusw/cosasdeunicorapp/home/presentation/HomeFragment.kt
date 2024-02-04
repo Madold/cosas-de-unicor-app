@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -21,8 +24,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.pop
 import com.markusw.cosasdeunicorapp.core.presentation.GoogleAuthClient
@@ -36,7 +37,6 @@ import com.markusw.cosasdeunicorapp.ui.theme.CosasDeUnicorAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 
@@ -80,15 +80,36 @@ class HomeFragment : Fragment() {
                             startDestination = Screens.Home.route
                         ) {
 
-                            composable(route = Screens.Home.route) {
+                            composable(
+                                route = Screens.Home.route,
+                                popEnterTransition = {
+                                    slideInHorizontally(
+                                        initialOffsetX = { fullWidth -> -fullWidth }
+                                    )
+                                },
+                                popExitTransition = {
+                                    slideOutHorizontally(
+                                        targetOffsetX = { fullWidth -> -fullWidth }
+                                    )
+                                }
+                            ) {
                                 HomeScreen(
                                     mainNavController = mainNavController,
                                     viewModel = viewModel
                                 )
                             }
 
-                            composable(route = Screens.Profile.route) {
-
+                            composable(
+                                route = Screens.Profile.route,
+                                enterTransition = {
+                                    slideInHorizontally(
+                                        initialOffsetX = { fullWidth -> fullWidth }
+                                    )
+                                },
+                                popExitTransition = {
+                                    shrinkOut()
+                                }
+                            ) {
                                 val viewModel = hiltViewModel<ProfileViewModel>()
                                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -99,7 +120,15 @@ class HomeFragment : Fragment() {
                                 )
                             }
 
-                            composable(route = Screens.EditProfile.route) {
+                            composable(
+                                route = Screens.EditProfile.route,
+                                enterTransition = {
+                                    slideInHorizontally(
+                                        initialOffsetX = { fullWidth -> fullWidth }
+                                    )
+                                },
+
+                            ) {
 
                                 val viewModel = hiltViewModel<ProfileViewModel>()
                                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -124,7 +153,14 @@ class HomeFragment : Fragment() {
                                 )
                             }
 
-                            composable(route = Screens.ResetPassword.route) {
+                            composable(
+                                route = Screens.ResetPassword.route,
+                                enterTransition = {
+                                    slideInHorizontally(
+                                        initialOffsetX = { fullWidth -> fullWidth }
+                                    )
+                                }
+                            ) {
 
                                 val viewModel = hiltViewModel<ProfileViewModel>()
                                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
