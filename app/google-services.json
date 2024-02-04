@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "723240159464-bkurm6lsrdvg850div6aurgv377iuva9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.markusw.cosasdeunicorapp",
+            "certificate_hash": "2d886ccb02d20090471fbc0f51291e34873089af"
+          }
+        },
+        {
           "client_id": "723240159464-hbqc2sr40lvbr3vcvvbl7b5cari252mn.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
