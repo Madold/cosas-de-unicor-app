@@ -1,21 +1,19 @@
 package com.markusw.cosasdeunicorapp.home.presentation.composables
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.exyte.animatednavbar.AnimatedNavigationBar
+import com.exyte.animatednavbar.animation.balltrajectory.Straight
+import com.exyte.animatednavbar.animation.indendshape.Height
 import com.markusw.cosasdeunicorapp.home.presentation.HomeScreens
 import com.markusw.cosasdeunicorapp.ui.theme.home_bottom_bar_background
+import com.markusw.cosasdeunicorapp.ui.theme.md_theme_light_primary
 
 @Composable
 fun BottomNavigationBar(
@@ -32,34 +30,57 @@ fun BottomNavigationBar(
         HomeScreens.Documents,
         HomeScreens.More,
     )
+    val selectedIndex = remember(currentDestination) {
+        screens.indexOfFirst { it.route == currentDestination?.route }
+    }
 
-    Box(
-        modifier = modifier
+
+    /*Row(
+        modifier = Modifier
             .fillMaxWidth()
-            .background(color = home_bottom_bar_background),
-        contentAlignment = Alignment.Center,
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        ) {
-            screens.forEach { screen ->
-                BottomNavigationBarItem(
-                    label = screen.label,
-                    icon = screen.icon,
-                    selected = currentDestination?.route == screen.route,
-                    onClick = {
-                        navController.navigate(screen.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
+        screens.forEach { screen ->
+            BottomNavigationBarItem(
+                label = screen.label,
+                icon = screen.icon,
+                selected = currentDestination?.route == screen.route,
+                onClick = {
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
                         }
+                        launchSingleTop = true
                     }
-                )
-            }
+                }
+            )
+        }
+    }*/
+
+    AnimatedNavigationBar(
+        selectedIndex = selectedIndex,
+        ballColor = md_theme_light_primary,
+        ballAnimation = Straight(tween(durationMillis = 300)),
+        indentAnimation = Height(tween(durationMillis = 700)),
+        barColor = home_bottom_bar_background,
+    ) {
+        screens.forEach { screen ->
+            BottomNavigationBarItem(
+                label = screen.label,
+                icon = screen.icon,
+                selected = currentDestination?.route == screen.route,
+                onClick = {
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
     }
+
+
 }
