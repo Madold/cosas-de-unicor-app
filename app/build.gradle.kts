@@ -87,6 +87,7 @@ dependencies {
     val roomVersion = "2.5.0"
     val dataStoreVersion = "1.0.0"
     val lottieVersion = "6.3.0"
+    val animatedNavigationBarVersion = "1.0.0"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.12.0")
@@ -154,6 +155,9 @@ dependencies {
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+
+    //Animated Navigation Bar
+    implementation("com.exyte:animated-navigation-bar:$animatedNavigationBarVersion")
 
     //Firebase crashlytics
     implementation("com.google.firebase:firebase-crashlytics-ktx")
