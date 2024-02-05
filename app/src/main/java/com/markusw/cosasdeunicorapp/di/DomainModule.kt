@@ -3,6 +3,8 @@ package com.markusw.cosasdeunicorapp.di
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
+import com.markusw.cosasdeunicorapp.BuildConfig
+import com.markusw.cosasdeunicorapp.core.data.FakeRemoteDatabase
 import com.markusw.cosasdeunicorapp.core.data.FireStoreService
 import com.markusw.cosasdeunicorapp.core.data.FirebaseAuthService
 import com.markusw.cosasdeunicorapp.core.domain.AuthService
@@ -40,12 +42,18 @@ object DomainModule {
         newsFireStorePager: NewsFireStorePager,
         auth: FirebaseAuth,
         remoteStorage: RemoteStorage
-    ): RemoteDatabase = FireStoreService(
-        fireStore,
-        messagesFireStorePager,
-        newsFireStorePager,
-        auth,
-        remoteStorage
-    )
+    ): RemoteDatabase {
 
+        if (BuildConfig.DEBUG) {
+            return FakeRemoteDatabase()
+        }
+
+        return FireStoreService(
+            fireStore,
+            messagesFireStorePager,
+            newsFireStorePager,
+            auth,
+            remoteStorage
+        )
+    }
 }
