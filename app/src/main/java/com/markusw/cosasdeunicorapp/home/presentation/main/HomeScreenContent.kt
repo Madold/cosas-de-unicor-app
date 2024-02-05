@@ -81,6 +81,8 @@ import com.markusw.cosasdeunicorapp.home.presentation.news.composables.NewsCard
 import com.markusw.cosasdeunicorapp.ui.theme.home_bottom_bar_background
 import kotlinx.coroutines.launch
 
+val DRAWER_WIDTH_PERCENTAGE = 0.8f
+
 @Composable
 fun HomeScreenContent(
     state: HomeState,
@@ -110,23 +112,64 @@ fun HomeScreenContent(
                             ),
                         )
                         Divider(
-                            modifier = Modifier.fillMaxWidth(0.8f)
+                            modifier = Modifier.fillMaxWidth(DRAWER_WIDTH_PERCENTAGE)
                         )
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth(DRAWER_WIDTH_PERCENTAGE)
                         ) {
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_moon),
+                                    contentDescription = null
+                                )
+
+                                Text(
+                                    text = "Modo oscuro",
+                                    color = Color.White
+                                )
+                            }
+
                             Switch(
                                 checked = state.localSettings.isDarkModeEnabled,
                                 onCheckedChange = {
                                     onEvent(HomeUiEvent.ChangeDarkMode(it))
                                 },
                             )
-                            Text(
-                                text = "Modo oscuro",
-                                color = Color.White
+                        }
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth(DRAWER_WIDTH_PERCENTAGE)
+                        ) {
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_sound_note),
+                                    contentDescription = null
+                                )
+
+                                Text(
+                                    text = "Sonidos de la App",
+                                    color = Color.White
+                                )
+                            }
+
+                            Switch(
+                                checked = state.localSettings.isAppSoundsEnabled,
+                                onCheckedChange = { onEvent(HomeUiEvent.ToggleAppSounds(it)) },
                             )
                         }
+
                     }
                 },
                 drawerContainerColor = home_bottom_bar_background,

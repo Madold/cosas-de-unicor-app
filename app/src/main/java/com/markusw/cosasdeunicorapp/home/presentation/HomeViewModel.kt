@@ -4,8 +4,10 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
+import com.markusw.cosasdeunicorapp.core.domain.AppSound
 import com.markusw.cosasdeunicorapp.core.domain.LocalDataStore
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
+import com.markusw.cosasdeunicorapp.core.domain.SoundPlayer
 import com.markusw.cosasdeunicorapp.core.ext.prepend
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.core.utils.TimeUtils
@@ -53,6 +55,7 @@ class HomeViewModel @Inject constructor(
     private val localDataStore: LocalDataStore,
     private val pushNotificationService: PushNotificationService,
     private val remoteDatabase: RemoteDatabase,
+    private val soundPlayer: SoundPlayer
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeState())
@@ -69,6 +72,7 @@ class HomeViewModel @Inject constructor(
         const val GENERAL_CHAT_NOTIFICATIONS_KEY = "isGeneralChatNotificationsEnabled"
         const val NEWS_NOTIFICATIONS_KEY = "isNewsNotificationsEnabled"
         const val DARK_MODE_KEY = "isDarkModeEnabled"
+        const val APP_SOUNDS_KEY = "isAppSoundsEnabled"
     }
 
     init {
@@ -78,6 +82,8 @@ class HomeViewModel @Inject constructor(
             observeNewMessages().collectLatest { newMessage ->
                 _uiState.update { it.copy(globalChatList = it.globalChatList.prepend(newMessage)) }
                 chatListEventsChannel.send(ChatListEvent.MessageAdded)
+
+                playSound(AppSound.MessageReceived)
             }
         }
 
@@ -119,6 +125,21 @@ class HomeViewModel @Inject constructor(
                             localSettings = state.localSettings.copy(
                                 isDarkModeEnabled = isDarkModeEnabled?.toBoolean()
                                     ?: false
+                            )
+                        )
+                    }
+                }
+        }
+
+        viewModelScope.launch(dispatchers.io) {
+            localDataStore
+                .get(APP_SOUNDS_KEY)
+                .collectLatest { isAppSoundsEnabled ->
+                    _uiState.update { state ->
+                        state.copy(
+                            localSettings = state.localSettings.copy(
+                                isAppSoundsEnabled = isAppSoundsEnabled?.toBoolean()
+                                    ?: true
                             )
                         )
                     }
@@ -179,7 +200,12 @@ class HomeViewModel @Inject constructor(
                             ),
                             sender = sender,
                             timestamp = TimeUtils.getDeviceHourInTimestamp()
-                        ).also { viewModelScope.launch { sendPushNotification(it) } }
+                        ).also {
+                            viewModelScope.launch {
+                                playSound(AppSound.MessageSent)
+                                sendPushNotification(it)
+                            }
+                        }
                     )
                 }
 
@@ -238,7 +264,6 @@ class HomeViewModel @Inject constructor(
                         removeUserFromLikedByList(event.news.id!!, uiState.value.currentUser)
                     }
                 } else {
-
                     val newsIndex = uiState.value.newsList.indexOf(event.news)
                     val updatedNews = event.news.copy(
                         likedBy = event.news.likedBy + uiState.value.currentUser
@@ -252,9 +277,9 @@ class HomeViewModel @Inject constructor(
                     }
 
                     viewModelScope.launch(dispatchers.io) {
+                        playSound(AppSound.Like)
                         addUserToLikedByList(event.news.id!!, uiState.value.currentUser)
                     }
-
                 }
             }
 
@@ -320,6 +345,15 @@ class HomeViewModel @Inject constructor(
                     localDataStore.save(
                         DARK_MODE_KEY,
                         event.isDarkMode.toString()
+                    )
+                }
+            }
+
+            is HomeUiEvent.ToggleAppSounds -> {
+                viewModelScope.launch(dispatchers.io) {
+                    localDataStore.save(
+                        APP_SOUNDS_KEY,
+                        event.isSoundsEnabled.toString()
                     )
                 }
             }
@@ -410,6 +444,12 @@ class HomeViewModel @Inject constructor(
     fun onPermissionResult(permission: String, isGranted: Boolean) {
         if (!isGranted && !visiblePermissionDialogQueue.contains(permission)) {
             visiblePermissionDialogQueue.add(permission)
+        }
+    }
+
+    private fun playSound(sound: AppSound) {
+        if (uiState.value.localSettings.isAppSoundsEnabled) {
+            soundPlayer.playSound(sound)
         }
     }
 
