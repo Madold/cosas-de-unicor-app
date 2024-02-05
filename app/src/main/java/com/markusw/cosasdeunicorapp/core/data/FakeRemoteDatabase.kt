@@ -43,7 +43,6 @@ class FakeRemoteDatabase: RemoteDatabase {
             )
         )
     )
-
     private val messagesToSend = listOf(
         Message(
             sender = User(
@@ -143,11 +142,17 @@ class FakeRemoteDatabase: RemoteDatabase {
         ),
 
     )
+    private val loggedUser = User(
+        displayName = "Madold",
+        email = "elmadold45@gmail.com",
+        photoUrl = "https://lh3.googleusercontent.com/a/ACg8ocLRvyuh6jZwTP4gDWZ0fG3ikOtlXsPPogaESDCOzE5VrQ=s96-c",
+        uid = "XhDVl33l1JTBBcPe4vKG4nq1i2n1"
+    )
 
     private fun randomTimestamp(): Long = System.currentTimeMillis() * (0..234).random() - (1..679).random()
 
     override suspend fun loadPreviousMessages(): List<Message> {
-        return messages.value
+        return emptyList()
     }
 
     override suspend fun sendMessageToGlobalChat(message: Message): Result<Unit> {
@@ -192,10 +197,10 @@ class FakeRemoteDatabase: RemoteDatabase {
     }
 
     override suspend fun onUserInfoUpdate(): Flow<User> {
-        return flow {  }
+        return flow { emit(loggedUser) }
     }
 
     override suspend fun getUser(id: String): User {
-        return User()
+        return loggedUser
     }
 }
