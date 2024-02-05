@@ -154,7 +154,11 @@ private fun HomeHost(
 
             LaunchedEffect(key1 = viewModel.newsListEvents) {
                 viewModel.newsListEvents.collectLatest { newsListEvent ->
-                    scrollState.animateScrollToItem(0)
+                    when (newsListEvent) {
+                        NewsListEvent.NewsAdded -> {
+                            scrollState.animateScrollToItem(0)
+                        }
+                    }
                 }
             }
 

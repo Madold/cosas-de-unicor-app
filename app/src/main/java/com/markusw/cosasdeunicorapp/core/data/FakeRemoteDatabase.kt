@@ -140,6 +140,114 @@ class FakeRemoteDatabase: RemoteDatabase {
             ),
             timestamp = randomTimestamp()
         ),
+        Message(
+            sender = User(
+                displayName = "Fire in the hole",
+                email = "finthehole@gmail.com",
+                photoUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.myinstants.com%2Fen%2Finstant%2Ffire-in-the-hole-geometry-dash-52280%2F&psig=AOvVaw1tZF0PE4QsrRjPrpC4wET_&ust=1707237426783000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIivoJTRlIQDFQAAAAAdAAAAABAQ",
+                uid = "vxcvsd8fqrmdsfi43"
+            ),
+            content = MessageContent(
+                text = "Fire in the hole"
+            ),
+            timestamp = randomTimestamp()
+        ),
+        Message(
+            sender = User(
+                displayName = "Fire in the hole",
+                email = "finthehole@gmail.com",
+                photoUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.myinstants.com%2Fen%2Finstant%2Ffire-in-the-hole-geometry-dash-52280%2F&psig=AOvVaw1tZF0PE4QsrRjPrpC4wET_&ust=1707237426783000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIivoJTRlIQDFQAAAAAdAAAAABAQ",
+                uid = "vxcvsd8fqrmdsfi43"
+            ),
+            content = MessageContent(
+                text = "Fire in the hole"
+            ),
+            timestamp = randomTimestamp()
+        ),
+        Message(
+            sender = User(
+                displayName = "Fire in the hole",
+                email = "finthehole@gmail.com",
+                photoUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.myinstants.com%2Fen%2Finstant%2Ffire-in-the-hole-geometry-dash-52280%2F&psig=AOvVaw1tZF0PE4QsrRjPrpC4wET_&ust=1707237426783000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIivoJTRlIQDFQAAAAAdAAAAABAQ",
+                uid = "vxcvsd8fqrmdsfi43"
+            ),
+            content = MessageContent(
+                text = "Fire in the hole"
+            ),
+            timestamp = randomTimestamp()
+        ),
+        Message(
+            sender = User(
+                displayName = "Fire in the hole",
+                email = "finthehole@gmail.com",
+                photoUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.myinstants.com%2Fen%2Finstant%2Ffire-in-the-hole-geometry-dash-52280%2F&psig=AOvVaw1tZF0PE4QsrRjPrpC4wET_&ust=1707237426783000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIivoJTRlIQDFQAAAAAdAAAAABAQ",
+                uid = "vxcvsd8fqrmdsfi43"
+            ),
+            content = MessageContent(
+                text = "Fire in the hole"
+            ),
+            timestamp = randomTimestamp()
+        ),
+        Message(
+            sender = User(
+                displayName = "Fire in the hole",
+                email = "finthehole@gmail.com",
+                photoUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.myinstants.com%2Fen%2Finstant%2Ffire-in-the-hole-geometry-dash-52280%2F&psig=AOvVaw1tZF0PE4QsrRjPrpC4wET_&ust=1707237426783000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIivoJTRlIQDFQAAAAAdAAAAABAQ",
+                uid = "vxcvsd8fqrmdsfi43"
+            ),
+            content = MessageContent(
+                text = "Fire in the hole"
+            ),
+            timestamp = randomTimestamp()
+        ),
+        Message(
+            sender = User(
+                displayName = "Markus Water",
+                email = "marcopor@gmail.com",
+                photoUrl = "https://lh3.googleusercontent.com/a/ACg8ocJ6cyg00GmGpEEDz-WvBspnSwQwrUg5UJ1nnIV7mlb6p6E=s96-c",
+                uid = "4V1p1O0e5YMYkDxar4wB1ibrjC63"
+            ),
+            content = MessageContent(
+                text = "I'm dead"
+            ),
+            timestamp = randomTimestamp()
+        ),
+        Message(
+            sender = User(
+                displayName = "Fire in the hole",
+                email = "finthehole@gmail.com",
+                photoUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.myinstants.com%2Fen%2Finstant%2Ffire-in-the-hole-geometry-dash-52280%2F&psig=AOvVaw1tZF0PE4QsrRjPrpC4wET_&ust=1707237426783000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIivoJTRlIQDFQAAAAAdAAAAABAQ",
+                uid = "vxcvsd8fqrmdsfi43"
+            ),
+            content = MessageContent(
+                text = "Fire in the hole"
+            ),
+            timestamp = randomTimestamp()
+        ),
+        Message(
+            sender = User(
+                displayName = "Fire in the hole",
+                email = "finthehole@gmail.com",
+                photoUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.myinstants.com%2Fen%2Finstant%2Ffire-in-the-hole-geometry-dash-52280%2F&psig=AOvVaw1tZF0PE4QsrRjPrpC4wET_&ust=1707237426783000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIivoJTRlIQDFQAAAAAdAAAAABAQ",
+                uid = "vxcvsd8fqrmdsfi43"
+            ),
+            content = MessageContent(
+                text = "Fire in the hole"
+            ),
+            timestamp = randomTimestamp()
+        ),
+        Message(
+            sender = User(
+                displayName = "Fire in the hole",
+                email = "finthehole@gmail.com",
+                photoUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.myinstants.com%2Fen%2Finstant%2Ffire-in-the-hole-geometry-dash-52280%2F&psig=AOvVaw1tZF0PE4QsrRjPrpC4wET_&ust=1707237426783000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIivoJTRlIQDFQAAAAAdAAAAABAQ",
+                uid = "vxcvsd8fqrmdsfi43"
+            ),
+            content = MessageContent(
+                text = "Fire in the hole"
+            ),
+            timestamp = randomTimestamp()
+        ),
 
     )
     private val loggedUser = User(
@@ -167,7 +275,7 @@ class FakeRemoteDatabase: RemoteDatabase {
         return flow {
             messagesToSend.forEach {
                 emit(it)
-                delay((6000..7000).random().toLong())
+                delay((3000..5000).random().toLong())
             }
         }
     }

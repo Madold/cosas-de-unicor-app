@@ -219,7 +219,8 @@ fun ChatScreenContent(
                     onRequestPreviousMessages = {
                         onEvent(HomeUiEvent.FetchPreviousGlobalMessages)
                     },
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier
+                        .weight(1f)
                 )
             }
         }
