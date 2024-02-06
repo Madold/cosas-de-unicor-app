@@ -64,6 +64,7 @@ fun HomeScreen(
             }
         }
     )
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -77,12 +78,15 @@ fun HomeScreen(
                 navController = navController,
                 contentPadding = it,
                 viewModel = viewModel,
-                mainNavController = mainNavController
+                mainNavController = mainNavController,
+                uiState = uiState,
             )
         },
         bottomBar = {
             BottomNavigationBar(
-                navController = navController
+                navController = navController,
+                state = uiState,
+                onEvent = viewModel::onEvent
             )
         }
     )
@@ -94,10 +98,10 @@ private fun HomeHost(
     navController: NavHostController,
     mainNavController: NavController,
     contentPadding: PaddingValues,
-    viewModel: HomeViewModel
+    uiState: HomeState,
+    viewModel: HomeViewModel,
 ) {
 
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     NavHost(
         modifier = modifier

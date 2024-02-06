@@ -83,7 +83,9 @@ class HomeViewModel @Inject constructor(
                 _uiState.update { it.copy(globalChatList = it.globalChatList.prepend(newMessage)) }
                 chatListEventsChannel.send(ChatListEvent.MessageAdded)
 
-                playSound(AppSound.MessageReceived)
+                if (newMessage.sender.uid != uiState.value.currentUser.uid) {
+                    playSound(AppSound.MessageReceived)
+                }
             }
         }
 

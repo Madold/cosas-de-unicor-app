@@ -44,7 +44,7 @@ object DomainModule {
         remoteStorage: RemoteStorage
     ): RemoteDatabase {
 
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.BUILD_TYPE == "development") {
             return FakeRemoteDatabase()
         }
 

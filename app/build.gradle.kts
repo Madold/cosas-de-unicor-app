@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.tasks.factory.dependsOn
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -25,6 +27,31 @@ android {
     }
 
     buildTypes {
+        val developmentVariant = "development"
+        val debugVariant = "debug"
+        val googleServicesJsonFile = "google-services.json"
+        val debugPath = "src/debug"
+        val productionPath = "src/release"
+        val rootDirectory = "src/"
+
+        //Tasks to copy the google-services.json file to the root directory
+        val copyReleaseGoogleServicesJson by tasks.registering(Copy::class) {
+            from(productionPath)
+            include(googleServicesJsonFile)
+            into(rootDirectory)
+            rename { "google-services.json" }
+        }
+
+        val copyDebugGoogleServicesJson by tasks.registering(Copy::class) {
+            from(debugPath)
+            include(googleServicesJsonFile)
+            into(rootDirectory)
+            rename { "google-services.json" }
+        }
+
+        create(developmentVariant) {
+            initWith(getByName(debugVariant))
+        }
         release {
             isMinifyEnabled = true
             proguardFiles(
@@ -33,12 +60,16 @@ android {
             )
             isDebuggable = false
             isShrinkResources = true
+
+            tasks.getByName<Copy>("copyDebugGoogleServicesJson").dependsOn(":app:copyReleaseGoogleServicesJson")
         }
         debug {
             isMinifyEnabled = false
             isDebuggable = true
+            isShrinkResources = false
+            applicationIdSuffix = ".debug"
+            tasks.getByName<Copy>("copyReleaseGoogleServicesJson").dependsOn(":app:copyDebugGoogleServicesJson")
         }
-
     }
 
     compileOptions {
