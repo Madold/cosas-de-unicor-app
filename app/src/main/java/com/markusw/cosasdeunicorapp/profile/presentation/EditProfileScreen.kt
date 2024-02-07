@@ -23,7 +23,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -51,8 +50,10 @@ import coil.compose.AsyncImage
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.pop
 import com.markusw.cosasdeunicorapp.core.presentation.AppTopBar
+import com.markusw.cosasdeunicorapp.core.presentation.Button
 import com.markusw.cosasdeunicorapp.core.presentation.DoneAnimation
 import com.markusw.cosasdeunicorapp.core.presentation.ErrorAnimation
+import timber.log.Timber
 
 @Composable
 fun EditProfileScreen(
@@ -72,8 +73,9 @@ fun EditProfileScreen(
         state.name != state.user.displayName ||
                 state.email != state.user.email ||
                 state.profilePhoto != null
-
     }
+
+    Timber.d("areChanges: $areChanges")
 
     Scaffold(
         topBar = {
