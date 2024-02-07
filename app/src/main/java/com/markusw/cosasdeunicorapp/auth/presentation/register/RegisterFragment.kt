@@ -16,6 +16,7 @@ import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.databinding.FragmentRegisterBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class RegisterFragment : Fragment() {
@@ -75,7 +76,11 @@ class RegisterFragment : Fragment() {
                         )
                     }
                     is RegistrationEvent.SuccessfullyRegistration -> {
-                        toast(UiText.StringResource(R.string.succesfully_registered))
+                        showDialog(
+                            title = UiText.StringResource(R.string.auth_success),
+                            message = UiText.StringResource(R.string.succesfully_registered),
+                            positiveButtonText = UiText.StringResource(R.string.understood)
+                        )
                         navController.popBackStack()
                     }
                     is RegistrationEvent.TermsNotAccepted -> {

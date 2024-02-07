@@ -62,7 +62,7 @@ class ResetPasswordFragment : Fragment() {
                     is ResetPasswordEvents.EmailSentSuccessfully -> {
                         showDialog(
                             title = UiText.StringResource(R.string.email_sent_success),
-                            message = UiText.StringResource(R.string.email_sent),
+                            message = UiText.StringResource(R.string.email_sent, viewModel.uiState.value.email),
                             positiveButtonText = UiText.StringResource(R.string.accept),
                             onPositiveButtonClick = { navController.popBackStack() }
                         )

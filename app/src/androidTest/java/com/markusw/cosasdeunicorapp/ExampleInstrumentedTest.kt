@@ -1,12 +1,11 @@
 package com.markusw.cosasdeunicorapp
 
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-
+import androidx.test.platform.app.InstrumentationRegistry
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.junit.Assert.*
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -19,6 +18,12 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+
+        if (BuildConfig.DEBUG) {
+            assertEquals("com.markusw.cosasdeunicorapp.debug", appContext.packageName)
+            return
+        }
+
         assertEquals("com.markusw.cosasdeunicorapp", appContext.packageName)
     }
 }

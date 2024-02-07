@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".auth.presentation.login.LoginFragment"
-    android:background="@color/white"
+    android:background="@color/md_theme_dark_surface"
     >
 
     <androidx.core.widget.NestedScrollView
@@ -95,6 +95,7 @@
                     android:hint="@string/email"
                     android:drawableEnd="@drawable/ic_email"
                     android:inputType="textEmailAddress"
+                    android:drawableTint="@color/md_theme_dark_onSurface"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -129,6 +130,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="8dp"
+                android:textColor="@color/md_theme_dark_onSurface"
                 />
 
             <Button
@@ -143,6 +145,7 @@
                 android:backgroundTint="@color/md_theme_light_primary"
                 android:textSize="17sp"
                 android:paddingVertical="12dp"
+                android:textColor="@color/md_theme_dark_onSurface"
                 />
 
             <LinearLayout
@@ -168,6 +171,7 @@
                     android:paddingHorizontal="5dp"
                     android:text="@string/alternative_login"
                     android:layout_gravity="center"
+                    android:textColor="@color/md_theme_dark_onSurface"
                     />
                 <View
                     android:layout_width="0dp"
@@ -214,6 +218,7 @@
                     android:text="@string/dont_have_account"
                     android:layout_marginEnd="5dp"
                     android:layout_gravity="center"
+                    android:textColor="@color/md_theme_dark_onSurface"
                     />
                 <TextView
                     android:id="@+id/registerText"

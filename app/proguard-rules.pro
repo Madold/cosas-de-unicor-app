@@ -21,3 +21,4 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class com.markusw.cosasdeunicorapp.home.domain.model.* { *; }
+-keep class com.markusw.cosasdeunicorapp.core.domain.model.* { *; }

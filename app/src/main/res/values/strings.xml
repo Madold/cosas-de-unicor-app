@@ -13,10 +13,12 @@
     <string name="dont_have_account">Don\'t have an account?</string>
     <string name="register_here">Register here</string>
 
+    <string name="global_chat">General Chat</string>
+
     <!-- Login error messages -->
     <string name="blank_email_error">Email can\'t be blank</string>
     <string name="invalid_email_error">Email is not valid</string>
-    <string name="account_not_verified">The account is not verified. A verification email has been sent.</string>
+    <string name="account_not_verified">The account is not verified. Please verify your email.</string>
     <string name="user_not_exist">There is no user with that email.</string>
     <string name="user_already_registered">There is already a registered user with that email address.</string>
 
@@ -42,7 +44,7 @@
     <string name="and">&#32; and &#32;</string>
     <string name="conditions">conditions</string>
 
-    <string name="succesfully_registered">Successfully registered</string>
+    <string name="succesfully_registered">Successfully registered. An email verification was send to your email.</string>
     <string name="important">Important</string>
     <string name="understood">Understood</string>
 
@@ -63,5 +65,18 @@
     <string name="invalid_password">The password must begin with a capital letter, have at least one number and one special character.</string>
     <string name="passwords_do_not_match">Passwords don\'t match</string>
     <string name="terms_not_accepted">You must accept the terms and conditions to register</string>
+
+    <!-- Permissions -->
+    <string name="permission_required">Permission required</string>
+    <string name="OK">OK</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="grant_permission">Grant permission</string>
+    <string name="write_external_storage_permission_rationale">To ensure that Cosas de Unicor functions correctly, we require permission to write to your device\'s external storage. This allows us to save and manage files, such as photos, documents on your device.</string>
+    <string name="write_external_storage_permission_permanently_denied">Write external storage permission permanently denied. Please go to settings and enable it.</string>
+    <string name="read_external_storage_permission_rationale">To ensure that Cosas de Unicor functions correctly, we require permission to read your device\'s external storage. This allows us to read files, such as photos, documents on your device.</string>
+    <string name="read_external_storage_permission_permanently_denied">Read external storage permission permanently denied. Please go to settings and enable it.</string>
+
+    <!-- Notifications -->
+    <string name="replied_text">%s replied</string>
 
 </resources>

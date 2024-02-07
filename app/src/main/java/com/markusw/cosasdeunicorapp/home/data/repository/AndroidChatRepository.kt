@@ -1,22 +1,25 @@
 package com.markusw.cosasdeunicorapp.home.data.repository
 
-import com.markusw.cosasdeunicorapp.core.utils.Resource
-import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.core.domain.RemoteDatabase
+import com.markusw.cosasdeunicorapp.core.utils.Result
+import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.home.domain.repository.ChatRepository
-import kotlinx.coroutines.flow.Flow
 
+// Created by Markus on 5-12-2023.
 
-class AndroidChatRepository constructor(
-    private val remoteDatabase: RemoteDatabase
+/**
+ * Android implementation of the [ChatRepository] interface
+ * @param remoteDatabase the remote database implementation
+ * @see ChatRepository
+ */
+class AndroidChatRepository(
+    private val remoteDatabase: RemoteDatabase,
 ) : ChatRepository {
-    override suspend fun getGlobalChatList(): Flow<Resource<List<Message>>> {
-        return remoteDatabase.getGlobalChatList()
-    }
-
-
-    override suspend fun sendMessageToGlobalChat(message: Message): Resource<Unit> {
+    override suspend fun loadPreviousMessages() = remoteDatabase.loadPreviousMessages()
+    override suspend fun sendMessageToGlobalChat(message: Message): Result<Unit> {
         return remoteDatabase.sendMessageToGlobalChat(message)
     }
+
+    override suspend fun onNewMessage() = remoteDatabase.onNewMessage()
 
 }

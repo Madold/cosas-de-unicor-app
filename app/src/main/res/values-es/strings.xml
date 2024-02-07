@@ -11,13 +11,15 @@
     <string name="register_here">Registrate aquí</string>
     <string name="blank_email_error">El correo no puede estar en blanco</string>
     <string name="invalid_email_error">El correo no es un correo valido</string>
-    <string name="account_not_verified">La cuenta no está verificada. Se ha enviado un correo de verificación.</string>
+    <string name="account_not_verified">La cuenta no está verificada. Porfavor verifique su cuenta.</string>
     <string name="user_not_exist">No existe un usuario con ese correo.</string>
     <string name="user_already_registered">Ya hay un usuario registrado con ese correo.</string>
 
     <string name="accept">Aceptar</string>
     <string name="retry">Reintentar</string>
     <string name="cancel">Cancelar</string>
+
+    <string name="global_chat">Chat General</string>
 
     <string name="auth_success">Autenticación exitosa</string>
 
@@ -35,7 +37,7 @@
     <string name="and">&#32; y &#32;</string>
     <string name="conditions">condiciones</string>
 
-    <string name="succesfully_registered">Registro exitoso</string>
+    <string name="succesfully_registered">Se ha registrado correctamente. Se ha enviado una verificación a su correo electrónico.</string>
     <string name="important">Importante</string>
     <string name="understood">Entendido</string>
 
@@ -54,5 +56,17 @@
     <string name="invalid_password">La contraseña debe empezar por mayuscula, tener almenos un número y un caracter especial</string>
     <string name="passwords_do_not_match">Las contraseñas no coinciden</string>
     <string name="terms_not_accepted">Debe aceptar los términos y condiciones para registrarse</string>
+
+    <string name="permission_required">Permiso requerido</string>
+    <string name="permission_denied">Permiso rechazado</string>
+    <string name="OK">OK</string>
+    <string name="grant_permission">Garantizar permiso</string>
+    <string name="write_external_storage_permission_rationale">Para garantizar que Cosas de Unicor funciona correctamente, necesitamos permiso para escribir en el almacenamiento externo de tu dispositivo. Esto nos permite guardar y gestionar archivos, como fotos, documentos en tu dispositivo.</string>
+    <string name="write_external_storage_permission_permanently_denied">Permiso de escritura de almacenamiento externo denegado permanentemente. Por favor, vaya a la configuración y habilitarlo.</string>
+
+    <string name="read_external_storage_permission_rationale">Para garantizar que Cosas de Unicor funciona correctamente, necesitamos permiso para leer el almacenamiento externo de tu dispositivo. Esto nos permite leer archivos, como fotos, documentos en su dispositivo.</string>
+    <string name="read_external_storage_permission_permanently_denied">Permiso de lectura de almacenamiento externo denegado permanentemente. Por favor, vaya a la configuración y habilitarlo.</string>
+
+    <string name="replied_text">%s respondió</string>
 
 </resources>

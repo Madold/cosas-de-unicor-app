@@ -8,7 +8,7 @@ import com.markusw.cosasdeunicorapp.auth.domain.use_cases.ValidateRepeatedPasswo
 import com.markusw.cosasdeunicorapp.auth.domain.use_cases.ValidateTerms
 import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidateEmail
 import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidatePassword
-import com.markusw.cosasdeunicorapp.core.utils.Resource
+import com.markusw.cosasdeunicorapp.core.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -102,7 +103,7 @@ class RegisterViewModel @Inject constructor(
                 )
             }
             when (val registrationResult = registerWithNameEmailAndPassword(name, email, password)) {
-                is Resource.Error -> {
+                is Result.Error -> {
                     registrationEventChannel.send(
                         RegistrationEvent.RegistrationFailed(
                             reason = registrationResult.message!!
@@ -110,7 +111,7 @@ class RegisterViewModel @Inject constructor(
                     )
                 }
 
-                is Resource.Success -> {
+                is Result.Success -> {
                     registrationEventChannel.send(RegistrationEvent.SuccessfullyRegistration)
                 }
             }
