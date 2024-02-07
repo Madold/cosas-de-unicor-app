@@ -107,7 +107,7 @@ class HomeFragment : Fragment() {
                                     )
                                 },
                                 popExitTransition = {
-                                    shrinkOut()
+                                    slideOutHorizontally { fullWidth -> fullWidth }
                                 }
                             ) {
                                 val viewModel = hiltViewModel<ProfileViewModel>()
@@ -127,6 +127,9 @@ class HomeFragment : Fragment() {
                                         initialOffsetX = { fullWidth -> fullWidth }
                                     )
                                 },
+                                popExitTransition = {
+                                    slideOutHorizontally { fullWidth -> fullWidth }
+                                }
 
                             ) {
 
@@ -159,6 +162,9 @@ class HomeFragment : Fragment() {
                                     slideInHorizontally(
                                         initialOffsetX = { fullWidth -> fullWidth }
                                     )
+                                },
+                                popExitTransition = {
+                                    slideOutHorizontally { fullWidth -> fullWidth }
                                 }
                             ) {
 
