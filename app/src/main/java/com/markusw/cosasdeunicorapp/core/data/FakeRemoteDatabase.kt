@@ -288,11 +288,11 @@ class FakeRemoteDatabase: RemoteDatabase {
         return flow {  }
     }
 
-    override suspend fun removeUserFromLikedByList(newsId: String, user: User): Result<Unit> {
+    override suspend fun removeUserFromLikedByList(newsId: String, userId: String): Result<Unit> {
         return Result.Success(Unit)
     }
 
-    override suspend fun addUserToLikedByList(newsId: String, user: User): Result<Unit> {
+    override suspend fun addUserToLikedByList(newsId: String, userId: String): Result<Unit> {
         return Result.Success(Unit)
     }
 

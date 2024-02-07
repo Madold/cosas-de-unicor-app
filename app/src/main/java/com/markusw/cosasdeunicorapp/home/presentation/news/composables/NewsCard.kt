@@ -64,7 +64,7 @@ fun NewsCard(
 ) {
 
     var isNewsDetailsDialogVisible by rememberSaveable { mutableStateOf(false) }
-    val isLiked = news.likedBy.contains(loggedUser)
+    val isLiked = news.likedBy.contains(loggedUser.uid)
     val formattedTimestamp = remember {
         TextUtils.formatDate(news.timestamp)
     }

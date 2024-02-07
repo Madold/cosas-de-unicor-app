@@ -158,7 +158,7 @@ class FireStoreService(
 
     }.conflate()
 
-    override suspend fun removeUserFromLikedByList(newsId: String, user: User): Result<Unit> {
+    override suspend fun removeUserFromLikedByList(newsId: String, userId: String): Result<Unit> {
         return try {
 
             fireStore
@@ -166,7 +166,7 @@ class FireStoreService(
                 .document(newsId)
                 .update(
                     mapOf(
-                        "likedBy" to FieldValue.arrayRemove(user)
+                        "likedBy" to FieldValue.arrayRemove(userId)
                     )
                 )
                 .await()
@@ -183,14 +183,14 @@ class FireStoreService(
 
     }
 
-    override suspend fun addUserToLikedByList(newsId: String, user: User): Result<Unit> {
+    override suspend fun addUserToLikedByList(newsId: String, userId: String): Result<Unit> {
         return try {
             fireStore
                 .collection(NEWS_COLLECTION)
                 .document(newsId)
                 .update(
                     mapOf(
-                        "likedBy" to FieldValue.arrayUnion(user)
+                        "likedBy" to FieldValue.arrayUnion(userId)
                     )
                 )
                 .await()

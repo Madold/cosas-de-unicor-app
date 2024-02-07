@@ -52,7 +52,7 @@ interface RemoteDatabase {
      * @return a Result object
      * @see Result
      */
-    suspend fun removeUserFromLikedByList(newsId: String, user: User): Result<Unit>
+    suspend fun removeUserFromLikedByList(newsId: String, userId: String): Result<Unit>
 
     /**
      * Adds a user to the likedBy list of a news
@@ -61,7 +61,7 @@ interface RemoteDatabase {
      * @return a Result object
      * @see Result
      */
-    suspend fun addUserToLikedByList(newsId: String, user: User): Result<Unit>
+    suspend fun addUserToLikedByList(newsId: String, userId: String): Result<Unit>
 
     /**
      * Returns the number of users in the database
