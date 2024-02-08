@@ -148,7 +148,8 @@ private fun HomeHost(
                 state = uiState,
                 onEvent = viewModel::onEvent,
                 scrollState = scrollState,
-                paddingValues = contentPadding
+                paddingValues = contentPadding,
+                mainNavController = mainNavController
             )
         }
 

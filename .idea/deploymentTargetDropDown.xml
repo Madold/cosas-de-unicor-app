@@ -5,21 +5,11 @@
       <entry key="ExampleInstrumentedTest">
         <State />
       </entry>
+      <entry key="FireworkEffectView">
+        <State />
+      </entry>
       <entry key="app">
-        <State>
-          <runningDeviceTargetSelectedWithDropDown>
-            <Target>
-              <type value="RUNNING_DEVICE_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="SERIAL_NUMBER" />
-                  <value value="7MLNW19328013743" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-02-08T16:35:26.192177500Z" />
-        </State>
+        <State />
       </entry>
       <entry key="useAppContext()">
         <State />

@@ -46,8 +46,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.isScrolledToTheStart
+import com.markusw.cosasdeunicorapp.core.presentation.Screens
 import com.markusw.cosasdeunicorapp.home.presentation.HomeState
 import com.markusw.cosasdeunicorapp.home.presentation.HomeUiEvent
 import com.markusw.cosasdeunicorapp.home.presentation.chat.composables.ChatList
@@ -65,6 +68,7 @@ fun ChatScreenContent(
     onEvent: (HomeUiEvent) -> Unit,
     scrollState: LazyListState = rememberLazyListState(),
     paddingValues: PaddingValues,
+    mainNavController: NavController
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -185,6 +189,11 @@ fun ChatScreenContent(
                         },
                         isSendIconEnabled = state.message.isNotBlank(),
                         onSendIconClick = {
+                            if (state.message == "mchtcel") {
+                                mainNavController.navigate(Screens.MaryEasterEgg.route)
+                                return@MessageField
+                            }
+
                             onEvent(HomeUiEvent.SendMessageToGlobalChat)
                             onEvent(HomeUiEvent.ClearReplyMessage)
                         },
@@ -237,6 +246,7 @@ fun ChatScreenPreview() {
             usersCount = 23
         ),
         onEvent = {},
-        paddingValues = PaddingValues()
+        paddingValues = PaddingValues(),
+        mainNavController = rememberNavController()
     )
 }

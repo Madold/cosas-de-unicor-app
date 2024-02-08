@@ -20,4 +20,8 @@ sealed class Screens(
         route = "profile/reset_password",
     )
 
+    data object MaryEasterEgg : Screens(
+        route = "mary_easter_egg",
+    )
+
 }
