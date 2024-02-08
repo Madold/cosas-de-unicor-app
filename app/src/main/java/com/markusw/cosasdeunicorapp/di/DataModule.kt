@@ -41,13 +41,11 @@ import javax.inject.Singleton
 object DataModule {
 
     @Provides
-    @Singleton
     fun provideChatRepository(
         remoteDatabase: RemoteDatabase,
     ): ChatRepository = AndroidChatRepository(remoteDatabase)
 
     @Provides
-    @Singleton
     fun provideNewsRepository(
         remoteDatabase: RemoteDatabase,
     ): NewsRepository = AndroidNewsRepository(remoteDatabase)
@@ -62,12 +60,10 @@ object DataModule {
     }
 
     @Provides
-    @Singleton
     fun provideFireStorePager(initialQuery: Query): MessageFireStorePager =
         MessageFireStorePager(initialQuery)
 
     @Provides
-    @Singleton
     fun provideNewsPager(fireStore: FirebaseFirestore): NewsFireStorePager {
         val initialQuery = fireStore
             .collection(FireStoreService.NEWS_COLLECTION)
