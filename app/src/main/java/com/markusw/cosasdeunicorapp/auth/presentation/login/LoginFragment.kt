@@ -6,6 +6,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,14 +36,20 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.domain.LocalDataStore
 import com.markusw.cosasdeunicorapp.core.ext.showDialog
 import com.markusw.cosasdeunicorapp.core.ext.toast
+import com.markusw.cosasdeunicorapp.core.presentation.Button
 import com.markusw.cosasdeunicorapp.core.presentation.GoogleAuthClient
 import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.databinding.FragmentLoginBinding
+import com.markusw.cosasdeunicorapp.home.presentation.HomeViewModel
+import com.markusw.cosasdeunicorapp.ui.theme.CosasDeUnicorAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -46,6 +72,9 @@ class LoginFragment : Fragment() {
 
         viewModel.onGoogleSignInFinished()
     }
+
+    @Inject
+    lateinit var localDataStore: LocalDataStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,8 +108,37 @@ class LoginFragment : Fragment() {
         binding.forgotPasswordText.setOnClickListener {
             navController.navigate(R.id.action_loginFragment_to_resetPasswordFragment)
         }
-        binding.googleButton.setOnClickListener {
-            startGoogleSignIn()
+        binding.googleButton.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                var isDarkModeEnabled by remember(localDataStore) { mutableStateOf(false) }
+                LaunchedEffect(key1 = localDataStore) {
+                    localDataStore
+                        .get(HomeViewModel.DARK_MODE_KEY)
+                        .collectLatest { isDarkModeEnabled = it.toBoolean() }
+                }
+
+                CosasDeUnicorAppTheme(
+                    darkTheme = isDarkModeEnabled
+                ) {
+                    OutlinedButton(
+                        onClick = ::startGoogleSignIn,
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.google_icon),
+                            contentDescription = null,
+                            contentScale = ContentScale.FillWidth,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = stringResource(id = R.string.google))
+                    }
+                }
+            }
         }
     }
 
