@@ -17,8 +17,8 @@ android {
         applicationId = "com.markusw.cosasdeunicorapp"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "beta-3-mary"
+        versionCode = 4
+        versionName = "beta-4-mary"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
