@@ -4,8 +4,8 @@ package com.markusw.cosasdeunicorapp.maryesateregg.presentation
 
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
@@ -31,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,6 +63,11 @@ fun MaryEasterEggScreen(mainNavController: NavHostController) {
         MediaPlayer.create(context, R.raw.calm_ambient).apply { isLooping = true }
     }
 
+    fun handleOnBack() {
+        player.stop()
+        mainNavController.pop()
+    }
+
     LaunchedEffect(key1 = Unit) {
         delay(7000)
         while (true) {
@@ -88,15 +94,14 @@ fun MaryEasterEggScreen(mainNavController: NavHostController) {
         isBodyVisible = true
     }
 
+    BackHandler(onBack = ::handleOnBack)
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = {
-                        player.stop()
-                        mainNavController.pop()
-                    }) {
+                    IconButton(onClick = ::handleOnBack) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_arrow_left),
                             contentDescription = null
@@ -127,7 +132,7 @@ fun MaryEasterEggScreen(mainNavController: NavHostController) {
 
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.9f)
                     .align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
