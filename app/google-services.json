@@ -1,41 +1,57 @@
 {
   "project_info": {
-    "project_number": "170611926338",
-    "project_id": "cosas-de-unicor-develop-90f66",
-    "storage_bucket": "cosas-de-unicor-develop-90f66.appspot.com"
+    "project_number": "723240159464",
+    "project_id": "cosas-de-unicor-app",
+    "storage_bucket": "cosas-de-unicor-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:170611926338:android:5190293a3e7bcb478514db",
+        "mobilesdk_app_id": "1:723240159464:android:7782488296198dad96a15d",
         "android_client_info": {
-          "package_name": "com.markusw.cosasdeunicorapp.debug"
+          "package_name": "com.markusw.cosasdeunicorapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "170611926338-57v4bkid9phd4gq1u16n83l2nqtuhv32.apps.googleusercontent.com",
+          "client_id": "723240159464-bkurm6lsrdvg850div6aurgv377iuva9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.markusw.cosasdeunicorapp.debug",
-            "certificate_hash": "bd8cd8bf6a32994ec6e2331794f8cef163fbd113"
+            "package_name": "com.markusw.cosasdeunicorapp",
+            "certificate_hash": "2d886ccb02d20090471fbc0f51291e34873089af"
           }
         },
         {
-          "client_id": "170611926338-8v4ha31vcoke6gbte9565lp7pstohm9n.apps.googleusercontent.com",
+          "client_id": "723240159464-hbqc2sr40lvbr3vcvvbl7b5cari252mn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.markusw.cosasdeunicorapp",
+            "certificate_hash": "115e04181c0c6582b950dd25b3322057b222dadf"
+          }
+        },
+        {
+          "client_id": "723240159464-smr153okk374lhmi9udcg3a6jupdu3v0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.markusw.cosasdeunicorapp",
+            "certificate_hash": "3e74eeda768a2dad572c65f8e29bfc87dc134ebc"
+          }
+        },
+        {
+          "client_id": "723240159464-6odcko1chm4tejqpoievv9eblfua00oe.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD-C0sksRGEcqoOSlbnsAbvXFeW6A-n_V8"
+          "current_key": "AIzaSyDHkaUnoqlD5AgeteGQ1xA8_gY1naeTeNM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "170611926338-8v4ha31vcoke6gbte9565lp7pstohm9n.apps.googleusercontent.com",
+              "client_id": "723240159464-6odcko1chm4tejqpoievv9eblfua00oe.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
