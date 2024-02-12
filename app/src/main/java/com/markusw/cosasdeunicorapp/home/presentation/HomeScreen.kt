@@ -223,7 +223,9 @@ private fun HomeHost(
         }
 
         composable(route = HomeScreens.More.route) {
-            MoreScreenContent()
+            MoreScreenContent(
+                mainNavController = mainNavController
+            )
         }
     }
 }
