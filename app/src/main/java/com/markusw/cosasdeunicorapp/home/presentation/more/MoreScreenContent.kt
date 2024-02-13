@@ -48,9 +48,10 @@ fun MoreScreenContent(
     ) { padding ->
         LazyVerticalGrid(
             modifier = Modifier
-                .padding(padding),
+                .padding(padding)
+                .fillMaxSize(),
             columns = GridCells.Adaptive(128.dp),
-            contentPadding = PaddingValues(horizontal = 8.dp),
+            contentPadding = PaddingValues(all = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             content = {
