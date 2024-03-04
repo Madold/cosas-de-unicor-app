@@ -26,4 +26,10 @@ Clone the project with Android Studio and compile it, remember to put your own F
 # Preview
 
 ![](https://github.com/Madold/imgs/blob/main/Captura%20de%20pantalla%202024-03-04%20115022.png?raw=true)
+![](https://github.com/Madold/imgs/blob/main/Captura%20de%20pantalla%202024-03-04%20114813.png?raw=true)
+![](https://github.com/Madold/imgs/blob/main/Captura%20de%20pantalla%202024-03-04%20114852.png?raw=true)
+![](https://github.com/Madold/imgs/blob/main/Captura%20de%20pantalla%202024-03-04%20114915.png?raw=true)
+![](https://github.com/Madold/imgs/blob/main/Captura%20de%20pantalla%202024-03-04%20114944.png?raw=true)
+![](https://github.com/Madold/imgs/blob/main/Captura%20de%20pantalla%202024-03-04%20115003.png?raw=true)
+![](https://github.com/Madold/imgs/blob/main/Captura%20de%20pantalla%202024-03-04%20115003.png?raw=true)
 
