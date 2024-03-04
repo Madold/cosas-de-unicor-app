@@ -7,6 +7,7 @@ sucede en la Universidad.
 
 ## Used technologies
 - Kotlin
+- Coroutines
 - Jetpack Compose
 - Firebase
 - Dagger-Hilt
