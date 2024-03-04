@@ -34,6 +34,6 @@ Clone the project with Android Studio and compile it, remember to put your own F
 ![](https://github.com/Madold/imgs/blob/main/Captura%20de%20pantalla%202024-03-04%20115003.png?raw=true)
 
 <div>
-  ![](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png)
+  <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" />
 </div>
 
