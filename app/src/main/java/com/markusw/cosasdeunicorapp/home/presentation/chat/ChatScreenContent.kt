@@ -50,7 +50,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.isScrolledToTheStart
-import com.markusw.cosasdeunicorapp.core.presentation.Screens
 import com.markusw.cosasdeunicorapp.home.presentation.HomeState
 import com.markusw.cosasdeunicorapp.home.presentation.HomeUiEvent
 import com.markusw.cosasdeunicorapp.home.presentation.chat.composables.ChatList
@@ -189,11 +188,6 @@ fun ChatScreenContent(
                         },
                         isSendIconEnabled = state.message.isNotBlank(),
                         onSendIconClick = {
-                            if (state.message == "mchtcel") {
-                                mainNavController.navigate(Screens.MaryEasterEgg.route)
-                                return@MessageField
-                            }
-
                             onEvent(HomeUiEvent.SendMessageToGlobalChat)
                             onEvent(HomeUiEvent.ClearReplyMessage)
                         },

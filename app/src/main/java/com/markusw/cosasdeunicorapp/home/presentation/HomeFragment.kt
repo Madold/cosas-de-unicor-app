@@ -27,7 +27,6 @@ import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.pop
 import com.markusw.cosasdeunicorapp.core.presentation.GoogleAuthClient
 import com.markusw.cosasdeunicorapp.core.presentation.Screens
-import com.markusw.cosasdeunicorapp.maryesateregg.presentation.MaryEasterEggScreen
 import com.markusw.cosasdeunicorapp.profile.presentation.ChangePasswordScreen
 import com.markusw.cosasdeunicorapp.profile.presentation.EditProfileScreen
 import com.markusw.cosasdeunicorapp.profile.presentation.ProfileScreen
@@ -187,12 +186,6 @@ class HomeFragment : Fragment() {
                                     mainNavController = mainNavController,
                                     state = uiState,
                                     onEvent = viewModel::onEvent
-                                )
-                            }
-
-                            composable(route = Screens.MaryEasterEgg.route) {
-                                MaryEasterEggScreen(
-                                    mainNavController = mainNavController
                                 )
                             }
 
