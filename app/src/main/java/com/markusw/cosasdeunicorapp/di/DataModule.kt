@@ -27,6 +27,8 @@ import com.markusw.cosasdeunicorapp.home.domain.repository.NewsRepository
 import com.markusw.cosasdeunicorapp.home.domain.repository.RemoteStorage
 import com.markusw.cosasdeunicorapp.profile.data.AndroidProfileRepository
 import com.markusw.cosasdeunicorapp.profile.domain.repository.ProfileRepository
+import com.markusw.cosasdeunicorapp.tabulator.data.repository.AndroidTabulatorRepository
+import com.markusw.cosasdeunicorapp.tabulator.domain.repository.TabulatorRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -127,5 +129,11 @@ object DataModule {
     fun provideAuthRepository(
         authService: AuthService,
     ): AuthRepository = AndroidAuthRepository(authService)
+
+    @Provides
+    @Singleton
+    fun provideTabulatorRepository(
+        remoteDatabase: RemoteDatabase
+    ): TabulatorRepository = AndroidTabulatorRepository(remoteDatabase)
 
 }

@@ -14,7 +14,7 @@ sealed class FeatureDestination (
     }
 
     data object Tabulator : FeatureDestination(
-        route = "home_tabulator",
+        route = "tabulator",
         label = "Tabulador",
         iconSrc = R.drawable.ic_excel_mono
     )

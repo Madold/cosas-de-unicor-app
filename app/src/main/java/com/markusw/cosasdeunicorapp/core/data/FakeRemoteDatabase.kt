@@ -7,6 +7,7 @@ import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.home.domain.model.MessageContent
 import com.markusw.cosasdeunicorapp.home.domain.model.News
+import com.markusw.cosasdeunicorapp.tabulator.domain.model.AcademicProgram
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -310,5 +311,9 @@ class FakeRemoteDatabase: RemoteDatabase {
 
     override suspend fun getUser(id: String): User {
         return loggedUser
+    }
+
+    override fun getAcademicPrograms(): Flow<List<AcademicProgram>> {
+        return flow {}
     }
 }

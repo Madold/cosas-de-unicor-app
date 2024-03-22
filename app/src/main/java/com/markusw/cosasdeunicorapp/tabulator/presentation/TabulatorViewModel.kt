@@ -3,6 +3,7 @@ package com.markusw.cosasdeunicorapp.tabulator.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.tabulator.domain.repository.TabulatorRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
+@HiltViewModel
 class TabulatorViewModel @Inject constructor(
     tabulatorRepository: TabulatorRepository
 ) : ViewModel() {

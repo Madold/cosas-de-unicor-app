@@ -73,7 +73,7 @@ fun MoreScreenContent(
                         },
                         modifier = Modifier.aspectRatio(1f),
                         onClick = {
-                            //TODO: Navigate to feature route
+                            mainNavController.navigate(feature.route)
                         }
                     )
                 }
