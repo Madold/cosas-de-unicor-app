@@ -1,9 +1,8 @@
-package com.markusw.cosasdeunicorapp.tabulator.domain
+package com.markusw.cosasdeunicorapp.tabulator.presentation
 
-/**
- * Represents the result of an ICFES test in any of it's editions.
- */
-data class IcfesResult(
+import com.markusw.cosasdeunicorapp.tabulator.domain.model.AcademicProgram
+
+data class TabulatorState(
     val chemistryScore: Float = 0f,
     val physicsScore: Float = 0f,
     val biologyScore: Float = 0f,
@@ -16,4 +15,7 @@ data class IcfesResult(
     val socialSciencesScore: Float = 0f,
     val criticalReadingScore: Float = 0f,
     val naturalSciencesScore: Float = 0f,
+    val selectedTestType: TestType = TestType.Before2005,
+    val academicPrograms: List<AcademicProgram> = emptyList(),
+    val favorableProgramsList: List<AcademicProgram> = emptyList(),
 )

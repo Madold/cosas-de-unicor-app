@@ -1,4 +1,4 @@
-package com.markusw.cosasdeunicorapp.tabulator.domain
+package com.markusw.cosasdeunicorapp.tabulator.domain.model
 
 /**
  * Represents an academic program in the university.

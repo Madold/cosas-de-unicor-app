@@ -17,10 +17,13 @@ import com.markusw.cosasdeunicorapp.home.data.repository.NewsFireStorePager
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.home.domain.model.News
 import com.markusw.cosasdeunicorapp.home.domain.repository.RemoteStorage
+import com.markusw.cosasdeunicorapp.tabulator.domain.model.AcademicProgram
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 
 class FireStoreService(
@@ -37,6 +40,7 @@ class FireStoreService(
         const val TIMESTAMP = "timestamp"
         const val PAGE_SIZE = 10L
         const val NEWS_COLLECTION = "news"
+        const val ACADEMIC_PROGRAMS_COLLECTION = "academic_programs"
     }
 
     override suspend fun loadPreviousMessages(): List<Message> {
@@ -297,6 +301,23 @@ class FireStoreService(
             .get()
             .await()
             .toObject(User::class.java)!!
+    }
+
+    override fun getAcademicPrograms(): Flow<List<AcademicProgram>> {
+        return callbackFlow {
+            val snapshotListener = fireStore
+                .collection(ACADEMIC_PROGRAMS_COLLECTION)
+                .addSnapshotListener { value, error ->
+                    error?.let { close(it) }
+
+                    value?.let { academicPrograms ->
+                        trySend(academicPrograms.toObjects(AcademicProgram::class.java))
+                    }
+                }
+            awaitClose {
+                snapshotListener.remove()
+            }
+        }.conflate().flowOn(Dispatchers.IO)
     }
 
 }

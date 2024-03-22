@@ -1,5 +1,8 @@
 package com.markusw.cosasdeunicorapp.tabulator.domain
 
+import com.markusw.cosasdeunicorapp.tabulator.domain.model.AcademicProgram
+import com.markusw.cosasdeunicorapp.tabulator.domain.model.IcfesResult
+
 /**
  * Encapsulates the calculation logic for the weighted score of an ICFES result after 2014
  */

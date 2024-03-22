@@ -1,5 +1,8 @@
 package com.markusw.cosasdeunicorapp.tabulator.domain
 
+import com.markusw.cosasdeunicorapp.tabulator.domain.model.AcademicProgram
+import com.markusw.cosasdeunicorapp.tabulator.domain.model.IcfesResult
+
 class Before2014: WeightingCalculation {
     override fun calculateWeighted(
         icfesResults: IcfesResult,

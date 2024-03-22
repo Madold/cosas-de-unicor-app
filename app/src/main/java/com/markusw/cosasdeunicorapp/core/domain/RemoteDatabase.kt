@@ -1,9 +1,10 @@
 package com.markusw.cosasdeunicorapp.core.domain
 
+import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
-import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.home.domain.model.News
+import com.markusw.cosasdeunicorapp.tabulator.domain.model.AcademicProgram
 import kotlinx.coroutines.flow.Flow
 
 interface RemoteDatabase {
@@ -74,5 +75,12 @@ interface RemoteDatabase {
     suspend fun onUserInfoUpdate(): Flow<User>
 
     suspend fun getUser(id: String): User
+
+    /**
+     * Returns a the flow of academic programs from the database in real time
+     * @return a flow of academic programs
+     * @see AcademicProgram
+     */
+    fun getAcademicPrograms(): Flow<List<AcademicProgram>>
 
 }

@@ -1,4 +1,4 @@
-package com.markusw.cosasdeunicorapp.tabulator.use_cases
+package com.markusw.cosasdeunicorapp.tabulator.domain.use_cases
 
 import javax.inject.Inject
 

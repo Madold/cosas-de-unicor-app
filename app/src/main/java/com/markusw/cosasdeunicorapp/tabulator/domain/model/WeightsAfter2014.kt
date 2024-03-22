@@ -1,4 +1,4 @@
-package com.markusw.cosasdeunicorapp.tabulator.domain
+package com.markusw.cosasdeunicorapp.tabulator.domain.model
 
 data class WeightsAfter2014(
     val criticalReadingWeight: Float = 0f,
