@@ -32,6 +32,8 @@ import com.markusw.cosasdeunicorapp.profile.presentation.EditProfileScreen
 import com.markusw.cosasdeunicorapp.profile.presentation.ProfileScreen
 import com.markusw.cosasdeunicorapp.profile.presentation.ProfileViewModel
 import com.markusw.cosasdeunicorapp.profile.presentation.ProfileViewModelEvent
+import com.markusw.cosasdeunicorapp.tabulator.presentation.TabulatorScreen
+import com.markusw.cosasdeunicorapp.tabulator.presentation.TabulatorViewModel
 import com.markusw.cosasdeunicorapp.ui.theme.CosasDeUnicorAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -185,6 +187,17 @@ class HomeFragment : Fragment() {
                                 ChangePasswordScreen(
                                     mainNavController = mainNavController,
                                     state = uiState,
+                                    onEvent = viewModel::onEvent
+                                )
+                            }
+
+                            composable(Screens.Tabulator.route) {
+                                val viewModel = hiltViewModel<TabulatorViewModel>()
+                                val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+                                TabulatorScreen(
+                                    mainNavController = mainNavController,
+                                    state = state,
                                     onEvent = viewModel::onEvent
                                 )
                             }

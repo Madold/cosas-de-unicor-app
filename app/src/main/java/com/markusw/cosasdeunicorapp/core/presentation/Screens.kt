@@ -19,4 +19,8 @@ sealed class Screens(
     data object ResetPassword : Screens(
         route = "profile/reset_password",
     )
+
+    data object Tabulator : Screens(
+        route = "tabulator",
+    )
 }
