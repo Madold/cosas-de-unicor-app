@@ -31,4 +31,9 @@ object TextUtils {
         }
     }
 
+    fun isValidDecimalNumber(text: String): Boolean {
+        val regex = Regex("^\\d+(\\.\\d+)?$")
+        return regex.matches(text)
+    }
+
 }
