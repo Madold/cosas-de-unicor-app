@@ -1,6 +1,7 @@
 package com.markusw.cosasdeunicorapp.tabulator.presentation
 
 import com.markusw.cosasdeunicorapp.tabulator.domain.model.AcademicProgram
+import com.markusw.cosasdeunicorapp.tabulator.domain.model.AdmissionResult
 
 data class TabulatorState(
     val chemistryScore: Float = 0f,
@@ -17,7 +18,8 @@ data class TabulatorState(
     val naturalSciencesScore: Float = 0f,
     val selectedTestType: TestType = TestType.Before2005,
     val academicPrograms: List<AcademicProgram> = emptyList(),
-    val favorableProgramsList: List<AcademicProgram> = emptyList(),
+    val admissionResults: List<AdmissionResult> = emptyList(),
     val selectedAcademicProgram: AcademicProgram? = null,
     val academicProgramName: String = "",
+    val isCalculatingResults: Boolean = false
 )

@@ -80,6 +80,10 @@ fun TabulatorScreen(
             return
         }
 
+        if (currentScreenIndex == THIRD_PAGE_INDEX) {
+            onEvent(TabulatorEvent.EvaluateScores)
+        }
+
         if (currentScreenIndex != pagerState.pageCount - 1) {
             coroutineScope.launch {
                 pagerState.animateScrollToPage(

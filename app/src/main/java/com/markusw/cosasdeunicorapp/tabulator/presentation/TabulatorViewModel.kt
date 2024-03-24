@@ -2,21 +2,32 @@ package com.markusw.cosasdeunicorapp.tabulator.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.markusw.cosasdeunicorapp.tabulator.domain.After2014
+import com.markusw.cosasdeunicorapp.tabulator.domain.Before2005
+import com.markusw.cosasdeunicorapp.tabulator.domain.Before2014
+import com.markusw.cosasdeunicorapp.tabulator.domain.WeightingCalculation
+import com.markusw.cosasdeunicorapp.tabulator.domain.model.AdmissionResult
+import com.markusw.cosasdeunicorapp.tabulator.domain.model.IcfesResult
 import com.markusw.cosasdeunicorapp.tabulator.domain.repository.TabulatorRepository
+import com.markusw.cosasdeunicorapp.tabulator.domain.use_cases.CalculateAdmissionPercentage
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class TabulatorViewModel @Inject constructor(
-    tabulatorRepository: TabulatorRepository
+    tabulatorRepository: TabulatorRepository,
+    private val calculateAdmissionPercentage: CalculateAdmissionPercentage
 ) : ViewModel() {
 
+    private var weightingCalculation: WeightingCalculation = Before2005()
     private val _uiState = MutableStateFlow(TabulatorState())
     private val _academicProgramsList = combine(
         _uiState,
@@ -115,6 +126,12 @@ class TabulatorViewModel @Inject constructor(
                     it.copy(selectedTestType = event.testType)
                 }
 
+                weightingCalculation = when (event.testType) {
+                    is TestType.After2005 -> Before2014()
+                    is TestType.After2014 -> After2014()
+                    is TestType.Before2005 -> Before2005()
+                }
+
             }
 
             is TabulatorEvent.ChangeSocialSciencesScore -> {
@@ -144,10 +161,54 @@ class TabulatorViewModel @Inject constructor(
             }
 
             is TabulatorEvent.EvaluateScores -> {
-                // TODO Evaluate scores and provide a list of favorable programs to get admitted
+                _uiState.update {
+                    it.copy(isCalculatingResults = true)
+                }
+
+                viewModelScope.launch {
+                    val icfesResult = IcfesResult(
+                        chemistryScore = uiState.value.chemistryScore,
+                        physicsScore = uiState.value.physicsScore,
+                        biologyScore = uiState.value.biologyScore,
+                        spanishScore = uiState.value.spanishScore,
+                        philosophyScore = uiState.value.philosophyScore,
+                        mathScore = uiState.value.mathScore,
+                        historyScore = uiState.value.historyScore,
+                        geographyScore = uiState.value.geographyScore,
+                        englishScore = uiState.value.englishScore,
+                        socialSciencesScore = uiState.value.socialSciencesScore,
+                        criticalReadingScore = uiState.value.criticalReadingScore,
+                        naturalSciencesScore = uiState.value.naturalSciencesScore
+                    )
+                    val admissionResults = mutableListOf<AdmissionResult>()
+
+                    uiState.value.academicPrograms.forEach { academicProgram ->
+                        val weighted = uiState.value.selectedAcademicProgram?.let {
+                            weightingCalculation.calculateWeighted(
+                                icfesResults = icfesResult,
+                                academicProgram = it
+                            )
+                        } ?: 0f
+
+                        val admissionPercentage = calculateAdmissionPercentage(weighted, academicProgram.maximumScore)
+
+                        admissionResults.add(
+                            AdmissionResult(academicProgram, admissionPercentage)
+                        )
+                    }
+
+                    admissionResults.sortByDescending { it.admissionPercentage }
+
+                    _uiState.update {
+                        it.copy(
+                            admissionResults = admissionResults.toList(),
+                            isCalculatingResults = false
+                        )
+                    }
+
+                    Timber.d(uiState.value.admissionResults.toString())
+                }
             }
-
-
         }
     }
 

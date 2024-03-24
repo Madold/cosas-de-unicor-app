@@ -36,4 +36,8 @@ object TextUtils {
         return regex.matches(text)
     }
 
+    fun formatPercents(value: Float): String {
+        return "${String.format(Locale.US, "%.2f", value)} %"
+    }
+
 }
