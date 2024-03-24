@@ -18,4 +18,5 @@ data class TabulatorState(
     val selectedTestType: TestType = TestType.Before2005,
     val academicPrograms: List<AcademicProgram> = emptyList(),
     val favorableProgramsList: List<AcademicProgram> = emptyList(),
+    val selectedAcademicProgram: AcademicProgram? = null
 )

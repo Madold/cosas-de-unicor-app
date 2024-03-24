@@ -18,7 +18,7 @@ class TabulatorViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(TabulatorState())
     private val _academicProgramsList = tabulatorRepository.getAcademicPrograms()
-    val uiState = combine(_uiState, _academicProgramsList) { state, academicPrograms  ->
+    val uiState = combine(_uiState, _academicProgramsList) { state, academicPrograms ->
         state.copy(academicPrograms = academicPrograms)
     }.stateIn(
         viewModelScope,
@@ -99,9 +99,18 @@ class TabulatorViewModel @Inject constructor(
                     it.copy(spanishScore = event.score)
                 }
             }
+
+            is TabulatorEvent.ChangeSelectedAcademicProgram -> {
+                _uiState.update {
+                    it.copy(selectedAcademicProgram = event.academicProgram)
+                }
+            }
+
             is TabulatorEvent.EvaluateScores -> {
                 // TODO Evaluate scores and provide a list of favorable programs to get admitted
             }
+
+
         }
     }
 
