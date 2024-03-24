@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.markusw.cosasdeunicorapp.core.ext.pop
 import com.markusw.cosasdeunicorapp.core.presentation.AppTopBar
 import com.markusw.cosasdeunicorapp.core.presentation.Button
 import com.markusw.cosasdeunicorapp.tabulator.presentation.views.AcademicProgramSelectionView
@@ -75,7 +76,7 @@ fun TabulatorScreen(
     fun navigateToNextPage() {
 
         if (currentScreenIndex == LAST_PAGE_INDEX) {
-            mainNavController.popBackStack()
+            mainNavController.pop()
             return
         }
 
@@ -95,7 +96,7 @@ fun TabulatorScreen(
                     Text("Tabulador")
                 },
                 navigationIcon = {
-                    IconButton(onClick = { mainNavController.popBackStack() }) {
+                    IconButton(onClick = { mainNavController.pop() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = null
