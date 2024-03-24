@@ -18,4 +18,5 @@ sealed interface TabulatorEvent {
     data class ChangeSelectedTestType(val testType: TestType) : TabulatorEvent
     data object EvaluateScores : TabulatorEvent
     data class ChangeSelectedAcademicProgram(val academicProgram: AcademicProgram) : TabulatorEvent
+    data class ChangeAcademicProgramName(val name: String): TabulatorEvent
 }
