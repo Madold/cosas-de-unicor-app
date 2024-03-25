@@ -7,6 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import com.markusw.cosasdeunicorapp.core.utils.TextUtils
 
+private const val MAXIMUM_SCORE = 100
+
 @Composable
 fun ScoreField(
     value: String,
@@ -18,7 +20,7 @@ fun ScoreField(
     OutlinedTextField(
         value = value,
         onValueChange = {
-            if (TextUtils.isPositiveInteger(it) && it.toInt() <= 100) {
+            if (TextUtils.isPositiveInteger(it) && it.toInt() <= MAXIMUM_SCORE) {
                 onValueChange(it.toInt())
             }
         },
