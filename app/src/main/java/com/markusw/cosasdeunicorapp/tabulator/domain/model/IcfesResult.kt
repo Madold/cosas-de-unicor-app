@@ -4,16 +4,16 @@ package com.markusw.cosasdeunicorapp.tabulator.domain.model
  * Represents the result of an ICFES test in any of it's editions.
  */
 data class IcfesResult(
-    val chemistryScore: Float = 0f,
-    val physicsScore: Float = 0f,
-    val biologyScore: Float = 0f,
-    val spanishScore: Float = 0f,
-    val philosophyScore: Float = 0f,
-    val mathScore: Float = 0f,
-    val historyScore: Float = 0f,
-    val geographyScore: Float = 0f,
-    val englishScore: Float = 0f,
-    val socialSciencesScore: Float = 0f,
-    val criticalReadingScore: Float = 0f,
-    val naturalSciencesScore: Float = 0f,
+    val chemistryScore: Int = 0,
+    val physicsScore: Int = 0,
+    val biologyScore: Int = 0,
+    val spanishScore: Int = 0,
+    val philosophyScore: Int = 0,
+    val mathScore: Int = 0,
+    val historyScore: Int = 0,
+    val geographyScore: Int = 0,
+    val englishScore: Int = 0,
+    val socialSciencesScore: Int = 0,
+    val criticalReadingScore: Int = 0,
+    val naturalSciencesScore: Int = 0,
 )

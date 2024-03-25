@@ -11,15 +11,15 @@ import com.markusw.cosasdeunicorapp.core.utils.TextUtils
 fun ScoreField(
     value: String,
     label: @Composable () -> Unit,
-    onValueChange: (Float) -> Unit,
+    onValueChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
     OutlinedTextField(
         value = value,
         onValueChange = {
-            if (TextUtils.isValidDecimalNumber(it)) {
-                onValueChange(it.toFloat())
+            if (TextUtils.isPositiveInteger(it)) {
+                onValueChange(it.toInt())
             }
         },
         label = label,
