@@ -11,7 +11,6 @@ import com.markusw.cosasdeunicorapp.tabulator.domain.model.IcfesResult
 import com.markusw.cosasdeunicorapp.tabulator.domain.repository.TabulatorRepository
 import com.markusw.cosasdeunicorapp.tabulator.domain.use_cases.CalculateAdmissionPercentage
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -190,10 +189,15 @@ class TabulatorViewModel @Inject constructor(
                             )
                         } ?: 0f
 
-                        val admissionPercentage = calculateAdmissionPercentage(weighted, academicProgram.maximumScore)
+                        val admissionPercentage =
+                            calculateAdmissionPercentage(weighted, academicProgram.maximumScore)
 
                         admissionResults.add(
-                            AdmissionResult(academicProgram, admissionPercentage)
+                            AdmissionResult(
+                                academicProgram,
+                                admissionPercentage,
+                                weighted
+                            )
                         )
                     }
 
@@ -205,8 +209,6 @@ class TabulatorViewModel @Inject constructor(
                             isCalculatingResults = false
                         )
                     }
-
-                    Timber.d(uiState.value.admissionResults.toString())
                 }
             }
         }

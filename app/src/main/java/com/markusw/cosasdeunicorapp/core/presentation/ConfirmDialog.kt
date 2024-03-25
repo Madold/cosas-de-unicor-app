@@ -48,7 +48,7 @@ fun ConfirmDialog(
                         Button(
                             onClick = onDismiss,
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant
+                                containerColor = MaterialTheme.colorScheme.onSurface
                             )
                         ) {
                             Text("Cancelar")
