@@ -10,7 +10,13 @@ class CalculateAdmissionPercentage @Inject constructor() {
      * @return The admission percentage of the student.
      */
     operator fun invoke(weighted: Float, maximumScore: Float ): Float {
-        return (weighted / maximumScore) * 100
+        val result = weighted / maximumScore
+
+        if (result >= 1f) {
+            return 0.99f * 100
+        }
+
+        return result * 100
     }
 
 }

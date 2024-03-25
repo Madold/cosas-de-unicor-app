@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.markusw.cosasdeunicorapp.tabulator.domain.model.AcademicProgram
 import com.markusw.cosasdeunicorapp.tabulator.presentation.TabulatorEvent
 import com.markusw.cosasdeunicorapp.tabulator.presentation.TabulatorState
 import com.markusw.cosasdeunicorapp.tabulator.presentation.composables.AdmissionResultsTable
@@ -31,9 +32,10 @@ fun TabulatorResultsView(
 
         AdmissionResultsTable(
             data = state.admissionResults,
-            firstColumnWeight = 0.5f,
-            secondColumnWeight = 0.5f,
-            modifier = Modifier.fillMaxSize()
+            firstColumnWeight = 0.3f,
+            secondColumnWeight = 0.3f,
+            thirdColumnWeight = 0.3f,
+            selectedAcademicProgram = state.selectedAcademicProgram ?: AcademicProgram()
         )
 
     }

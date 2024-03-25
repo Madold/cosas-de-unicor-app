@@ -40,4 +40,9 @@ object TextUtils {
         return "${String.format(Locale.US, "%.2f", value)} %"
     }
 
+    fun isPositiveInteger(str: String): Boolean {
+        val regex = "^[0-9]+$".toRegex()
+        return regex.matches(str)
+    }
+
 }
