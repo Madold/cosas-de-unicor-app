@@ -17,13 +17,15 @@ fun ScoreField(
     modifier: Modifier = Modifier,
 ) {
 
+    fun handleScoreChange(newValue: String) {
+        if (TextUtils.isPositiveInteger(newValue) && newValue.toInt() <= MAXIMUM_SCORE) {
+            onValueChange(newValue.toInt())
+        }
+    }
+
     OutlinedTextField(
         value = value,
-        onValueChange = {
-            if (TextUtils.isPositiveInteger(it) && it.toInt() <= MAXIMUM_SCORE) {
-                onValueChange(it.toInt())
-            }
-        },
+        onValueChange = ::handleScoreChange,
         label = label,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         modifier = modifier
