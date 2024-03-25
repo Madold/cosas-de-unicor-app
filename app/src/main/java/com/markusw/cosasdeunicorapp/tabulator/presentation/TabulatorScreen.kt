@@ -39,6 +39,10 @@ import com.markusw.cosasdeunicorapp.core.ext.pop
 import com.markusw.cosasdeunicorapp.core.presentation.AppTopBar
 import com.markusw.cosasdeunicorapp.core.presentation.Button
 import com.markusw.cosasdeunicorapp.core.presentation.ConfirmDialog
+import com.markusw.cosasdeunicorapp.tabulator.presentation.composables.After2014ResultsPreviewTable
+import com.markusw.cosasdeunicorapp.tabulator.presentation.composables.After2014TestForm
+import com.markusw.cosasdeunicorapp.tabulator.presentation.composables.Before2005ResultsPreviewTable
+import com.markusw.cosasdeunicorapp.tabulator.presentation.composables.Before2014ResultsPreviewTable
 import com.markusw.cosasdeunicorapp.tabulator.presentation.views.AcademicProgramSelectionView
 import com.markusw.cosasdeunicorapp.tabulator.presentation.views.TabulatorResultsView
 import com.markusw.cosasdeunicorapp.tabulator.presentation.views.TestScoresView
@@ -230,6 +234,32 @@ fun TabulatorScreen(
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
+
+                    when (state.selectedTestType) {
+                        TestType.After2005 -> {
+                            Before2014ResultsPreviewTable(
+                                state = state,
+                                firstColumnWeight = 0.5f,
+                                secondColumnWeight = 0.5f
+                            )
+                        }
+                        TestType.After2014 -> {
+                            After2014ResultsPreviewTable(
+                                state = state,
+                                firstColumnWeight = 0.5f,
+                                secondColumnWeight = 0.5f
+                            )
+                        }
+                        TestType.Before2005 -> {
+                            Before2005ResultsPreviewTable(
+                                state = state,
+                                firstColumnWeight = 0.5f,
+                                secondColumnWeight = 0.5f
+                            )
+                        }
+                    }
+
+
 
                 },
                 onConfirm = {
