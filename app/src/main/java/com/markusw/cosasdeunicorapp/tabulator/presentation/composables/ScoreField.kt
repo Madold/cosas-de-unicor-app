@@ -18,7 +18,7 @@ fun ScoreField(
     OutlinedTextField(
         value = value,
         onValueChange = {
-            if (TextUtils.isPositiveInteger(it)) {
+            if (TextUtils.isPositiveInteger(it) && it.toInt() <= 100) {
                 onValueChange(it.toInt())
             }
         },
