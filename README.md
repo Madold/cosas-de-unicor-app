@@ -10,7 +10,7 @@ formats at your fingertips, a real-time chat and a news channel to keep you info
 - Jetpack Compose
 - Firebase
 - Dagger-Hilt
-- Github Actions
+- Github Actions (CI/CD)
 
 ## Used architecture
 - Feature layer
