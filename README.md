@@ -1,9 +1,8 @@
 # Cosas de Unicor App
 
 ## Summary
-Esta es una app que apunta a ser una mano derecha para los estudiantes tanto de nuevo ingreso como para los de antiguo de la Universidad de córdoba. 
-Provee herramientas como formatos académicos al alcance de la mano, un chat en tiempo real y un canal de noticias para mantenerse informado de lo que 
-sucede en la Universidad.
+This is an app that aims to be a right hand for both new and old students at the University of Cordoba. It provides tools such as academic 
+formats at your fingertips, a real-time chat and a news channel to keep you informed of what is happening at the University.
 
 ## Used technologies
 - Kotlin
