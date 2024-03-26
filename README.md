@@ -1,14 +1,16 @@
 # Cosas de Unicor App
 
 ## Summary
-This is an app that aims to be a right hand for both new and old students at the University of Cordoba. It provides tools such as academic 
-formats at your fingertips, a real-time chat and a news channel to keep you informed of what is happening at the University.
+
+It is an app that aims to be a right hand for both new and old students of the University of Cordoba. It offers tools such as academic
+formats at your fingertips, a real-time chat along with a news channel which through push notifications keep you informed of what 
+is happening at the University and a score tabulator to help incoming students to know which careers are more favorable to be admitted.
 
 ## Used technologies
 - Kotlin
 - Coroutines
 - Jetpack Compose
-- Firebase
+- Firebase (for authentication, remote storage, database and push notification services)
 - Dagger-Hilt
 - Github Actions (CI/CD)
 
@@ -18,7 +20,8 @@ formats at your fingertips, a real-time chat and a news channel to keep you info
 
 ## Patterns and design principles used
 - SOLID Principles
-- Strategy pattern
+- Strategy Pattern
+- Singleton Pattern
 
 ## Instalation
 Clone the project with Android Studio and compile it, remember to put your own FIREBASE credentials and link the app to you own firebase project.
