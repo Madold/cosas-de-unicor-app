@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,6 +31,7 @@ class TabulatorViewModel @Inject constructor(
         _uiState,
         tabulatorRepository.getAcademicPrograms()
     ) { uiState, academicPrograms ->
+        println("Excecuted")
         when (uiState.academicProgramName) {
             "" -> academicPrograms
             else -> academicPrograms.filter {

@@ -18,6 +18,21 @@
           <timeTargetWasSelectedWithDropDown value="2024-03-22T15:45:47.159489300Z" />
         </State>
       </entry>
+      <entry key="on_google_signIn_finished_should_put_loading_state_to_false()">
+        <State />
+      </entry>
+      <entry key="on_google_signIn_started_should_put_loading_stat_to_true()">
+        <State />
+      </entry>
+      <entry key="shouldHaveTheCorrectInitialState()">
+        <State />
+      </entry>
+      <entry key="shouldUpdateEmail()">
+        <State />
+      </entry>
+      <entry key="shouldUpdatePassword()">
+        <State />
+      </entry>
     </value>
   </component>
 </project>
