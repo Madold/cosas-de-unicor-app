@@ -1,17 +1,26 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.markusw.cosasdeunicorapp.auth.presentation.login
 
-import com.google.firebase.auth.AuthCredential
+import app.cash.turbine.test
 import com.markusw.cosasdeunicorapp.auth.domain.use_cases.LoginWithCredential
 import com.markusw.cosasdeunicorapp.auth.domain.use_cases.LoginWithEmailAndPassword
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
 import com.markusw.cosasdeunicorapp.core.TestDispatchers
-import com.markusw.cosasdeunicorapp.core.domain.ProfileUpdateData
-import com.markusw.cosasdeunicorapp.core.domain.model.User
+import com.markusw.cosasdeunicorapp.core.data.repository.FakeAuthRepository
 import com.markusw.cosasdeunicorapp.core.domain.repository.AuthRepository
 import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidateEmail
 import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidatePassword
-import com.markusw.cosasdeunicorapp.core.utils.Result
-import org.junit.Assert.*
+import com.markusw.cosasdeunicorapp.core.utils.ValidationResult
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.RelaxedMockK
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -20,51 +29,21 @@ class LoginViewModelTest {
     private lateinit var fakeAuthRepository: AuthRepository
     private lateinit var loginWithEmailAndPasswordFake: LoginWithEmailAndPassword
     private lateinit var loginWithCredentialFake: LoginWithCredential
+    @RelaxedMockK
     private lateinit var validateEmailFake: ValidateEmail
+    @RelaxedMockK
     private lateinit var validatePasswordFake: ValidatePassword
     private lateinit var viewModel: LoginViewModel
     private val testDispatcher: DispatcherProvider = TestDispatchers()
+    private val dispatcher = StandardTestDispatcher()
 
     @Before
     fun setUp() {
-        fakeAuthRepository = object: AuthRepository{
-            override suspend fun authenticate(email: String, password: String): Result<Unit> {
-                return Result.Success(Unit)
-            }
-
-            override suspend fun register(
-                name: String,
-                email: String,
-                password: String
-            ): Result<Unit> {
-                return Result.Success(Unit)
-            }
-
-            override suspend fun logout(): Result<Unit> {
-                return Result.Success(Unit)
-            }
-
-            override suspend fun authenticateWithCredential(credential: AuthCredential): Result<Unit> {
-                return Result.Success(Unit)
-            }
-
-            override suspend fun sendPasswordResetByEmail(email: String): Result<Unit> {
-                return Result.Success(Unit)
-            }
-
-            override suspend fun updateUserProfileData(data: ProfileUpdateData): Result<Unit> {
-                return Result.Success(Unit)
-            }
-
-            override suspend fun getLoggedUser(): Result<User> {
-                return Result.Success(User())
-            }
-
-        }
+        MockKAnnotations.init(this)
+        Dispatchers.setMain(dispatcher)
+        fakeAuthRepository = FakeAuthRepository()
         loginWithEmailAndPasswordFake = LoginWithEmailAndPassword(fakeAuthRepository)
         loginWithCredentialFake = LoginWithCredential(fakeAuthRepository)
-        validateEmailFake = ValidateEmail()
-        validatePasswordFake = ValidatePassword()
         viewModel = LoginViewModel(
             loginWithEmailAndPasswordFake,
             loginWithCredentialFake,

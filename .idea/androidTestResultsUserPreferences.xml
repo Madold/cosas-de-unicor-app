@@ -250,6 +250,20 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="2071934101">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="HUAWEI JKM-LX3" value="120" />
+                  <entry key="Pixel_8_Pro_API_31" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="2132518885">
           <value>
             <AndroidTestResultsTableState>

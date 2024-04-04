@@ -101,8 +101,8 @@ dependencies {
     val daggerHiltVersion = "2.48"
     val flexboxVersion = "3.0.0"
     val timberVersion = "5.0.1"
-    val mockkVersion = "1.13.5"
-    val coroutinesTestVersion = "1.7.1"
+    val mockkVersion = "1.13.10"
+    val coroutinesTestVersion = "1.8.0"
     val loggerVersion = "2.2.0"
     val gmsAuthServicesVersion = "20.7.0"
     val splashScreenVersion = "1.0.1"
@@ -118,6 +118,8 @@ dependencies {
     val dataStoreVersion = "1.0.0"
     val lottieVersion = "6.3.0"
     val animatedNavigationBarVersion = "1.0.0"
+    val turbineVersion = "1.1.0"
+    val googleTruthVersion = "1.4.2"
 
     //App dependencies
     implementation("androidx.core:core-ktx:1.12.0")
@@ -213,9 +215,14 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
     //Kotlin coroutines test
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion")
+    //Turbine
+    testImplementation("app.cash.turbine:turbine:$turbineVersion")
+    //Google Truth
+    testImplementation("com.google.truth:truth:$googleTruthVersion")
 
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
     androidTestImplementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")

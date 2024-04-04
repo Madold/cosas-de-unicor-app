@@ -1,12 +1,15 @@
 package com.markusw.cosasdeunicorapp.core.domain.use_cases
 
-import android.util.Patterns
-import com.markusw.cosasdeunicorapp.core.presentation.UiText
-import javax.inject.Inject
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.core.utils.ValidationResult
+import javax.inject.Inject
 
 class ValidateEmail @Inject constructor() {
+
+    companion object {
+        private const val EMAIL_REGEX = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
+    }
 
     operator fun invoke(email: String): ValidationResult {
 
@@ -17,7 +20,7 @@ class ValidateEmail @Inject constructor() {
             )
         }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (!email.matches(EMAIL_REGEX.toRegex())) {
             return ValidationResult(
                 successful = false,
                 errorMessage = UiText.StringResource(R.string.invalid_email_error)

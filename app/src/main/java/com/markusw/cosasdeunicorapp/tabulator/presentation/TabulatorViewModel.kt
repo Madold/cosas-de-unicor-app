@@ -31,7 +31,6 @@ class TabulatorViewModel @Inject constructor(
         _uiState,
         tabulatorRepository.getAcademicPrograms()
     ) { uiState, academicPrograms ->
-        println("Excecuted")
         when (uiState.academicProgramName) {
             "" -> academicPrograms
             else -> academicPrograms.filter {
