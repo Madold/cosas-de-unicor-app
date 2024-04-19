@@ -26,7 +26,7 @@ sealed class FeatureDestination (
     )
 
     data object RateTeachers: FeatureDestination(
-        route = "home_rate_teachers",
+        route = "teacher_rating",
         label = "Calificar Profesores",
         iconSrc = R.drawable.ic_teacher
     )

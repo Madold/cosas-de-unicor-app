@@ -23,4 +23,9 @@ sealed class Screens(
     data object Tabulator : Screens(
         route = "tabulator",
     )
+
+    data object TeacherRating: Screens(
+        route = "teacher_rating",
+    )
+
 }

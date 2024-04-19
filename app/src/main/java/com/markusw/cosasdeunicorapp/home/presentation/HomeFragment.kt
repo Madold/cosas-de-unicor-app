@@ -9,6 +9,7 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -34,6 +35,7 @@ import com.markusw.cosasdeunicorapp.profile.presentation.ProfileViewModel
 import com.markusw.cosasdeunicorapp.profile.presentation.ProfileViewModelEvent
 import com.markusw.cosasdeunicorapp.tabulator.presentation.TabulatorScreen
 import com.markusw.cosasdeunicorapp.tabulator.presentation.TabulatorViewModel
+import com.markusw.cosasdeunicorapp.teacher_rating.presentation.TeacherRatingScreen
 import com.markusw.cosasdeunicorapp.ui.theme.CosasDeUnicorAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -199,6 +201,13 @@ class HomeFragment : Fragment() {
                                     mainNavController = mainNavController,
                                     state = state,
                                     onEvent = viewModel::onEvent
+                                )
+                            }
+
+                            composable(Screens.TeacherRating.route) {
+                                TeacherRatingScreen(
+                                    onEvent = {},
+                                    mainNavController = mainNavController
                                 )
                             }
 
