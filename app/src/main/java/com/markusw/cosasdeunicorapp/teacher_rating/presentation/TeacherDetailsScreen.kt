@@ -1,16 +1,32 @@
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+
 package com.markusw.cosasdeunicorapp.teacher_rating.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -21,10 +37,20 @@ import androidx.navigation.NavController
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.pop
 import com.markusw.cosasdeunicorapp.core.presentation.AppTopBar
+import com.markusw.cosasdeunicorapp.core.presentation.Button
 import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.TeacherRating
+import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.TeacherRating.Homie
+import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.TeacherRating.Pushy
+import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.TeacherRating.Ruthless
+import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.TeacherRating.Supportive
 import com.markusw.cosasdeunicorapp.teacher_rating.presentation.composables.RATING_BAR_LABEL_WEIGHT
+import com.markusw.cosasdeunicorapp.teacher_rating.presentation.composables.RatingChip
+import com.markusw.cosasdeunicorapp.teacher_rating.presentation.composables.ReviewsList
 import com.markusw.cosasdeunicorapp.teacher_rating.presentation.composables.TeacherRatingBar
-import timber.log.Timber
+import com.markusw.cosasdeunicorapp.ui.theme.homie_color
+import com.markusw.cosasdeunicorapp.ui.theme.pushy_color
+import com.markusw.cosasdeunicorapp.ui.theme.ruthless_color
+import com.markusw.cosasdeunicorapp.ui.theme.supportive_color
 
 
 @Composable
@@ -38,28 +64,36 @@ fun TeacherDetailsScreen(
         teacher.reviews.size
     }
     val homieReviewsCount = remember(teacher) {
-        teacher.reviews.count { it.vote == TeacherRating.Homie }
+        teacher.reviews.count { it.vote == Homie }
     }
     val pushyReviewsCount = remember(teacher) {
-        teacher.reviews.count { it.vote == TeacherRating.Pushy }
+        teacher.reviews.count { it.vote == Pushy }
     }
     val supportiveReviewsCount = remember(teacher) {
-        teacher.reviews.count { it.vote == TeacherRating.Supportive }
+        teacher.reviews.count { it.vote == Supportive }
     }
     val ruthlessReviewsCount = remember(teacher) {
-        teacher.reviews.count { it.vote == TeacherRating.Ruthless }
+        teacher.reviews.count { it.vote == Ruthless }
     }
+    val sheetState = rememberModalBottomSheetState()
+    val coroutineScope = rememberCoroutineScope()
+    var isBottomSheetVisible by remember {
+        mutableStateOf(false)
+    }
+
+
 
     Scaffold(
         topBar = {
-            AppTopBar(title = {
-                Text(
-                    text = "Reseñas", color = Color.White,
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.Bold
+            AppTopBar(
+                title = {
+                    Text(
+                        text = "Reseñas", color = Color.White,
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold
+                        )
                     )
-                )
-            },
+                },
                 navigationIcon = {
                     IconButton(onClick = { mainNavController.pop() }) {
                         Icon(
@@ -68,7 +102,22 @@ fun TeacherDetailsScreen(
                             tint = Color.White
                         )
                     }
-                })
+                }
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    isBottomSheetVisible = true
+                },
+                shape = CircleShape
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_pencil),
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
         }
     ) { padding ->
         Column(
@@ -135,8 +184,140 @@ fun TeacherDetailsScreen(
                     percentage = if (totalReviews == 0) 0f else homieReviewsCount.toFloat() / totalReviews,
                     count = homieReviewsCount,
                 )
+
+                ReviewsList(
+                    reviews = state.selectedTeacher.reviews,
+                    onEvent = onEvent
+                )
             }
+
+            if (isBottomSheetVisible) {
+                ModalBottomSheet(
+                    onDismissRequest = { isBottomSheetVisible = false },
+                    sheetState = sheetState
+                ) {
+                    SheetContent(
+                        state = state,
+                        onEvent = onEvent
+                    )
+                }
+            }
+
         }
     }
+}
 
+@Composable
+private fun SheetContent(
+    state: TeacherRatingState,
+    onEvent: (TeacherRatingEvent) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = "Hacer reseña",
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Text(text = "Califica al docente")
+
+        FlowRow(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            TeacherRating.entries.forEach { rating ->
+                when (rating) {
+                    Homie -> {
+                        RatingChip(
+                            onClick = {
+                                onEvent(
+                                    TeacherRatingEvent.ChangeTeacherRating(
+                                        rating
+                                    )
+                                )
+                            },
+                            label = {
+                                Text(text = "Valecita")
+                            },
+                            backgroundColor = homie_color,
+                            selected = state.selectedTeacherRating == rating
+                        )
+                    }
+
+                    Ruthless -> {
+                        RatingChip(
+                            onClick = {
+                                onEvent(
+                                    TeacherRatingEvent.ChangeTeacherRating(
+                                        rating
+                                    )
+                                )
+                            },
+                            label = {
+                                Text(text = "Cuchilla")
+                            },
+                            backgroundColor = ruthless_color,
+                            selected = state.selectedTeacherRating == rating
+                        )
+                    }
+
+                    Pushy -> {
+                        RatingChip(
+                            onClick = {
+                                onEvent(
+                                    TeacherRatingEvent.ChangeTeacherRating(
+                                        rating
+                                    )
+                                )
+                            },
+                            label = {
+                                Text(text = "Pesao")
+                            },
+                            backgroundColor = pushy_color,
+                            selected = state.selectedTeacherRating == rating
+                        )
+                    }
+
+                    Supportive -> {
+                        RatingChip(
+                            onClick = {
+                                onEvent(
+                                    TeacherRatingEvent.ChangeTeacherRating(
+                                        rating
+                                    )
+                                )
+                            },
+                            label = {
+                                Text(text = "Calidoso")
+                            },
+                            backgroundColor = supportive_color,
+                            selected = state.selectedTeacherRating == rating
+                        )
+                    }
+                }
+            }
+        }
+
+        OutlinedTextField(
+            value = state.userOpinion,
+            onValueChange = { onEvent(TeacherRatingEvent.ChangeUserOpinion(it)) },
+            modifier = Modifier.fillMaxWidth(),
+            label = {
+                Text(text = "Tu opinión (opcional)")
+            }
+        )
+
+        Button(onClick = { onEvent(TeacherRatingEvent.SubmitRating) }, modifier = Modifier.fillMaxWidth()) {
+            Text("Relizar reseña")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+    }
 }
