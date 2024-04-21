@@ -40,6 +40,10 @@ object TextUtils {
         return "${String.format(Locale.US, "%.2f", value)} %"
     }
 
+    fun formatPercentage(value: Float): String {
+        return "${(value * 100).toInt()} %"
+    }
+
     fun isPositiveInteger(str: String): Boolean {
         val regex = "^[0-9]+$".toRegex()
         return regex.matches(str)

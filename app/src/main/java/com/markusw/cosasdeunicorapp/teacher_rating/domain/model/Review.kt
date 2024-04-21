@@ -1,6 +1,7 @@
 package com.markusw.cosasdeunicorapp.teacher_rating.domain.model
 
 import com.markusw.cosasdeunicorapp.core.domain.model.User
+import com.markusw.cosasdeunicorapp.teacher_rating.data.model.ReviewDto
 
 data class Review(
     val content: String = "",
@@ -9,4 +10,13 @@ data class Review(
     val likes: List<Vote> = emptyList(),
     val dislikes: List<Vote> = emptyList(),
     val timestamp: Long = 0L
+)
+
+fun Review.toRemoteDatabaseModel() = ReviewDto(
+    content = content,
+    vote = vote,
+    authorId = author.uid,
+    likes = likes,
+    dislikes = dislikes,
+    timestamp = timestamp
 )

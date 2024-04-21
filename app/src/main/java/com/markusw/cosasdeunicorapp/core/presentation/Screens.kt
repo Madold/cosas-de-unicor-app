@@ -28,4 +28,8 @@ sealed class Screens(
         route = "teacher_rating",
     )
 
+    data object TeacherRatingDetail: Screens(
+        route = "teacher_rating_detail",
+    )
+
 }

@@ -9,7 +9,6 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -22,10 +21,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.fragment.findNavController
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.pop
+import com.markusw.cosasdeunicorapp.core.ext.sharedViewModel
 import com.markusw.cosasdeunicorapp.core.presentation.GoogleAuthClient
 import com.markusw.cosasdeunicorapp.core.presentation.Screens
 import com.markusw.cosasdeunicorapp.profile.presentation.ChangePasswordScreen
@@ -36,6 +37,9 @@ import com.markusw.cosasdeunicorapp.profile.presentation.ProfileViewModelEvent
 import com.markusw.cosasdeunicorapp.tabulator.presentation.TabulatorScreen
 import com.markusw.cosasdeunicorapp.tabulator.presentation.TabulatorViewModel
 import com.markusw.cosasdeunicorapp.teacher_rating.presentation.TeacherRatingScreen
+import com.markusw.cosasdeunicorapp.teacher_rating.presentation.TeacherRatingViewModel
+import com.markusw.cosasdeunicorapp.teacher_rating.presentation.TeacherDetailsScreen
+import com.markusw.cosasdeunicorapp.teacher_rating.presentation.TeacherRatingViewModelEvent
 import com.markusw.cosasdeunicorapp.ui.theme.CosasDeUnicorAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -204,11 +208,33 @@ class HomeFragment : Fragment() {
                                 )
                             }
 
-                            composable(Screens.TeacherRating.route) {
-                                TeacherRatingScreen(
-                                    onEvent = {},
-                                    mainNavController = mainNavController
-                                )
+                            navigation(
+                                route = Screens.TeacherRating.route,
+                                startDestination = "${Screens.TeacherRating.route}/teachers"
+                            ) {
+                                composable("${Screens.TeacherRating.route}/teachers") { backStackEntry ->
+
+                                    val viewModel = backStackEntry.sharedViewModel<TeacherRatingViewModel>(navController = mainNavController)
+                                    val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+                                    TeacherRatingScreen(
+                                        onEvent = viewModel::onEvent,
+                                        mainNavController = mainNavController,
+                                        state = state
+                                    )
+                                }
+
+                                composable(route = Screens.TeacherRatingDetail.route) { backStackEntry ->
+
+                                    val viewModel = backStackEntry.sharedViewModel<TeacherRatingViewModel>(navController = mainNavController)
+                                    val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+                                    TeacherDetailsScreen(
+                                        state = state,
+                                        onEvent = viewModel::onEvent,
+                                        mainNavController = mainNavController
+                                    )
+                                }
                             }
 
                         }
