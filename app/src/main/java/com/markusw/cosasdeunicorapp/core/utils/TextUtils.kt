@@ -49,4 +49,14 @@ object TextUtils {
         return regex.matches(str)
     }
 
+    fun formatReviewTimestamp(timestamp: Long): String {
+        val date = Date(timestamp)
+        val dayFormat = SimpleDateFormat("dd", Locale.getDefault())
+        val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
+        val day = dayFormat.format(date)
+        val month = monthFormat.format(date)
+
+        return "$day ${month.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}"
+    }
+
 }

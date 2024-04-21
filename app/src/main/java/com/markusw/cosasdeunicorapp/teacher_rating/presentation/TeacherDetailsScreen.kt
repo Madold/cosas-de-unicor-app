@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -76,7 +77,6 @@ fun TeacherDetailsScreen(
         teacher.reviews.count { it.vote == Ruthless }
     }
     val sheetState = rememberModalBottomSheetState()
-    val coroutineScope = rememberCoroutineScope()
     var isBottomSheetVisible by remember {
         mutableStateOf(false)
     }
@@ -184,12 +184,15 @@ fun TeacherDetailsScreen(
                     percentage = if (totalReviews == 0) 0f else homieReviewsCount.toFloat() / totalReviews,
                     count = homieReviewsCount,
                 )
-
-                ReviewsList(
-                    reviews = state.selectedTeacher.reviews,
-                    onEvent = onEvent
-                )
             }
+
+            Text(text = "Comentarios (${totalReviews})")
+            Divider()
+
+            ReviewsList(
+                reviews = state.selectedTeacher.reviews,
+                onEvent = onEvent
+            )
 
             if (isBottomSheetVisible) {
                 ModalBottomSheet(
