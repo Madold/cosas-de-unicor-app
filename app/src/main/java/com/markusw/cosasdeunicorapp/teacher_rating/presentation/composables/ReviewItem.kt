@@ -30,11 +30,11 @@ import com.markusw.cosasdeunicorapp.ui.theme.supportive_color
 @Composable
 fun ReviewItem(
     review: Review,
-    onEvent: (TeacherRatingEvent) -> Unit
+    onEvent: (TeacherRatingEvent) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
