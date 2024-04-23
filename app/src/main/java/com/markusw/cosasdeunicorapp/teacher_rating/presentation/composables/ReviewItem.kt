@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.Review
 import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.TeacherRating
 import com.markusw.cosasdeunicorapp.teacher_rating.presentation.TeacherRatingEvent
 import com.markusw.cosasdeunicorapp.ui.theme.homie_color
+import com.markusw.cosasdeunicorapp.ui.theme.md_theme_light_primary
 import com.markusw.cosasdeunicorapp.ui.theme.pushy_color
 import com.markusw.cosasdeunicorapp.ui.theme.ruthless_color
 import com.markusw.cosasdeunicorapp.ui.theme.supportive_color
@@ -31,7 +33,8 @@ import com.markusw.cosasdeunicorapp.ui.theme.supportive_color
 fun ReviewItem(
     review: Review,
     onEvent: (TeacherRatingEvent) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isFromUser: Boolean = false
 ) {
     Column(
         modifier = modifier
@@ -43,7 +46,9 @@ fun ReviewItem(
         Text(text = review.content)
         ReviewFooter(review = review, onEvent = onEvent)
     }
-    Divider()
+    Divider(
+        color = if (isFromUser) md_theme_light_primary else DividerDefaults.color,
+    )
 
 }
 

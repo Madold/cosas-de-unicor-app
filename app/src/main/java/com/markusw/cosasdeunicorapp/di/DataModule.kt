@@ -143,6 +143,6 @@ object DataModule {
     @Provides
     fun provideTeacherRatingRepository(
         remoteDatabase: RemoteDatabase
-    ): TeacherRatingRepository = FakeRatingRepository()
+    ): TeacherRatingRepository = AndroidRatingRepository(remoteDatabase)
 
 }

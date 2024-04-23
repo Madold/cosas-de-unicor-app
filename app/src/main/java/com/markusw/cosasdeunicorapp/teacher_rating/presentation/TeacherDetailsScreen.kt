@@ -2,7 +2,9 @@
 
 package com.markusw.cosasdeunicorapp.teacher_rating.presentation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -62,6 +64,7 @@ fun TeacherDetailsScreen(
     mainNavController: NavController
 ) {
     val teacher = state.selectedTeacher
+    val isReviewsListEmpty = teacher.reviews.isEmpty()
     val totalReviews = remember(teacher) {
         teacher.reviews.size
     }
@@ -81,8 +84,6 @@ fun TeacherDetailsScreen(
     var isBottomSheetVisible by remember {
         mutableStateOf(false)
     }
-
-
 
     Scaffold(
         topBar = {
@@ -190,10 +191,35 @@ fun TeacherDetailsScreen(
             Text(text = "Comentarios (${totalReviews})")
             Divider()
 
-            ReviewsList(
-                reviews = state.selectedTeacher.reviews,
-                onEvent = onEvent
-            )
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                if (isReviewsListEmpty) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.empty_comments_ilustration),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
+                        Text(
+                            text = "No hay reseñas ¡Realiza la primera!",
+                        )
+                    }
+                } else {
+                    ReviewsList(
+                        state = state,
+                        onEvent = onEvent,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.TopCenter)
+                    )
+                }
+            }
 
             if (isBottomSheetVisible) {
                 ModalBottomSheet(
