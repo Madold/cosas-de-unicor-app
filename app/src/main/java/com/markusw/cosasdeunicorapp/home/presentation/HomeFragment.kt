@@ -8,9 +8,11 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -225,14 +227,33 @@ class HomeFragment : Fragment() {
                                 }
 
                                 composable(route = Screens.TeacherRatingDetail.route) { backStackEntry ->
-
                                     val viewModel = backStackEntry.sharedViewModel<TeacherRatingViewModel>(navController = mainNavController)
                                     val state by viewModel.uiState.collectAsStateWithLifecycle()
+                                    val snackBarHostState = remember {
+                                        SnackbarHostState()
+                                    }
+
+                                    LaunchedEffect(viewModel.events) {
+                                        viewModel.events.collectLatest { viewModelEvent ->
+                                            when (viewModelEvent) {
+                                                is TeacherRatingViewModelEvent.ReviewDeletedSuccessfully -> {
+                                                    snackBarHostState.showSnackbar(message = "Reseña eliminada correctamente")
+                                                }
+                                                is TeacherRatingViewModelEvent.ReviewSaveError -> {
+
+                                                }
+                                                is TeacherRatingViewModelEvent.ReviewSavedSuccessfully -> {
+                                                    snackBarHostState.showSnackbar(message = "Reseña guardada correctamente")
+                                                }
+                                            }
+                                        }
+                                    }
 
                                     TeacherDetailsScreen(
                                         state = state,
                                         onEvent = viewModel::onEvent,
-                                        mainNavController = mainNavController
+                                        mainNavController = mainNavController,
+                                        snackBarHostState = snackBarHostState
                                     )
                                 }
                             }

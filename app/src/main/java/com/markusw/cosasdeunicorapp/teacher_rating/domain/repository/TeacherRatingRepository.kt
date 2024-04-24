@@ -6,6 +6,7 @@ import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.TeacherReview
 import kotlinx.coroutines.flow.Flow
 
 interface TeacherRatingRepository {
-    suspend fun getTeachers(): List<TeacherReview>
+    fun getTeachers(): Flow<List<TeacherReview>>
     suspend fun saveReview(review: Review, teacherId: String): Result<Unit>
+    suspend fun deleteReview(review: Review, teacherId: String): Result<Unit>
 }

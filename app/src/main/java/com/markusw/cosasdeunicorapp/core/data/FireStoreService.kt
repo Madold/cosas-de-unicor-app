@@ -325,57 +325,62 @@ class FireStoreService(
         }.conflate().flowOn(Dispatchers.IO)
     }
 
-    override suspend fun getTeachers(): List<TeacherReview> {
-        val teachers = fireStore
+    override fun getTeachers(): Flow<List<TeacherReview>> = callbackFlow {
+        val snapshotListener = fireStore
             .collection(TEACHERS_COLLECTION)
-            .get()
-            .await()
-            .toObjects(TeacherReviewDto::class.java)
+            .addSnapshotListener { value, error ->
+                error?.let { close(it) }
 
-        val usersIds = mutableListOf<String>()
-        teachers.forEach {
-            it.reviews.forEach { review ->
-                usersIds.add(review.authorId)
+                val teachers = value?.toObjects(TeacherReviewDto::class.java) ?: emptyList()
+                val usersIds = mutableListOf<String>()
+
+                teachers.forEach {
+                    it.reviews.forEach { review ->
+                        usersIds.add(review.authorId)
+                    }
+                }
+
+                if (usersIds.isEmpty()) {
+                    trySend(teachers.map {
+                        TeacherReview(
+                            id = it.id,
+                            teacherName = it.teacherName,
+                            reviews = emptyList()
+                        )
+                    })
+                    return@addSnapshotListener
+                }
+
+                fireStore
+                    .collection(USERS_COLLECTION)
+                    .whereIn("uid", usersIds)
+                    .get()
+                    .addOnSuccessListener { users ->
+                        val usersList = users.toObjects(User::class.java)
+                        val teacherReviews = teachers.map { teacher ->
+                            val reviews = teacher.reviews.map reviews@ { reviewDto ->
+                                val user = usersList.first { user -> user.uid == reviewDto.authorId }
+                                return@reviews Review(
+                                    content = reviewDto.content,
+                                    vote = reviewDto.vote,
+                                    author = user,
+                                    likes = reviewDto.likes,
+                                    dislikes = reviewDto.dislikes,
+                                    timestamp = reviewDto.timestamp
+                                )
+                            }
+
+                            return@map TeacherReview(
+                                id = teacher.id,
+                                teacherName = teacher.teacherName,
+                                reviews = reviews
+                            )
+                        }
+                        trySend(teacherReviews)
+                    }
             }
-        }
-
-        if (usersIds.isEmpty()) {
-            return teachers.map {
-                TeacherReview(
-                    id = it.id,
-                    teacherName = it.teacherName,
-                    reviews = emptyList()
-                )
-            }
-        }
-
-        val users = fireStore
-            .collection(USERS_COLLECTION)
-            .whereIn("uid", usersIds)
-            .get()
-            .await()
-            .toObjects(User::class.java)
-
-        return teachers.map {
-            val reviews = it.reviews.map reviews@ { reviewDto ->
-                val user = users.first { user -> user.uid == reviewDto.authorId }
-                return@reviews Review(
-                    content = reviewDto.content,
-                    vote = reviewDto.vote,
-                    author = user,
-                    likes = reviewDto.likes,
-                    dislikes = reviewDto.dislikes,
-                    timestamp = reviewDto.timestamp
-                )
-            }
-
-            return@map TeacherReview(
-                id = it.id,
-                teacherName = it.teacherName,
-                reviews = reviews
-            )
-        }
-    }
+        awaitClose { snapshotListener.remove() }
+    }.conflate().flowOn(Dispatchers.IO)
 
     override suspend fun saveReview(review: ReviewDto, teacherId: String) {
         fireStore
@@ -384,6 +389,26 @@ class FireStoreService(
             .update(
                 mapOf(
                     "reviews" to FieldValue.arrayUnion(review)
+                )
+            ).await()
+    }
+
+    override suspend fun deleteReview(review: Review, teacherId: String) {
+        val teacher =  fireStore
+            .collection(TEACHERS_COLLECTION)
+            .document(teacherId)
+            .get()
+            .await()
+            .toObject(TeacherReviewDto::class.java) ?: return
+
+        val updatedReviews = teacher.reviews.filter { it.authorId != review.author.uid }
+
+        fireStore
+            .collection(TEACHERS_COLLECTION)
+            .document(teacherId)
+            .update(
+                mapOf(
+                    "reviews" to updatedReviews
                 )
             ).await()
     }

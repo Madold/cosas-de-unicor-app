@@ -11,5 +11,6 @@ data class TeacherRatingState(
     val isSavingReview: Boolean = false,
     val selectedTeacher: TeacherReview = TeacherReview(),
     val isLoadingReviews: Boolean = false,
-    val loggedUser: User = User()
+    val loggedUser: User = User(),
+    val isDeletingReview: Boolean = false
 )

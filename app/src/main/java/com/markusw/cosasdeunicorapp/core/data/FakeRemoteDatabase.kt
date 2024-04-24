@@ -9,6 +9,7 @@ import com.markusw.cosasdeunicorapp.home.domain.model.MessageContent
 import com.markusw.cosasdeunicorapp.home.domain.model.News
 import com.markusw.cosasdeunicorapp.tabulator.domain.model.AcademicProgram
 import com.markusw.cosasdeunicorapp.teacher_rating.data.model.ReviewDto
+import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.Review
 import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.TeacherReview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -319,11 +320,15 @@ class FakeRemoteDatabase: RemoteDatabase {
         return flow {}
     }
 
-    override suspend fun getTeachers(): List<TeacherReview> {
-        TODO("Not yet implemented")
+    override fun getTeachers(): Flow<List<TeacherReview>> {
+        return flow {}
     }
 
     override suspend fun saveReview(review: ReviewDto, teacherId: String) {
-        TODO("Not yet implemented")
+
+    }
+
+    override suspend fun deleteReview(review: Review, teacherId: String) {
+
     }
 }

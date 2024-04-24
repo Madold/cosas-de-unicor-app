@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 class AndroidRatingRepository(
     private val remoteDatabase: RemoteDatabase
 ): TeacherRatingRepository {
-    override suspend fun getTeachers() = remoteDatabase.getTeachers()
+    override fun getTeachers() = remoteDatabase.getTeachers()
 
     override suspend fun saveReview(review: Review, teacherId: String): Result<Unit> {
         return try {
@@ -20,6 +20,15 @@ class AndroidRatingRepository(
             Result.Success(Unit)
         } catch (e: Exception) {
             Result.Error(UiText.DynamicString("Error saving review: ${e.message}"))
+        }
+    }
+
+    override suspend fun deleteReview(review: Review, teacherId: String): Result<Unit> {
+        return try {
+            remoteDatabase.deleteReview(review, teacherId)
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Result.Error(UiText.DynamicString("Error deleting review: ${e.message}"))
         }
     }
 }

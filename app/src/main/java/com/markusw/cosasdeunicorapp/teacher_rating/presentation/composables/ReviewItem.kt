@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.Icon
@@ -44,7 +43,8 @@ fun ReviewItem(
     ) {
         ReviewHeader(
             review = review,
-            isFromUser = isFromUser
+            isFromUser = isFromUser,
+            onEvent = onEvent
         )
         Text(text = review.content)
         ReviewFooter(review = review, onEvent = onEvent)
@@ -92,7 +92,8 @@ private fun ReviewFooter(
 @Composable
 private fun ReviewHeader(
     review: Review,
-    isFromUser: Boolean = false
+    isFromUser: Boolean = false,
+    onEvent: (TeacherRatingEvent) -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -104,7 +105,7 @@ private fun ReviewHeader(
         ) {
             Text(text = TextUtils.formatReviewTimestamp(review.timestamp))
             if (isFromUser) {
-                OutlinedButton(onClick = { /*TODO*/ }) {
+                OutlinedButton(onClick = { onEvent(TeacherRatingEvent.DeleteReview(review)) }) {
                     Text(text = "Eliminar")
                 }
             }

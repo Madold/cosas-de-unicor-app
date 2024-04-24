@@ -23,6 +23,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -61,7 +63,8 @@ import com.markusw.cosasdeunicorapp.ui.theme.supportive_color
 fun TeacherDetailsScreen(
     state: TeacherRatingState,
     onEvent: (TeacherRatingEvent) -> Unit,
-    mainNavController: NavController
+    mainNavController: NavController,
+    snackBarHostState: SnackbarHostState
 ) {
     val teacher = state.selectedTeacher
     val isReviewsListEmpty = teacher.reviews.isEmpty()
@@ -90,6 +93,9 @@ fun TeacherDetailsScreen(
     val isFloatingActionButtonVisible = userReview == null
 
     Scaffold(
+        snackbarHost = {
+          SnackbarHost(hostState = snackBarHostState)
+        },
         topBar = {
             AppTopBar(
                 title = {

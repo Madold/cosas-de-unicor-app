@@ -5,16 +5,18 @@ import androidx.lifecycle.viewModelScope
 import com.markusw.cosasdeunicorapp.core.DispatcherProvider
 import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.core.domain.repository.AuthRepository
+import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.Review
 import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.TeacherRating
 import com.markusw.cosasdeunicorapp.teacher_rating.domain.repository.TeacherRatingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,36 +29,38 @@ class TeacherRatingViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TeacherRatingState())
+    private val _teachers = teacherRatingRepository.getTeachers()
+    val uiState = combine(_uiState, _teachers) { state, teachers ->
+        val updatedSelectedTeacher =
+            teachers.find { it.id == state.selectedTeacher.id } ?: state.selectedTeacher
+        state.copy(teachers = teachers, selectedTeacher = updatedSelectedTeacher)
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000L),
+        TeacherRatingState()
+    )
     private val eventsChannel = Channel<TeacherRatingViewModelEvent>()
     val events = eventsChannel.receiveAsFlow()
-    val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-
             val loggedUser = when (val result = authRepository.getLoggedUser()) {
                 is Result.Error -> User()
                 is Result.Success -> result.data ?: User()
             }
 
-            updateUiState { copy(
-                isLoadingReviews = true,
-                loggedUser = loggedUser
-            )}
-            delay(2400)
-            val teachers = teacherRatingRepository.getTeachers()
-
-            updateUiState { copy(
-                teachers = teachers,
-                isLoadingReviews = false
-            ) }
+            updateUiState {
+                copy(
+                    loggedUser = loggedUser
+                )
+            }
         }
     }
 
     fun onEvent(event: TeacherRatingEvent) {
         when (event) {
             is TeacherRatingEvent.ChangeTeacherRating -> {
-               updateUiState { copy(selectedTeacherRating = event.teacherRating) }
+                updateUiState { copy(selectedTeacherRating = event.teacherRating) }
             }
 
             is TeacherRatingEvent.ChangeUserOpinion -> {
@@ -69,7 +73,7 @@ class TeacherRatingViewModel @Inject constructor(
                 val selectedTeacher = _uiState.value.selectedTeacher
 
                 viewModelScope.launch(dispatchers.io) {
-                   updateUiState { copy(isSavingReview = true)}
+                    updateUiState { copy(isSavingReview = true) }
 
                     val loggedUser = when (val result = authRepository.getLoggedUser()) {
                         is Result.Error -> User()
@@ -83,29 +87,61 @@ class TeacherRatingViewModel @Inject constructor(
                         timestamp = System.currentTimeMillis()
                     )
 
-                    when (val result = teacherRatingRepository.saveReview(review, selectedTeacher.id)) {
+                    when (val result =
+                        teacherRatingRepository.saveReview(review, selectedTeacher.id)) {
                         is Result.Error -> {
 
                         }
+
                         is Result.Success -> {
-                            updateUiState {
-                                copy(
-                                    selectedTeacher = selectedTeacher.copy(
-                                        reviews = selectedTeacher.reviews + review
-                                    )
-                                )
-                            }
+
                         }
                     }
 
                     updateUiState { copy(isSavingReview = false) }
-                    refreshTeachersList()
                 }
 
             }
 
             is TeacherRatingEvent.ChangeSelectedTeacher -> {
                 updateUiState { copy(selectedTeacher = event.teacher) }
+            }
+
+            is TeacherRatingEvent.DeleteReview -> {
+                updateUiState { copy(isDeletingReview = true) }
+
+                viewModelScope.launch(dispatchers.io) {
+                    val teacherId = _uiState.value.selectedTeacher.id
+
+                    when (val result =
+                        teacherRatingRepository.deleteReview(event.review, teacherId)) {
+                        is Result.Error -> {
+                            eventsChannel.send(
+                                TeacherRatingViewModelEvent.ReviewSaveError(
+                                    result.message ?: UiText.DynamicString("Unknown error")
+                                )
+                            )
+                        }
+
+                        is Result.Success -> {
+                            eventsChannel.send(TeacherRatingViewModelEvent.ReviewDeletedSuccessfully)
+
+                            val teacher = _uiState.value.selectedTeacher
+                            val reviews =
+                                teacher.reviews.filter { it.author.uid != event.review.author.uid }
+
+                            updateUiState {
+                                copy(
+                                    selectedTeacher = teacher.copy(reviews = reviews)
+                                )
+                            }
+                        }
+                    }
+
+                    updateUiState { copy(isDeletingReview = false) }
+                }
+
+
             }
         }
     }
@@ -120,14 +156,6 @@ class TeacherRatingViewModel @Inject constructor(
                 selectedTeacherRating = TeacherRating.Supportive,
                 userOpinion = ""
             )
-        }
-    }
-
-    private fun refreshTeachersList() {
-        viewModelScope.launch {
-            updateUiState { copy(isLoadingReviews = true) }
-            val teachers = teacherRatingRepository.getTeachers()
-            updateUiState { copy(teachers = teachers, isLoadingReviews = false) }
         }
     }
 

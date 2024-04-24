@@ -6,6 +6,7 @@ import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.home.domain.model.News
 import com.markusw.cosasdeunicorapp.tabulator.domain.model.AcademicProgram
 import com.markusw.cosasdeunicorapp.teacher_rating.data.model.ReviewDto
+import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.Review
 import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.TeacherReview
 import kotlinx.coroutines.flow.Flow
 
@@ -85,8 +86,10 @@ interface RemoteDatabase {
      */
     fun getAcademicPrograms(): Flow<List<AcademicProgram>>
 
-    suspend fun getTeachers(): List<TeacherReview>
+    fun getTeachers(): Flow<List<TeacherReview>>
 
     suspend fun saveReview(review: ReviewDto, teacherId: String)
+
+    suspend fun deleteReview(review: Review, teacherId: String)
 
 }
