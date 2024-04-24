@@ -84,6 +84,10 @@ fun TeacherDetailsScreen(
     var isBottomSheetVisible by remember {
         mutableStateOf(false)
     }
+    val userReview = remember(state.selectedTeacher.reviews) {
+        state.selectedTeacher.reviews.find { it.author.uid == state.loggedUser.uid }
+    }
+    val isFloatingActionButtonVisible = userReview == null
 
     Scaffold(
         topBar = {
@@ -108,17 +112,19 @@ fun TeacherDetailsScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    isBottomSheetVisible = true
-                },
-                shape = CircleShape
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_pencil),
-                    contentDescription = null,
-                    tint = Color.White
-                )
+            if (isFloatingActionButtonVisible) {
+                FloatingActionButton(
+                    onClick = {
+                        isBottomSheetVisible = true
+                    },
+                    shape = CircleShape
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_pencil),
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
             }
         }
     ) { padding ->

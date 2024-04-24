@@ -79,7 +79,8 @@ fun ReviewsList(
                 modifier = Modifier.graphicsLayer {
                     this.scaleX = animatable.value
                     this.scaleY = animatable.value
-                }
+                },
+                isFromUser = false
             )
         }
     }

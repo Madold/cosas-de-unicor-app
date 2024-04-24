@@ -5,17 +5,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.presentation.ProfileAvatar
@@ -42,7 +42,10 @@ fun ReviewItem(
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        ReviewHeader(review = review)
+        ReviewHeader(
+            review = review,
+            isFromUser = isFromUser
+        )
         Text(text = review.content)
         ReviewFooter(review = review, onEvent = onEvent)
     }
@@ -88,14 +91,24 @@ private fun ReviewFooter(
 
 @Composable
 private fun ReviewHeader(
-    review: Review
+    review: Review,
+    isFromUser: Boolean = false
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         AuthorInfo(review = review)
-        Text(text = TextUtils.formatReviewTimestamp(review.timestamp))
+        Column(
+            horizontalAlignment = Alignment.End
+        ) {
+            Text(text = TextUtils.formatReviewTimestamp(review.timestamp))
+            if (isFromUser) {
+                OutlinedButton(onClick = { /*TODO*/ }) {
+                    Text(text = "Eliminar")
+                }
+            }
+        }
     }
 }
 
