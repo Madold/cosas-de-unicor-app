@@ -63,7 +63,8 @@ fun ReviewsList(
                         this.scaleY = animatable.value
                     },
                     isFromUser = true,
-                    teacherId = state.selectedTeacher.id
+                    teacherId = state.selectedTeacher.id,
+                    loggedUser = state.loggedUser
                 )
             }
         }
@@ -85,7 +86,8 @@ fun ReviewsList(
                     this.scaleY = animatable.value
                 },
                 isFromUser = false,
-                teacherId = state.selectedTeacher.id
+                teacherId = state.selectedTeacher.id,
+                loggedUser = state.loggedUser
             )
         }
     }

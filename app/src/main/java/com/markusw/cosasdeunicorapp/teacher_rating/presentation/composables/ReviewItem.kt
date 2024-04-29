@@ -9,14 +9,18 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.core.presentation.ProfileAvatar
 import com.markusw.cosasdeunicorapp.core.utils.TextUtils
 import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.Review
@@ -33,8 +37,9 @@ fun ReviewItem(
     review: Review,
     teacherId: String,
     onEvent: (TeacherRatingEvent) -> Unit,
+    loggedUser: User,
     modifier: Modifier = Modifier,
-    isFromUser: Boolean = false
+    isFromUser: Boolean = false,
 ) {
     Column(
         modifier = modifier
@@ -51,7 +56,8 @@ fun ReviewItem(
         ReviewFooter(
             review = review,
             onEvent = onEvent,
-            teacherId = teacherId
+            teacherId = teacherId,
+            loggedUser = loggedUser
         )
     }
     Divider(
@@ -64,8 +70,19 @@ fun ReviewItem(
 private fun ReviewFooter(
     review: Review,
     teacherId: String,
-    onEvent: (TeacherRatingEvent) -> Unit
+    onEvent: (TeacherRatingEvent) -> Unit,
+    loggedUser: User
 ) {
+
+    val isReviewLiked = remember (review.likes) {
+        review.likes.contains(loggedUser.uid)
+    }
+    val isReviewDisliked = remember (review.dislikes) {
+        review.dislikes.contains(loggedUser.uid)
+    }
+    val likeIcon = if (isReviewLiked) R.drawable.ic_like_filled else R.drawable.ic_like
+    val dislikeIcon = if (isReviewDisliked) R.drawable.ic_dislike_filled else R.drawable.ic_dislike
+
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth(),
@@ -81,8 +98,9 @@ private fun ReviewFooter(
                 onEvent(TeacherRatingEvent.ToggleReviewLike(teacherId, review.author.uid))
             }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_like),
-                    contentDescription = null
+                    painter = painterResource(id = likeIcon),
+                    contentDescription = null,
+                    tint = if (isReviewLiked) MaterialTheme.colorScheme.primary else LocalContentColor.current
                 )
             }
 
@@ -91,8 +109,9 @@ private fun ReviewFooter(
                 onEvent(TeacherRatingEvent.ToggleReviewDislike(teacherId, review.author.uid))
             }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_dislike),
-                    contentDescription = null
+                    painter = painterResource(id = dislikeIcon),
+                    contentDescription = null,
+                    tint = if (isReviewDisliked) MaterialTheme.colorScheme.primary else LocalContentColor.current
                 )
             }
         }
