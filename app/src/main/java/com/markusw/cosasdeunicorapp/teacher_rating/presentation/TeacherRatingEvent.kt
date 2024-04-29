@@ -11,4 +11,10 @@ sealed interface TeacherRatingEvent {
     data class ChangeSelectedTeacher(val teacher: TeacherReview) : TeacherRatingEvent
     data object SubmitRating : TeacherRatingEvent
     data class DeleteReview(val review: Review) : TeacherRatingEvent
+    data object ShowSearchBar : TeacherRatingEvent
+    data object HideSearchBar : TeacherRatingEvent
+    data class ChangeTeacherNameQuery(val query: String) : TeacherRatingEvent
+    data object SearchTeachers : TeacherRatingEvent
+    data class ToggleReviewLike(val teacherId: String, val authorId: String): TeacherRatingEvent
+    data class ToggleReviewDislike(val teacherId: String, val authorId: String): TeacherRatingEvent
 }

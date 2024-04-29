@@ -7,8 +7,8 @@ data class Review(
     val content: String = "",
     val vote: TeacherRating = TeacherRating.Supportive,
     val author: User = User(),
-    val likes: List<Vote> = emptyList(),
-    val dislikes: List<Vote> = emptyList(),
+    val likes: List<String> = emptyList(),
+    val dislikes: List<String> = emptyList(),
     val timestamp: Long = 0L
 )
 

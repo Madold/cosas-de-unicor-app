@@ -31,6 +31,7 @@ import com.markusw.cosasdeunicorapp.ui.theme.supportive_color
 @Composable
 fun ReviewItem(
     review: Review,
+    teacherId: String,
     onEvent: (TeacherRatingEvent) -> Unit,
     modifier: Modifier = Modifier,
     isFromUser: Boolean = false
@@ -47,7 +48,11 @@ fun ReviewItem(
             onEvent = onEvent
         )
         Text(text = review.content)
-        ReviewFooter(review = review, onEvent = onEvent)
+        ReviewFooter(
+            review = review,
+            onEvent = onEvent,
+            teacherId = teacherId
+        )
     }
     Divider(
         color = if (isFromUser) md_theme_light_primary else DividerDefaults.color,
@@ -58,6 +63,7 @@ fun ReviewItem(
 @Composable
 private fun ReviewFooter(
     review: Review,
+    teacherId: String,
     onEvent: (TeacherRatingEvent) -> Unit
 ) {
     Row(
@@ -71,7 +77,9 @@ private fun ReviewFooter(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = review.likes.count().toString())
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {
+                onEvent(TeacherRatingEvent.ToggleReviewLike(teacherId, review.author.uid))
+            }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_like),
                     contentDescription = null
@@ -79,7 +87,9 @@ private fun ReviewFooter(
             }
 
             Text(text = review.dislikes.count().toString())
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {
+                onEvent(TeacherRatingEvent.ToggleReviewDislike(teacherId, review.author.uid))
+            }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_dislike),
                     contentDescription = null

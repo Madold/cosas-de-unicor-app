@@ -33,7 +33,14 @@ class TeacherRatingViewModel @Inject constructor(
     val uiState = combine(_uiState, _teachers) { state, teachers ->
         val updatedSelectedTeacher =
             teachers.find { it.id == state.selectedTeacher.id } ?: state.selectedTeacher
-        state.copy(teachers = teachers, selectedTeacher = updatedSelectedTeacher)
+
+        val filteredTeachers = if (state.teacherNameQuery.isBlank()) {
+            emptyList()
+        } else {
+            teachers.filter { it.teacherName.contains(state.teacherNameQuery, ignoreCase = true) }
+        }
+
+        state.copy(teachers = teachers, selectedTeacher = updatedSelectedTeacher, filteredTeachers = filteredTeachers)
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
@@ -142,6 +149,32 @@ class TeacherRatingViewModel @Inject constructor(
                 }
 
 
+            }
+
+            is TeacherRatingEvent.ChangeTeacherNameQuery -> {
+                updateUiState { copy(teacherNameQuery = event.query)}
+            }
+
+            is TeacherRatingEvent.HideSearchBar -> {
+                updateUiState { copy(isSearchBarActive = false) }
+            }
+            is TeacherRatingEvent.SearchTeachers -> {
+
+            }
+            is TeacherRatingEvent.ShowSearchBar -> {
+                updateUiState { copy(isSearchBarActive = true) }
+            }
+
+            is TeacherRatingEvent.ToggleReviewLike -> {
+                viewModelScope.launch(dispatchers.io) {
+                    teacherRatingRepository.toggleReviewLike(event.teacherId, event.authorId)
+                }
+            }
+
+            is TeacherRatingEvent.ToggleReviewDislike -> {
+                viewModelScope.launch(dispatchers.io) {
+                    teacherRatingRepository.toggleReviewDislike(event.teacherId, event.authorId)
+                }
             }
         }
     }

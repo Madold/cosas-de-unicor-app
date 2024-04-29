@@ -331,4 +331,12 @@ class FakeRemoteDatabase: RemoteDatabase {
     override suspend fun deleteReview(review: Review, teacherId: String) {
 
     }
+
+    override suspend fun toggleReviewLike(teacherId: String, authorId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun toggleReviewDislike(teacherId: String, authorId: String) {
+        TODO("Not yet implemented")
+    }
 }

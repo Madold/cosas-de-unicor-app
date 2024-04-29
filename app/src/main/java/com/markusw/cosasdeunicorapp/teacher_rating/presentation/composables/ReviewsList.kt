@@ -30,6 +30,9 @@ fun ReviewsList(
     val userReview = remember(state.selectedTeacher.reviews) {
         state.selectedTeacher.reviews.find { it.author.uid == state.loggedUser.uid }
     }
+    val otherReviews = remember(state.selectedTeacher.reviews) {
+        state.selectedTeacher.reviews.filter { it.author.uid != state.loggedUser.uid }
+    }
 
     LazyColumn(
         modifier = modifier,
@@ -59,12 +62,13 @@ fun ReviewsList(
                         this.scaleX = animatable.value
                         this.scaleY = animatable.value
                     },
-                    isFromUser = true
+                    isFromUser = true,
+                    teacherId = state.selectedTeacher.id
                 )
             }
         }
 
-        items(state.selectedTeacher.reviews) { review ->
+        items(otherReviews) { review ->
 
             val animatable = remember {
                 Animatable(0.5f)
@@ -80,7 +84,8 @@ fun ReviewsList(
                     this.scaleX = animatable.value
                     this.scaleY = animatable.value
                 },
-                isFromUser = false
+                isFromUser = false,
+                teacherId = state.selectedTeacher.id
             )
         }
     }

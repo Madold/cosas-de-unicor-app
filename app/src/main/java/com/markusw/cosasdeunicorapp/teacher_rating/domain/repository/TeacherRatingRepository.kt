@@ -9,4 +9,6 @@ interface TeacherRatingRepository {
     fun getTeachers(): Flow<List<TeacherReview>>
     suspend fun saveReview(review: Review, teacherId: String): Result<Unit>
     suspend fun deleteReview(review: Review, teacherId: String): Result<Unit>
+    suspend fun toggleReviewLike(teacherId: String, authorId: String): Result<Unit>
+    suspend fun toggleReviewDislike(teacherId: String, authorId: String): Result<Unit>
 }

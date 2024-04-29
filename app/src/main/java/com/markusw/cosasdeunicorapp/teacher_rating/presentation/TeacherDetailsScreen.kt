@@ -240,7 +240,13 @@ fun TeacherDetailsScreen(
                 ) {
                     SheetContent(
                         state = state,
-                        onEvent = onEvent
+                        onEvent = { event ->
+                            if (event is TeacherRatingEvent.SubmitRating) {
+                                isBottomSheetVisible = false
+                            }
+
+                            onEvent(event)
+                        }
                     )
                 }
             }

@@ -92,4 +92,8 @@ interface RemoteDatabase {
 
     suspend fun deleteReview(review: Review, teacherId: String)
 
+    suspend fun toggleReviewLike(teacherId: String, authorId: String)
+
+    suspend fun toggleReviewDislike(teacherId: String, authorId: String)
+
 }

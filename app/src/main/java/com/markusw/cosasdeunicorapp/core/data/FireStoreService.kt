@@ -358,8 +358,9 @@ class FireStoreService(
                     .addOnSuccessListener { users ->
                         val usersList = users.toObjects(User::class.java)
                         val teacherReviews = teachers.map { teacher ->
-                            val reviews = teacher.reviews.map reviews@ { reviewDto ->
-                                val user = usersList.first { user -> user.uid == reviewDto.authorId }
+                            val reviews = teacher.reviews.map reviews@{ reviewDto ->
+                                val user =
+                                    usersList.first { user -> user.uid == reviewDto.authorId }
                                 return@reviews Review(
                                     content = reviewDto.content,
                                     vote = reviewDto.vote,
@@ -394,7 +395,7 @@ class FireStoreService(
     }
 
     override suspend fun deleteReview(review: Review, teacherId: String) {
-        val teacher =  fireStore
+        val teacher = fireStore
             .collection(TEACHERS_COLLECTION)
             .document(teacherId)
             .get()
@@ -402,6 +403,161 @@ class FireStoreService(
             .toObject(TeacherReviewDto::class.java) ?: return
 
         val updatedReviews = teacher.reviews.filter { it.authorId != review.author.uid }
+
+        fireStore
+            .collection(TEACHERS_COLLECTION)
+            .document(teacherId)
+            .update(
+                mapOf(
+                    "reviews" to updatedReviews
+                )
+            ).await()
+    }
+
+    //TODO: Fix likes and dislikes toggle when is already in the other list
+    override suspend fun toggleReviewLike(teacherId: String, authorId: String) {
+        val teacher = fireStore
+            .collection(TEACHERS_COLLECTION)
+            .document(teacherId)
+            .get()
+            .await()
+            .toObject(TeacherReviewDto::class.java) ?: return
+        val currentUserId = auth.currentUser?.uid ?: return
+        val review = teacher.reviews.find { it.authorId == authorId } ?: return
+
+        val updatedLikes = if (review.likes.contains(currentUserId)) {
+            review.likes.filter { it != currentUserId }
+        } else {
+            review.likes.toMutableList().plus(currentUserId)
+        }
+
+        val updatedReview = review.copy(
+            likes = updatedLikes
+        )
+
+        val updatedReviews = teacher.reviews.map {
+            if (it.authorId == updatedReview.authorId) {
+                return@map updatedReview
+            }
+            return@map it
+        }
+
+        fireStore
+            .collection(TEACHERS_COLLECTION)
+            .document(teacherId)
+            .update(
+                mapOf(
+                    "reviews" to updatedReviews
+                )
+            ).await()
+
+        val isUserIdAlreadyInDislikes = updatedReview.dislikes.contains(currentUserId)
+
+        if (isUserIdAlreadyInDislikes) {
+            removeUserIdFromDislikes(teacherId, authorId)
+        }
+
+    }
+
+    override suspend fun toggleReviewDislike(teacherId: String, authorId: String) {
+        val teacher = fireStore
+            .collection(TEACHERS_COLLECTION)
+            .document(teacherId)
+            .get()
+            .await()
+            .toObject(TeacherReviewDto::class.java) ?: return
+
+        val currentUserId = auth.currentUser?.uid ?: return
+        val review = teacher.reviews.find { it.authorId == authorId } ?: return
+
+        val updatedDislikes = if (review.dislikes.contains(currentUserId)) {
+            review.dislikes.filter { it != currentUserId }
+        } else {
+            review.dislikes.toMutableList().plus(currentUserId)
+        }
+
+        val updatedReview = review.copy(
+            dislikes = updatedDislikes
+        )
+
+        val updatedReviews = teacher.reviews.map {
+            if (it.authorId == updatedReview.authorId) {
+                return@map updatedReview
+            }
+            return@map it
+        }
+
+        fireStore
+            .collection(TEACHERS_COLLECTION)
+            .document(teacherId)
+            .update(
+                mapOf(
+                    "reviews" to updatedReviews
+                )
+            ).await()
+
+        val isUserIdAlreadyInLikes = updatedReview.likes.contains(currentUserId)
+
+        if (isUserIdAlreadyInLikes) {
+            removeUserIdFromLikes(teacherId, authorId)
+        }
+
+    }
+
+
+    private suspend fun removeUserIdFromLikes(teacherId: String, authorId: String) {
+        val teacher = fireStore
+            .collection(TEACHERS_COLLECTION)
+            .document(teacherId)
+            .get()
+            .await()
+            .toObject(TeacherReviewDto::class.java) ?: return
+
+        val review = teacher.reviews.find { it.authorId == authorId } ?: return
+        val currentUserId = auth.currentUser?.uid ?: return
+        val updatedLikes = review.likes.filter { it != currentUserId }
+        val updatedReview = review.copy(
+            likes = updatedLikes
+        )
+
+        val updatedReviews = teacher.reviews.map {
+            if (it.authorId == updatedReview.authorId) {
+                return@map updatedReview
+            }
+            return@map it
+        }
+
+        fireStore
+            .collection(TEACHERS_COLLECTION)
+            .document(teacherId)
+            .update(
+                mapOf(
+                    "reviews" to updatedReviews
+                )
+            ).await()
+    }
+
+    private suspend fun removeUserIdFromDislikes(teacherId: String, authorId: String) {
+        val teacher = fireStore
+            .collection(TEACHERS_COLLECTION)
+            .document(teacherId)
+            .get()
+            .await()
+            .toObject(TeacherReviewDto::class.java) ?: return
+
+        val review = teacher.reviews.find { it.authorId == authorId } ?: return
+        val currentUserId = auth.currentUser?.uid ?: return
+        val updatedDislikes = review.dislikes.filter { it != currentUserId }
+        val updatedReview = review.copy(
+            dislikes = updatedDislikes
+        )
+
+        val updatedReviews = teacher.reviews.map {
+            if (it.authorId == updatedReview.authorId) {
+                return@map updatedReview
+            }
+            return@map it
+        }
 
         fireStore
             .collection(TEACHERS_COLLECTION)
