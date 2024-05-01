@@ -139,21 +139,24 @@ fun TeacherRatingScreen(
                         }
                     },
                     content = {
-                        LazyColumn {
+                        LazyColumn(
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        ) {
                             items(state.filteredTeachers) { teacher ->
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .clip(RoundedCornerShape(8.dp))
-                                        .padding(8.dp)
                                         .clickable {
                                             onEvent(TeacherRatingEvent.ChangeSelectedTeacher(teacher))
                                             mainNavController.navigate(Screens.TeacherRatingDetail.route)
                                         }
+                                        .padding(16.dp),
                                 ) {
                                     Text(
                                         text = teacher.teacherName,
-                                        color = Color.White
+                                        color = Color.White,
+                                        style = MaterialTheme.typography.titleMedium
                                     )
                                 }
                             }
