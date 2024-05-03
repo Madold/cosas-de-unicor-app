@@ -17,4 +17,10 @@ sealed interface TeacherRatingEvent {
     data object SearchTeachers : TeacherRatingEvent
     data class ToggleReviewLike(val teacherId: String, val authorId: String): TeacherRatingEvent
     data class ToggleReviewDislike(val teacherId: String, val authorId: String): TeacherRatingEvent
+
+    data object ShowTeacherFiltersDialog : TeacherRatingEvent
+    data object HideTeacherFiltersDialog : TeacherRatingEvent
+    data class ChangeFilterType(val filterType: FilterType) : TeacherRatingEvent
+    data class ChangeNameOrderDropDownMenuExpanded(val isExpanded: Boolean) : TeacherRatingEvent
+    data class ChangeNameOrderDropDownMenuOption(val option: String) : TeacherRatingEvent
 }

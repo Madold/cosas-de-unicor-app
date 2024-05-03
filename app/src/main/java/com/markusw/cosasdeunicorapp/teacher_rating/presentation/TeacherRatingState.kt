@@ -3,6 +3,7 @@ package com.markusw.cosasdeunicorapp.teacher_rating.presentation
 import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.TeacherRating
 import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.TeacherReview
+import com.markusw.cosasdeunicorapp.teacher_rating.presentation.composables.AZ
 
 data class TeacherRatingState(
     val teachers: List<TeacherReview> = emptyList(),
@@ -15,5 +16,9 @@ data class TeacherRatingState(
     val isDeletingReview: Boolean = false,
     val isSearchBarActive: Boolean = false,
     val teacherNameQuery: String = "",
-    val filteredTeachers: List<TeacherReview> = emptyList()
+    val filteredTeachers: List<TeacherReview> = emptyList(),
+    val isTeacherFiltersDialogVisible: Boolean = false,
+    val filterType: FilterType = FilterType.ByNameAscending,
+    val isNameOrderDropDownMenuExpanded: Boolean = false,
+    val selectedNameOrderOption: String = AZ,
 )

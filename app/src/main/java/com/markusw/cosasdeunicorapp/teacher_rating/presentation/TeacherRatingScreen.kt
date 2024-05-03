@@ -46,7 +46,10 @@ import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.pop
 import com.markusw.cosasdeunicorapp.core.presentation.AppTopBar
 import com.markusw.cosasdeunicorapp.core.presentation.Screens
+import com.markusw.cosasdeunicorapp.teacher_rating.presentation.composables.AZ
+import com.markusw.cosasdeunicorapp.teacher_rating.presentation.composables.TeacherFiltersDialog
 import com.markusw.cosasdeunicorapp.teacher_rating.presentation.composables.TeachersList
+import com.markusw.cosasdeunicorapp.teacher_rating.presentation.composables.ZA
 import com.markusw.cosasdeunicorapp.ui.theme.CosasDeUnicorAppTheme
 import com.markusw.cosasdeunicorapp.ui.theme.home_bottom_bar_background
 
@@ -80,6 +83,14 @@ fun TeacherRatingScreen(
                         IconButton(onClick = { onEvent(TeacherRatingEvent.ShowSearchBar) }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_search),
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        }
+
+                        IconButton(onClick = { onEvent(TeacherRatingEvent.ShowTeacherFiltersDialog) }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_filter),
                                 contentDescription = null,
                                 tint = Color.White
                             )
@@ -186,8 +197,37 @@ fun TeacherRatingScreen(
                         modifier = Modifier.fillMaxSize(),
                         mainNavController = mainNavController
                     )
+                    if (state.isTeacherFiltersDialogVisible) {
+                        TeacherFiltersDialog(
+                            onDismiss = {
+                                onEvent(TeacherRatingEvent.HideTeacherFiltersDialog)
+                            },
+                            onConfirm = {
+                                onEvent(TeacherRatingEvent.HideTeacherFiltersDialog)
+                            },
+                            onChipClick = {
+                                onEvent(TeacherRatingEvent.ChangeFilterType(FilterType.ByRating(it)))
+                            },
+                            selectedFilterType = state.filterType,
+                            isDropDownMenuExpanded = state.isNameOrderDropDownMenuExpanded,
+                            onExpandedChange = {
+                                onEvent(TeacherRatingEvent.ChangeNameOrderDropDownMenuExpanded(it))
+                            },
+                            onDropDownMenuOptionChange = { option ->
+                                onEvent(TeacherRatingEvent.ChangeNameOrderDropDownMenuOption(option))
+                                when (option) {
+                                    AZ -> {
+                                        onEvent(TeacherRatingEvent.ChangeFilterType(FilterType.ByNameAscending))
+                                    }
+                                    ZA -> {
+                                        onEvent(TeacherRatingEvent.ChangeFilterType(FilterType.ByNameDescending))
+                                    }
+                                }
+                            },
+                            selectedOption = state.selectedNameOrderOption
+                        )
+                    }
                 }
-
             }
         }
     }

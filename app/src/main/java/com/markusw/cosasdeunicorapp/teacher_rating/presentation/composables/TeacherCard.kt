@@ -45,7 +45,8 @@ import com.markusw.cosasdeunicorapp.ui.theme.supportive_color
 fun TeacherCard(
     teacher: TeacherReview,
     onEvent: (TeacherRatingEvent) -> Unit,
-    mainNavController: NavController
+    mainNavController: NavController,
+    modifier: Modifier = Modifier
 ) {
 
     val totalReviews = remember(teacher) {
@@ -82,7 +83,9 @@ fun TeacherCard(
     }
 
     Spacer(modifier = Modifier.height(8.dp))
-    Box {
+    Box(
+        modifier = modifier
+    ) {
         Card(
             colors = CardDefaults.cardColors(
                 containerColor = home_bottom_bar_background
