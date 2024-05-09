@@ -10,19 +10,13 @@ sealed class FeatureDestination (
 ){
 
     companion object {
-        fun values() = listOf(Tabulator, Map, RateTeachers)
+        fun values() = listOf(Tabulator, RateTeachers)
     }
 
     data object Tabulator : FeatureDestination(
         route = "tabulator",
         label = "Tabulador",
         iconSrc = R.drawable.ic_excel_mono
-    )
-
-    data object Map: FeatureDestination(
-        route = "home_map",
-        label = "Mapa de la Universidad",
-        iconSrc = R.drawable.ic_map
     )
 
     data object RateTeachers: FeatureDestination(
