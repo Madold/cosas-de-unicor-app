@@ -27,6 +27,11 @@ import com.markusw.cosasdeunicorapp.home.domain.repository.NewsRepository
 import com.markusw.cosasdeunicorapp.home.domain.repository.RemoteStorage
 import com.markusw.cosasdeunicorapp.profile.data.AndroidProfileRepository
 import com.markusw.cosasdeunicorapp.profile.domain.repository.ProfileRepository
+import com.markusw.cosasdeunicorapp.tabulator.data.repository.AndroidTabulatorRepository
+import com.markusw.cosasdeunicorapp.tabulator.domain.repository.TabulatorRepository
+import com.markusw.cosasdeunicorapp.teacher_rating.data.repository.AndroidRatingRepository
+import com.markusw.cosasdeunicorapp.teacher_rating.data.repository.FakeRatingRepository
+import com.markusw.cosasdeunicorapp.teacher_rating.domain.repository.TeacherRatingRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,13 +46,11 @@ import javax.inject.Singleton
 object DataModule {
 
     @Provides
-    @Singleton
     fun provideChatRepository(
         remoteDatabase: RemoteDatabase,
     ): ChatRepository = AndroidChatRepository(remoteDatabase)
 
     @Provides
-    @Singleton
     fun provideNewsRepository(
         remoteDatabase: RemoteDatabase,
     ): NewsRepository = AndroidNewsRepository(remoteDatabase)
@@ -62,12 +65,10 @@ object DataModule {
     }
 
     @Provides
-    @Singleton
     fun provideFireStorePager(initialQuery: Query): MessageFireStorePager =
         MessageFireStorePager(initialQuery)
 
     @Provides
-    @Singleton
     fun provideNewsPager(fireStore: FirebaseFirestore): NewsFireStorePager {
         val initialQuery = fireStore
             .collection(FireStoreService.NEWS_COLLECTION)
@@ -131,5 +132,17 @@ object DataModule {
     fun provideAuthRepository(
         authService: AuthService,
     ): AuthRepository = AndroidAuthRepository(authService)
+
+    @Provides
+    @Singleton
+    fun provideTabulatorRepository(
+        remoteDatabase: RemoteDatabase
+    ): TabulatorRepository = AndroidTabulatorRepository(remoteDatabase)
+
+    @Singleton
+    @Provides
+    fun provideTeacherRatingRepository(
+        remoteDatabase: RemoteDatabase
+    ): TeacherRatingRepository = AndroidRatingRepository(remoteDatabase)
 
 }

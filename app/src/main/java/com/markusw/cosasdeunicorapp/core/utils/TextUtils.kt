@@ -31,4 +31,32 @@ object TextUtils {
         }
     }
 
+    fun isValidDecimalNumber(text: String): Boolean {
+        val regex = Regex("^\\d+(\\.\\d+)?$")
+        return regex.matches(text)
+    }
+
+    fun formatPercents(value: Float): String {
+        return "${String.format(Locale.US, "%.2f", value)} %"
+    }
+
+    fun formatPercentage(value: Float): String {
+        return "${(value * 100).toInt()} %"
+    }
+
+    fun isPositiveInteger(str: String): Boolean {
+        val regex = "^[0-9]+$".toRegex()
+        return regex.matches(str)
+    }
+
+    fun formatReviewTimestamp(timestamp: Long): String {
+        val date = Date(timestamp)
+        val dayFormat = SimpleDateFormat("dd", Locale.getDefault())
+        val monthFormat = SimpleDateFormat("MMMM", Locale.getDefault())
+        val day = dayFormat.format(date)
+        val month = monthFormat.format(date)
+
+        return "$day ${month.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }}"
+    }
+
 }

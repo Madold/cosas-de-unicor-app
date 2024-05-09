@@ -8,8 +8,8 @@ class RemoveUserFromLikedByList @Inject constructor(
     private val remoteDatabase: RemoteDatabase
 ) {
 
-    suspend operator fun invoke(newsId: String, user: User) {
-        remoteDatabase.removeUserFromLikedByList(newsId, user)
+    suspend operator fun invoke(newsId: String, userId: String) {
+        remoteDatabase.removeUserFromLikedByList(newsId, userId)
     }
 
 }

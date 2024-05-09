@@ -246,13 +246,13 @@ class HomeViewModel @Inject constructor(
 
             is HomeUiEvent.LikeNews -> {
 
-                val isUserInLikedList = event.news.likedBy.contains(uiState.value.currentUser)
+                val isUserInLikedList = event.news.likedBy.contains(uiState.value.currentUser.uid)
 
                 if (isUserInLikedList) {
 
                     val newsIndex = uiState.value.newsList.indexOf(event.news)
                     val updatedNews = event.news.copy(
-                        likedBy = event.news.likedBy.filter { it != uiState.value.currentUser }
+                        likedBy = event.news.likedBy.filter { it != uiState.value.currentUser.uid }
                     )
                     _uiState.update {
                         it.copy(
@@ -263,12 +263,12 @@ class HomeViewModel @Inject constructor(
                     }
 
                     viewModelScope.launch(dispatchers.io) {
-                        removeUserFromLikedByList(event.news.id!!, uiState.value.currentUser)
+                        removeUserFromLikedByList(event.news.id!!, uiState.value.currentUser.uid)
                     }
                 } else {
                     val newsIndex = uiState.value.newsList.indexOf(event.news)
                     val updatedNews = event.news.copy(
-                        likedBy = event.news.likedBy + uiState.value.currentUser
+                        likedBy = event.news.likedBy + uiState.value.currentUser.uid
                     )
                     _uiState.update {
                         it.copy(
@@ -280,7 +280,7 @@ class HomeViewModel @Inject constructor(
 
                     viewModelScope.launch(dispatchers.io) {
                         playSound(AppSound.Like)
-                        addUserToLikedByList(event.news.id!!, uiState.value.currentUser)
+                        addUserToLikedByList(event.news.id!!, uiState.value.currentUser.uid)
                     }
                 }
             }

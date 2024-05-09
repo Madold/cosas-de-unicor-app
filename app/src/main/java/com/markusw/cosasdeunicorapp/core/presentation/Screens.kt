@@ -20,4 +20,16 @@ sealed class Screens(
         route = "profile/reset_password",
     )
 
+    data object Tabulator : Screens(
+        route = "tabulator",
+    )
+
+    data object TeacherRating: Screens(
+        route = "teacher_rating",
+    )
+
+    data object TeacherRatingDetail: Screens(
+        route = "teacher_rating_detail",
+    )
+
 }

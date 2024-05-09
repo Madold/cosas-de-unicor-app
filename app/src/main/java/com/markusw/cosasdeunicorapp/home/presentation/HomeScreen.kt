@@ -148,7 +148,8 @@ private fun HomeHost(
                 state = uiState,
                 onEvent = viewModel::onEvent,
                 scrollState = scrollState,
-                paddingValues = contentPadding
+                paddingValues = contentPadding,
+                mainNavController = mainNavController
             )
         }
 
@@ -222,7 +223,9 @@ private fun HomeHost(
         }
 
         composable(route = HomeScreens.More.route) {
-            MoreScreenContent()
+            MoreScreenContent(
+                mainNavController = mainNavController
+            )
         }
     }
 }

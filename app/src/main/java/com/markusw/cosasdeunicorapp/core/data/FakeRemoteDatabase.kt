@@ -7,6 +7,10 @@ import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.home.domain.model.MessageContent
 import com.markusw.cosasdeunicorapp.home.domain.model.News
+import com.markusw.cosasdeunicorapp.tabulator.domain.model.AcademicProgram
+import com.markusw.cosasdeunicorapp.teacher_rating.data.model.ReviewDto
+import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.Review
+import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.TeacherReview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -288,11 +292,11 @@ class FakeRemoteDatabase: RemoteDatabase {
         return flow {  }
     }
 
-    override suspend fun removeUserFromLikedByList(newsId: String, user: User): Result<Unit> {
+    override suspend fun removeUserFromLikedByList(newsId: String, userId: String): Result<Unit> {
         return Result.Success(Unit)
     }
 
-    override suspend fun addUserToLikedByList(newsId: String, user: User): Result<Unit> {
+    override suspend fun addUserToLikedByList(newsId: String, userId: String): Result<Unit> {
         return Result.Success(Unit)
     }
 
@@ -310,5 +314,29 @@ class FakeRemoteDatabase: RemoteDatabase {
 
     override suspend fun getUser(id: String): User {
         return loggedUser
+    }
+
+    override fun getAcademicPrograms(): Flow<List<AcademicProgram>> {
+        return flow {}
+    }
+
+    override fun getTeachers(): Flow<List<TeacherReview>> {
+        return flow {}
+    }
+
+    override suspend fun saveReview(review: ReviewDto, teacherId: String) {
+
+    }
+
+    override suspend fun deleteReview(review: Review, teacherId: String) {
+
+    }
+
+    override suspend fun toggleReviewLike(teacherId: String, authorId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun toggleReviewDislike(teacherId: String, authorId: String) {
+        TODO("Not yet implemented")
     }
 }

@@ -183,22 +183,17 @@
 
             </LinearLayout>
 
-            <Button
+            <androidx.compose.ui.platform.ComposeView
                 android:id="@+id/googleButton"
-                style="@style/Widget.Material3.Button.IconButton.Outlined"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/alternativeLogin"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="10dp"
-                android:text="@string/google"
-                app:icon="@drawable/ic_google"
-                app:cornerRadius="10dp"
-                android:textColor="@color/black"
-                android:backgroundTint="@color/white"
                 app:rippleColor="@color/ripple"
-                app:iconPadding="4dp"
+                tools:layout_width="80dp"
+                tools:layout_height="50dp"
                 />
 
             <com.google.android.flexbox.FlexboxLayout

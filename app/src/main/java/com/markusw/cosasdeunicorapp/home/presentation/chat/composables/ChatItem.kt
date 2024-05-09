@@ -28,11 +28,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.markusw.cosasdeunicorapp.R
+import com.markusw.cosasdeunicorapp.core.domain.model.User
+import com.markusw.cosasdeunicorapp.core.presentation.ProfileAvatar
 import com.markusw.cosasdeunicorapp.core.utils.TextUtils
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
 import com.markusw.cosasdeunicorapp.home.domain.model.MessageContent
-import com.markusw.cosasdeunicorapp.core.domain.model.User
-import com.markusw.cosasdeunicorapp.core.presentation.ProfileAvatar
 
 @Composable
 fun ChatItem(
@@ -83,7 +83,7 @@ fun ChatItem(
                 Spacer(modifier = Modifier.width(4.dp))
             }
         },
-        directions = if(swipeEnabled) setOf(DismissDirection.StartToEnd) else emptySet() ,
+        directions = if (swipeEnabled) setOf(DismissDirection.StartToEnd) else emptySet(),
         dismissContent = {
             Row(
                 modifier = Modifier
@@ -103,23 +103,18 @@ fun ChatItem(
                     Column(
                         horizontalAlignment = horizontalAlignment
                     ) {
+                        if (!isFromCurrentUser) {
+                            NameLabel(name = message.sender.displayName)
+                        }
                         ChatBubble(
                             content = message.content,
                             isFromCurrentUser = isFromCurrentUser,
                             cornerRadius = 20.dp
                         )
-                        Row(
-                            horizontalArrangement = Arrangement.Start,
-                        ) {
-                            if (!isFromCurrentUser) {
-                                NameLabel(name = message.sender.displayName)
-                            }
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = formattedTimestamp,
-                                color = Color.Gray
-                            )
-                        }
+                        Text(
+                            text = formattedTimestamp,
+                            color = Color.Gray
+                        )
                     }
                 }
             }

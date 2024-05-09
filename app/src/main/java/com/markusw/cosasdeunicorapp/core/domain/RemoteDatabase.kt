@@ -1,9 +1,13 @@
 package com.markusw.cosasdeunicorapp.core.domain
 
+import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.core.utils.Result
 import com.markusw.cosasdeunicorapp.home.domain.model.Message
-import com.markusw.cosasdeunicorapp.core.domain.model.User
 import com.markusw.cosasdeunicorapp.home.domain.model.News
+import com.markusw.cosasdeunicorapp.tabulator.domain.model.AcademicProgram
+import com.markusw.cosasdeunicorapp.teacher_rating.data.model.ReviewDto
+import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.Review
+import com.markusw.cosasdeunicorapp.teacher_rating.domain.model.TeacherReview
 import kotlinx.coroutines.flow.Flow
 
 interface RemoteDatabase {
@@ -52,7 +56,7 @@ interface RemoteDatabase {
      * @return a Result object
      * @see Result
      */
-    suspend fun removeUserFromLikedByList(newsId: String, user: User): Result<Unit>
+    suspend fun removeUserFromLikedByList(newsId: String, userId: String): Result<Unit>
 
     /**
      * Adds a user to the likedBy list of a news
@@ -61,7 +65,7 @@ interface RemoteDatabase {
      * @return a Result object
      * @see Result
      */
-    suspend fun addUserToLikedByList(newsId: String, user: User): Result<Unit>
+    suspend fun addUserToLikedByList(newsId: String, userId: String): Result<Unit>
 
     /**
      * Returns the number of users in the database
@@ -74,5 +78,22 @@ interface RemoteDatabase {
     suspend fun onUserInfoUpdate(): Flow<User>
 
     suspend fun getUser(id: String): User
+
+    /**
+     * Returns a the flow of academic programs from the database in real time
+     * @return a flow of academic programs
+     * @see AcademicProgram
+     */
+    fun getAcademicPrograms(): Flow<List<AcademicProgram>>
+
+    fun getTeachers(): Flow<List<TeacherReview>>
+
+    suspend fun saveReview(review: ReviewDto, teacherId: String)
+
+    suspend fun deleteReview(review: Review, teacherId: String)
+
+    suspend fun toggleReviewLike(teacherId: String, authorId: String)
+
+    suspend fun toggleReviewDislike(teacherId: String, authorId: String)
 
 }

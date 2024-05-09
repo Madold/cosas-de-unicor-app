@@ -14,7 +14,7 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.markusw.cosasdeunicorapp.core.utils.Constants.INTERSTITIAL_AD_ID
+import com.markusw.cosasdeunicorapp.core.utils.Constants.TEST_INTERSTITIAL_AD_ID
 
 /**
  * Shows a toast message.
@@ -69,7 +69,7 @@ fun Context.showInterstitialAd(
 
     InterstitialAd.load(
         this,
-        INTERSTITIAL_AD_ID,
+        TEST_INTERSTITIAL_AD_ID,
         adRequest,
         object : InterstitialAdLoadCallback() {
             override fun onAdLoaded(ad: InterstitialAd) {

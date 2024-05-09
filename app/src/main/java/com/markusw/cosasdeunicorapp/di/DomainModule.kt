@@ -35,7 +35,6 @@ object DomainModule {
     )
 
     @Provides
-    @Singleton
     fun provideRemoteDatabase(
         fireStore: FirebaseFirestore,
         messagesFireStorePager: MessageFireStorePager,

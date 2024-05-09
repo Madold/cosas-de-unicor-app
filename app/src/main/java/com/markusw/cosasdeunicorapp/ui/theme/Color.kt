@@ -70,3 +70,8 @@ val seed = Color(0xFFC00002)
 val home_bottom_bar_background = Color(0xFF181717)
 val message_field_color = Color(0xFFF4F4F4)
 val heart_color = Color(0xFFe74c3c)
+
+val ruthless_color = Color(0xFF780919)
+val pushy_color = Color(0xFFE67E22)
+val supportive_color = Color(0xFF3498DB)
+val homie_color = Color(0xFF2ECC71)

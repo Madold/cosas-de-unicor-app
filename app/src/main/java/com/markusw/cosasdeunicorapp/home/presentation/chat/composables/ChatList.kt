@@ -54,7 +54,7 @@ fun ChatList(
             items(globalChatList, key = { message -> message.timestamp }) { message ->
                 ChatItem(
                     message = message,
-                    isFromCurrentUser = state.currentUser.displayName == message.sender.displayName,
+                    isFromCurrentUser = state.currentUser.uid == message.sender.uid,
                     onReplyToMessage = onReplyToMessage
                 )
             }

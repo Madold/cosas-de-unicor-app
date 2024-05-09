@@ -56,7 +56,7 @@ class ProfileViewModel @Inject constructor(
                                 user = latestUserInfo,
                                 name = latestUserInfo.displayName,
                                 email = latestUserInfo.email,
-                                profilePhoto = latestUserInfo.photoUrl
+                                profilePhoto = null
                             )
                         }
                     }

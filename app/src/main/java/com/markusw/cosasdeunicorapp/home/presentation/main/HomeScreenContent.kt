@@ -27,7 +27,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -65,6 +64,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.shimmerEffect
+import com.markusw.cosasdeunicorapp.core.presentation.Button
 import com.markusw.cosasdeunicorapp.core.presentation.ProfileAvatar
 import com.markusw.cosasdeunicorapp.core.presentation.Screens
 import com.markusw.cosasdeunicorapp.core.utils.TextUtils
@@ -81,7 +81,7 @@ import com.markusw.cosasdeunicorapp.home.presentation.news.composables.NewsCard
 import com.markusw.cosasdeunicorapp.ui.theme.home_bottom_bar_background
 import kotlinx.coroutines.launch
 
-val DRAWER_WIDTH_PERCENTAGE = 0.8f
+private const val DRAWER_WIDTH_PERCENTAGE = 0.8f
 
 @Composable
 fun HomeScreenContent(
@@ -227,6 +227,35 @@ fun HomeScreenContent(
                         if (state.isLoading) {
                             LoadingLayout()
                         } else {
+
+                            Section(
+                                title = {
+                                    Text(
+                                        text = "¿Qué esta pasando?",
+                                        style = MaterialTheme.typography.titleLarge.copy(
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                },
+                                trailingIcon = {
+                                    TextButton(onClick = {
+                                        bottomBarNavController.navigate(HomeScreens.News.route)
+                                    }) {
+                                        Text(text = "Ver todo")
+                                    }
+                                },
+                                content = {
+                                    Column {
+                                        state.newsList.take(2).forEach { news ->
+                                            NewsCard(
+                                                news = news,
+                                                onNewsLiked = { },
+                                                likeButtonVisible = false
+                                            )
+                                        }
+                                    }
+                                })
+
                             Section(
                                 title = {
                                     Text(
@@ -272,34 +301,6 @@ fun HomeScreenContent(
                                     }
                                 }
                             )
-
-                            Section(
-                                title = {
-                                    Text(
-                                        text = "¿Qué esta pasando?",
-                                        style = MaterialTheme.typography.titleLarge.copy(
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    )
-                                },
-                                trailingIcon = {
-                                    TextButton(onClick = {
-                                        bottomBarNavController.navigate(HomeScreens.News.route)
-                                    }) {
-                                        Text(text = "Ver todo")
-                                    }
-                                },
-                                content = {
-                                    Column {
-                                        state.newsList.take(2).forEach { news ->
-                                            NewsCard(
-                                                news = news,
-                                                onNewsLiked = { },
-                                                likeButtonVisible = false
-                                            )
-                                        }
-                                    }
-                                })
 
                             Section(
                                 title = {

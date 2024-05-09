@@ -4,14 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -22,10 +23,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.fragment.findNavController
 import com.markusw.cosasdeunicorapp.R
 import com.markusw.cosasdeunicorapp.core.ext.pop
+import com.markusw.cosasdeunicorapp.core.ext.sharedViewModel
 import com.markusw.cosasdeunicorapp.core.presentation.GoogleAuthClient
 import com.markusw.cosasdeunicorapp.core.presentation.Screens
 import com.markusw.cosasdeunicorapp.profile.presentation.ChangePasswordScreen
@@ -33,6 +36,12 @@ import com.markusw.cosasdeunicorapp.profile.presentation.EditProfileScreen
 import com.markusw.cosasdeunicorapp.profile.presentation.ProfileScreen
 import com.markusw.cosasdeunicorapp.profile.presentation.ProfileViewModel
 import com.markusw.cosasdeunicorapp.profile.presentation.ProfileViewModelEvent
+import com.markusw.cosasdeunicorapp.tabulator.presentation.TabulatorScreen
+import com.markusw.cosasdeunicorapp.tabulator.presentation.TabulatorViewModel
+import com.markusw.cosasdeunicorapp.teacher_rating.presentation.TeacherRatingScreen
+import com.markusw.cosasdeunicorapp.teacher_rating.presentation.TeacherRatingViewModel
+import com.markusw.cosasdeunicorapp.teacher_rating.presentation.TeacherDetailsScreen
+import com.markusw.cosasdeunicorapp.teacher_rating.presentation.TeacherRatingViewModelEvent
 import com.markusw.cosasdeunicorapp.ui.theme.CosasDeUnicorAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -107,7 +116,7 @@ class HomeFragment : Fragment() {
                                     )
                                 },
                                 popExitTransition = {
-                                    shrinkOut()
+                                    slideOutHorizontally { fullWidth -> fullWidth }
                                 }
                             ) {
                                 val viewModel = hiltViewModel<ProfileViewModel>()
@@ -127,6 +136,9 @@ class HomeFragment : Fragment() {
                                         initialOffsetX = { fullWidth -> fullWidth }
                                     )
                                 },
+                                popExitTransition = {
+                                    slideOutHorizontally { fullWidth -> fullWidth }
+                                }
 
                             ) {
 
@@ -159,6 +171,9 @@ class HomeFragment : Fragment() {
                                     slideInHorizontally(
                                         initialOffsetX = { fullWidth -> fullWidth }
                                     )
+                                },
+                                popExitTransition = {
+                                    slideOutHorizontally { fullWidth -> fullWidth }
                                 }
                             ) {
 
@@ -182,6 +197,65 @@ class HomeFragment : Fragment() {
                                     state = uiState,
                                     onEvent = viewModel::onEvent
                                 )
+                            }
+
+                            composable(Screens.Tabulator.route) {
+                                val viewModel = hiltViewModel<TabulatorViewModel>()
+                                val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+                                TabulatorScreen(
+                                    mainNavController = mainNavController,
+                                    state = state,
+                                    onEvent = viewModel::onEvent
+                                )
+                            }
+
+                            navigation(
+                                route = Screens.TeacherRating.route,
+                                startDestination = "${Screens.TeacherRating.route}/teachers"
+                            ) {
+                                composable("${Screens.TeacherRating.route}/teachers") { backStackEntry ->
+
+                                    val viewModel = backStackEntry.sharedViewModel<TeacherRatingViewModel>(navController = mainNavController)
+                                    val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+                                    TeacherRatingScreen(
+                                        onEvent = viewModel::onEvent,
+                                        mainNavController = mainNavController,
+                                        state = state
+                                    )
+                                }
+
+                                composable(route = Screens.TeacherRatingDetail.route) { backStackEntry ->
+                                    val viewModel = backStackEntry.sharedViewModel<TeacherRatingViewModel>(navController = mainNavController)
+                                    val state by viewModel.uiState.collectAsStateWithLifecycle()
+                                    val snackBarHostState = remember {
+                                        SnackbarHostState()
+                                    }
+
+                                    LaunchedEffect(viewModel.events) {
+                                        viewModel.events.collectLatest { viewModelEvent ->
+                                            when (viewModelEvent) {
+                                                is TeacherRatingViewModelEvent.ReviewDeletedSuccessfully -> {
+                                                    snackBarHostState.showSnackbar(message = "Reseña eliminada correctamente")
+                                                }
+                                                is TeacherRatingViewModelEvent.ReviewSaveError -> {
+
+                                                }
+                                                is TeacherRatingViewModelEvent.ReviewSavedSuccessfully -> {
+                                                    snackBarHostState.showSnackbar(message = "Reseña guardada correctamente")
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    TeacherDetailsScreen(
+                                        state = state,
+                                        onEvent = viewModel::onEvent,
+                                        mainNavController = mainNavController,
+                                        snackBarHostState = snackBarHostState
+                                    )
+                                }
                             }
 
                         }
