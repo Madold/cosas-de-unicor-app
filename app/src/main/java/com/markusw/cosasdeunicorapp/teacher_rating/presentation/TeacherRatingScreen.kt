@@ -75,7 +75,8 @@ fun TeacherRatingScreen(
                         IconButton(onClick = { mainNavController.pop() }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_arrow_left),
-                                contentDescription = null
+                                contentDescription = null,
+                                tint = Color.White
                             )
                         }
                     },
@@ -219,6 +220,7 @@ fun TeacherRatingScreen(
                                     AZ -> {
                                         onEvent(TeacherRatingEvent.ChangeFilterType(FilterType.ByNameAscending))
                                     }
+
                                     ZA -> {
                                         onEvent(TeacherRatingEvent.ChangeFilterType(FilterType.ByNameDescending))
                                     }

@@ -35,6 +35,7 @@ fun TeacherRatingBar(
     modifier: Modifier = Modifier,
     barHeight: Dp = 28.dp,
     barColor: Color = Color.Gray,
+    isInsideCard: Boolean = false
 ) {
 
     var animationPlayed by remember {
@@ -81,7 +82,7 @@ fun TeacherRatingBar(
                     color = Color.White
                 )
             }
-            Text(text = "(${count})", color = if (isSystemInDarkTheme) Color.White else MaterialTheme.colorScheme.onSurface)
+            Text(text = "(${count})", color = if (isSystemInDarkTheme && !isInsideCard) Color.White else MaterialTheme.colorScheme.onSurface)
         }
 
     }

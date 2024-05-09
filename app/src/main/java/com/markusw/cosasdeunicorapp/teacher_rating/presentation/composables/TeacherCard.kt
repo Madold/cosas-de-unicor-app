@@ -122,6 +122,7 @@ fun TeacherCard(
                         },
                         percentage = if (totalReviews == 0) 0f else ruthlessReviewsCount.toFloat() / totalReviews,
                         count = ruthlessReviewsCount,
+                        isInsideCard = true
                     )
 
                     TeacherRatingBar(
@@ -134,6 +135,7 @@ fun TeacherCard(
                         },
                         percentage = if (totalReviews == 0) 0f else pushyReviewsCount.toFloat() / totalReviews,
                         count = pushyReviewsCount,
+                        isInsideCard = true
                     )
 
                     TeacherRatingBar(
@@ -146,6 +148,7 @@ fun TeacherCard(
                         },
                         percentage = if (totalReviews == 0) 0f else supportiveReviewsCount.toFloat() / totalReviews,
                         count = supportiveReviewsCount,
+                        isInsideCard = true
                     )
 
                     TeacherRatingBar(
@@ -158,6 +161,7 @@ fun TeacherCard(
                         },
                         percentage = if (totalReviews == 0) 0f else homieReviewsCount.toFloat() / totalReviews,
                         count = homieReviewsCount,
+                        isInsideCard = true
                     )
 
                     Box(

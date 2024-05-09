@@ -22,7 +22,8 @@ fun RatingChip(
         colors = AssistChipDefaults.assistChipColors(
             containerColor = if(selected) backgroundColor else Color.Gray,
         ),
-        shape = CircleShape
+        shape = CircleShape,
+        modifier = modifier
     )
 
 }

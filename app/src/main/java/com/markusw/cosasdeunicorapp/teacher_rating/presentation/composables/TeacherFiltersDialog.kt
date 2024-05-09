@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -134,7 +135,10 @@ fun TeacherFiltersDialog(
                                             onChipClick(rating)
                                         },
                                         label = {
-                                            Text(text = "Valecita")
+                                            Text(
+                                                text = "Valecita",
+                                                color = Color.White
+                                            )
                                         },
                                         backgroundColor = homie_color,
                                         selected = selectedFilterType == FilterType.ByRating(rating)
@@ -147,7 +151,9 @@ fun TeacherFiltersDialog(
                                             onChipClick(rating)
                                         },
                                         label = {
-                                            Text(text = "Cuchilla")
+                                            Text(text = "Cuchilla",
+                                                color = Color.White
+                                            )
                                         },
                                         backgroundColor = ruthless_color,
                                         selected = selectedFilterType == FilterType.ByRating(rating)
@@ -160,7 +166,9 @@ fun TeacherFiltersDialog(
                                             onChipClick(rating)
                                         },
                                         label = {
-                                            Text(text = "Pesao")
+                                            Text(text = "Pesao",
+                                                color = Color.White
+                                            )
                                         },
                                         backgroundColor = pushy_color,
                                         selected = selectedFilterType == FilterType.ByRating(rating)
@@ -173,7 +181,9 @@ fun TeacherFiltersDialog(
                                             onChipClick(rating)
                                         },
                                         label = {
-                                            Text(text = "Calidoso")
+                                            Text(text = "Calidoso",
+                                                color = Color.White
+                                            )
                                         },
                                         backgroundColor = supportive_color,
                                         selected = selectedFilterType == FilterType.ByRating(rating)
