@@ -3,6 +3,7 @@
 package com.markusw.cosasdeunicorapp.teacher_rating.presentation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -91,6 +92,8 @@ fun TeacherDetailsScreen(
         state.selectedTeacher.reviews.find { it.author.uid == state.loggedUser.uid }
     }
     val isFloatingActionButtonVisible = userReview == null
+    val isSystemInDarkTheme = isSystemInDarkTheme()
+    val textColor = if (isSystemInDarkTheme) Color.White else MaterialTheme.colorScheme.onSurface
 
     Scaffold(
         snackbarHost = {
@@ -143,7 +146,7 @@ fun TeacherDetailsScreen(
             Text(
                 text = state.selectedTeacher.teacherName,
                 modifier = Modifier.fillMaxWidth(),
-                color = Color.White,
+                color = textColor,
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 textAlign = TextAlign.Center
             )
@@ -155,7 +158,7 @@ fun TeacherDetailsScreen(
                     label = {
                         Text(
                             text = "Cuchilla",
-                            color = Color.White,
+                            color = textColor,
                             modifier = Modifier.weight(RATING_BAR_LABEL_WEIGHT)
                         )
                     },
@@ -167,7 +170,7 @@ fun TeacherDetailsScreen(
                     label = {
                         Text(
                             text = "Pesao",
-                            color = Color.White,
+                            color = textColor,
                             modifier = Modifier.weight(RATING_BAR_LABEL_WEIGHT)
                         )
                     },
@@ -179,7 +182,7 @@ fun TeacherDetailsScreen(
                     label = {
                         Text(
                             text = "Calidoso",
-                            color = Color.White,
+                            color = textColor,
                             modifier = Modifier.weight(RATING_BAR_LABEL_WEIGHT)
                         )
                     },
@@ -191,7 +194,7 @@ fun TeacherDetailsScreen(
                     label = {
                         Text(
                             text = "Valecita",
-                            color = Color.White,
+                            color = textColor,
                             modifier = Modifier.weight(RATING_BAR_LABEL_WEIGHT)
                         )
                     },

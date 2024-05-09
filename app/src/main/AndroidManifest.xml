@@ -46,7 +46,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+            android:value="ca-app-pub-7843708863859210~6426010841" />
 
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"

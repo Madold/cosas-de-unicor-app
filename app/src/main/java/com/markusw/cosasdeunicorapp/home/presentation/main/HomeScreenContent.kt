@@ -227,6 +227,35 @@ fun HomeScreenContent(
                         if (state.isLoading) {
                             LoadingLayout()
                         } else {
+
+                            Section(
+                                title = {
+                                    Text(
+                                        text = "¿Qué esta pasando?",
+                                        style = MaterialTheme.typography.titleLarge.copy(
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                },
+                                trailingIcon = {
+                                    TextButton(onClick = {
+                                        bottomBarNavController.navigate(HomeScreens.News.route)
+                                    }) {
+                                        Text(text = "Ver todo")
+                                    }
+                                },
+                                content = {
+                                    Column {
+                                        state.newsList.take(2).forEach { news ->
+                                            NewsCard(
+                                                news = news,
+                                                onNewsLiked = { },
+                                                likeButtonVisible = false
+                                            )
+                                        }
+                                    }
+                                })
+
                             Section(
                                 title = {
                                     Text(
@@ -272,34 +301,6 @@ fun HomeScreenContent(
                                     }
                                 }
                             )
-
-                            Section(
-                                title = {
-                                    Text(
-                                        text = "¿Qué esta pasando?",
-                                        style = MaterialTheme.typography.titleLarge.copy(
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    )
-                                },
-                                trailingIcon = {
-                                    TextButton(onClick = {
-                                        bottomBarNavController.navigate(HomeScreens.News.route)
-                                    }) {
-                                        Text(text = "Ver todo")
-                                    }
-                                },
-                                content = {
-                                    Column {
-                                        state.newsList.take(2).forEach { news ->
-                                            NewsCard(
-                                                news = news,
-                                                onNewsLiked = { },
-                                                likeButtonVisible = false
-                                            )
-                                        }
-                                    }
-                                })
 
                             Section(
                                 title = {

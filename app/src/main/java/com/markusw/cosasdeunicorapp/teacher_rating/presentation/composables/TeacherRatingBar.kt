@@ -3,12 +3,14 @@ package com.markusw.cosasdeunicorapp.teacher_rating.presentation.composables
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,6 +47,7 @@ fun TeacherRatingBar(
             durationMillis = 500
         )
     )
+    val isSystemInDarkTheme = isSystemInDarkTheme()
 
     LaunchedEffect(key1 = Unit) {
         animationPlayed = true
@@ -78,7 +81,7 @@ fun TeacherRatingBar(
                     color = Color.White
                 )
             }
-            Text(text = "(${count})", color = Color.White)
+            Text(text = "(${count})", color = if (isSystemInDarkTheme) Color.White else MaterialTheme.colorScheme.onSurface)
         }
 
     }
