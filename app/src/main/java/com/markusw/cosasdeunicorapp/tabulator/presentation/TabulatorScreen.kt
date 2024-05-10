@@ -26,6 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -40,7 +41,6 @@ import com.markusw.cosasdeunicorapp.core.presentation.AppTopBar
 import com.markusw.cosasdeunicorapp.core.presentation.Button
 import com.markusw.cosasdeunicorapp.core.presentation.ConfirmDialog
 import com.markusw.cosasdeunicorapp.tabulator.presentation.composables.After2014ResultsPreviewTable
-import com.markusw.cosasdeunicorapp.tabulator.presentation.composables.After2014TestForm
 import com.markusw.cosasdeunicorapp.tabulator.presentation.composables.Before2005ResultsPreviewTable
 import com.markusw.cosasdeunicorapp.tabulator.presentation.composables.Before2014ResultsPreviewTable
 import com.markusw.cosasdeunicorapp.tabulator.presentation.views.AcademicProgramSelectionView
@@ -113,13 +113,20 @@ fun TabulatorScreen(
         topBar = {
             AppTopBar(
                 title = {
-                    Text("Tabulador")
+                    Text(
+                        "Tabulador",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = { mainNavController.pop() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = Color.White
                         )
                     }
                 }
@@ -243,6 +250,7 @@ fun TabulatorScreen(
                                 secondColumnWeight = 0.5f
                             )
                         }
+
                         TestType.After2014 -> {
                             After2014ResultsPreviewTable(
                                 state = state,
@@ -250,6 +258,7 @@ fun TabulatorScreen(
                                 secondColumnWeight = 0.5f
                             )
                         }
+
                         TestType.Before2005 -> {
                             Before2005ResultsPreviewTable(
                                 state = state,
@@ -258,7 +267,6 @@ fun TabulatorScreen(
                             )
                         }
                     }
-
 
 
                 },
