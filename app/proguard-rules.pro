@@ -22,3 +22,7 @@
 
 -keep class com.markusw.cosasdeunicorapp.home.domain.model.* { *; }
 -keep class com.markusw.cosasdeunicorapp.core.domain.model.* { *; }
+-keep class com.markusw.cosasdeunicorapp.tabulator.domain.model.* { *; }
+-keep class com.markusw.cosasdeunicorapp.tabulator.domain.* { *; }
+-keep class com.markusw.cosasdeunicorapp.teacher_rating.domain.model.* { *; }
+-keep class com.markusw.cosasdeunicorapp.teacher_rating.data.model.* { *; }
