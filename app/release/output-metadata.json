@@ -11,8 +11,8 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 3,
-      "versionName": "beta-3-mary",
+      "versionCode": 5,
+      "versionName": "beta-6",
       "outputFile": "app-release.apk"
     }
   ],
