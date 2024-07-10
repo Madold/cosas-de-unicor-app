@@ -11,6 +11,7 @@ import com.markusw.cosasdeunicorapp.core.data.repository.FakeAuthRepository
 import com.markusw.cosasdeunicorapp.core.domain.repository.AuthRepository
 import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidateEmail
 import com.markusw.cosasdeunicorapp.core.domain.use_cases.ValidatePassword
+import com.markusw.cosasdeunicorapp.core.presentation.UiText
 import com.markusw.cosasdeunicorapp.core.utils.ValidationResult
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -23,6 +24,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import kotlin.math.exp
 
 class LoginViewModelTest {
 
@@ -94,7 +96,40 @@ class LoginViewModelTest {
         assertEquals(expectedState, currentState)
     }
 
+    @Test
+    fun `when email validation is not success then is loading should be false`() {
+        every { validateEmailFake(any()) } returns ValidationResult(successful = false, errorMessage = UiText.DynamicString("Invalid email"))
+        viewModel.onLogin()
+        val currentState = viewModel.uiState.value
+        val expectedValue = false
 
+        assertEquals(currentState.isLoading, expectedValue)
+    }
+
+    @Test
+    fun `when password validation is not success then is loading should be false`() {
+        every { validatePasswordFake(any()) } returns ValidationResult(successful = false, errorMessage = UiText.DynamicString("Invalid password"))
+        viewModel.onLogin()
+        val currentState = viewModel.uiState.value
+        val expectedValue = false
+
+        assertEquals(currentState.isLoading, expectedValue)
+    }
+
+    @Test
+    fun `when password validation and email validation is success then error messages should be null`() {
+        every { validateEmailFake(any()) } returns ValidationResult(successful = true)
+        every { validatePasswordFake(any()) } returns ValidationResult(successful = true)
+
+        viewModel.onLogin()
+        val currentState = viewModel.uiState.value
+        val expectedState = LoginState(
+            passwordError = null,
+            emailError = null
+        )
+
+        assertEquals(currentState, expectedState)
+    }
 
 
 }
